@@ -107,7 +107,7 @@
     <Compile Include="FrmProgressWindowFix.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmProgressWindowFix.designer.cs">
+    <Compile Include="FrmProgressWindowFix.Designer.cs">
       <DependentUpon>FrmProgressWindowFix.cs</DependentUpon>
     </Compile>
     <Compile Include="RvDB\FileStatus.cs" />
@@ -128,17 +128,17 @@
     <Compile Include="DatReaders\DatXMLReader.cs" />
     <Compile Include="DatUpdate.cs" />
     <Compile Include="FileScanning.cs" />
-    <Compile Include="frmHelpAbout.cs">
+    <Compile Include="FrmHelpAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmHelpAbout.Designer.cs">
-      <DependentUpon>frmHelpAbout.cs</DependentUpon>
+    <Compile Include="FrmHelpAbout.Designer.cs">
+      <DependentUpon>FrmHelpAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmKey.cs">
+    <Compile Include="FrmKey.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmKey.designer.cs">
-      <DependentUpon>frmKey.cs</DependentUpon>
+    <Compile Include="FrmKey.Designer.cs">
+      <DependentUpon>FrmKey.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmProgressWindow.cs">
       <SubType>Form</SubType>
@@ -152,30 +152,30 @@
     <Compile Include="FrmRegistration.Designer.cs">
       <DependentUpon>FrmRegistration.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSetDir.cs">
+    <Compile Include="FrmSetDir.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSetDir.Designer.cs">
-      <DependentUpon>frmSetDir.cs</DependentUpon>
+    <Compile Include="FrmSetDir.Designer.cs">
+      <DependentUpon>FrmSetDir.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSettings.cs">
+    <Compile Include="FrmSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSettings.Designer.cs">
-      <DependentUpon>frmSettings.cs</DependentUpon>
+    <Compile Include="FrmSettings.Designer.cs">
+      <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="DirCellDraw.cs" />
-    <Compile Include="frmShowError.cs">
+    <Compile Include="FrmShowError.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmShowError.designer.cs">
-      <DependentUpon>frmShowError.cs</DependentUpon>
+    <Compile Include="FrmShowError.Designer.cs">
+      <DependentUpon>FrmShowError.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSplashScreen.cs">
+    <Compile Include="FrmSplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSplashScreen.Designer.cs">
-      <DependentUpon>frmSplashScreen.cs</DependentUpon>
+    <Compile Include="FrmSplashScreen.Designer.cs">
+      <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="ReportError.cs" />
     <Compile Include="rvImages1.Designer.cs">
@@ -225,11 +225,11 @@
     <Compile Include="SupportedFiles\Zip\ZLib\ZlibCodec.cs" />
     <Compile Include="SupportedFiles\Zip\ZLib\ZlibConstants.cs" />
     <Compile Include="SupportedFiles\Zip\ZLib\ZlibStream.cs" />
-    <EmbeddedResource Include="frmHelpAbout.resx">
-      <DependentUpon>frmHelpAbout.cs</DependentUpon>
+    <EmbeddedResource Include="FrmHelpAbout.resx">
+      <DependentUpon>FrmHelpAbout.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmKey.resx">
-      <DependentUpon>frmKey.cs</DependentUpon>
+    <EmbeddedResource Include="FrmKey.resx">
+      <DependentUpon>FrmKey.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
@@ -244,15 +244,15 @@
     <EmbeddedResource Include="FrmRegistration.resx">
       <DependentUpon>FrmRegistration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSettings.resx">
-      <DependentUpon>frmSettings.cs</DependentUpon>
+    <EmbeddedResource Include="FrmSettings.resx">
+      <DependentUpon>FrmSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmShowError.resx">
-      <DependentUpon>frmShowError.cs</DependentUpon>
+    <EmbeddedResource Include="FrmShowError.resx">
+      <DependentUpon>FrmShowError.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSplashScreen.resx">
-      <DependentUpon>frmSplashScreen.cs</DependentUpon>
+    <EmbeddedResource Include="FrmSplashScreen.resx">
+      <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

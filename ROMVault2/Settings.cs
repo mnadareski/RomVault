@@ -48,6 +48,15 @@ namespace ROMVault2
         public static bool CacheSaveTimerEnabled = true;
         public static int CacheSaveTimePeriod = 10;
 
+        public static bool MonoFileIO
+        {
+            get
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                return ((p == 4) || (p == 6) || (p == 128));
+            }
+        }
+
         public static string EMail
         {
             get
@@ -88,7 +97,7 @@ namespace ROMVault2
 
         public static void SetDefaults()
         {
-            CacheFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2_"+DBVersion.Version+".Cache");
+            CacheFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2_" + DBVersion.Version + ".Cache");
 
             //DatRoot = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DatRoot");
             DatRoot = "DatRoot";
@@ -135,10 +144,10 @@ namespace ROMVault2
 
             bw.Write(ver);                  //int
             bw.Write(DatRoot);              //string
-            bw.Write((Int32)ScanLevel);     
+            bw.Write((Int32)ScanLevel);
             bw.Write((Int32)FixLevel);
             bw.Write(DebugLogsEnabled);     //bool
-                
+
             bw.Write(IgnoreFiles.Count);    //int
             foreach (string t in IgnoreFiles)
             {

@@ -47,12 +47,7 @@ namespace ROMVault2.IO
         public string FullName;
         public long LastWriteTime;
         public long Length;
-        public int fileAttributes;
 
-        public bool isHidden
-        {
-            get { return (fileAttributes & Win32Native.FILE_ATTRIBUTE_HIDDEN) != 0; }
-        }
 
         public FileInfo()
         { }
@@ -61,6 +56,14 @@ namespace ROMVault2.IO
         {
             FullName = path;
             Name = Path.GetFileName(path);
+
+            if (Settings.MonoFileIO)
+            {
+                System.IO.FileInfo fi = new System.IO.FileInfo(path);
+                Length = fi.Length;
+                LastWriteTime = fi.LastWriteTimeUtc.Ticks;
+                return;
+            }
 
             string fileName = NameFix.AddLongPathPrefix(path);
             Win32Native.WIN32_FILE_ATTRIBUTE_DATA wIn32FileAttributeData = new Win32Native.WIN32_FILE_ATTRIBUTE_DATA();
@@ -71,7 +74,6 @@ namespace ROMVault2.IO
 
             Length = Convert.Length(wIn32FileAttributeData.fileSizeHigh, wIn32FileAttributeData.fileSizeLow);
             LastWriteTime = Convert.Time(wIn32FileAttributeData.ftLastWriteTimeHigh, wIn32FileAttributeData.ftLastWriteTimeLow);
-            fileAttributes = wIn32FileAttributeData.fileAttributes;
         }
 
     }
@@ -81,19 +83,20 @@ namespace ROMVault2.IO
         public string Name;
         public string FullName;
         public long LastWriteTime;
-        public int fileAttributes;
-
-        public bool isHidden
-        {
-            get { return (fileAttributes & Win32Native.FILE_ATTRIBUTE_HIDDEN) != 0; }
-        }
-
+        
         public DirectoryInfo()
         { }
         public DirectoryInfo(string path)
         {
             FullName = path;
             Name = Path.GetFileName(path);
+
+            if (Settings.MonoFileIO)
+            {
+                System.IO.DirectoryInfo fi = new System.IO.DirectoryInfo(path);
+                LastWriteTime = fi.LastWriteTimeUtc.Ticks;
+                return;
+            }
 
             string fileName = NameFix.AddLongPathPrefix(path);
             Win32Native.WIN32_FILE_ATTRIBUTE_DATA wIn32FileAttributeData = new Win32Native.WIN32_FILE_ATTRIBUTE_DATA();
@@ -102,7 +105,6 @@ namespace ROMVault2.IO
 
             if (!b || (wIn32FileAttributeData.fileAttributes & Win32Native.FILE_ATTRIBUTE_DIRECTORY) == 0) return;
             LastWriteTime = Convert.Time(wIn32FileAttributeData.ftLastWriteTimeHigh, wIn32FileAttributeData.ftLastWriteTimeLow);
-            fileAttributes = wIn32FileAttributeData.fileAttributes;
         }
 
 
@@ -114,6 +116,25 @@ namespace ROMVault2.IO
         public DirectoryInfo[] GetDirectories(string SearchPattern, bool includeHidden = true)
         {
             List<DirectoryInfo> dirs = new List<DirectoryInfo>();
+
+            if (Settings.MonoFileIO)
+            {
+                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(FullName);
+                System.IO.DirectoryInfo[] arrDi = di.GetDirectories(SearchPattern);
+                foreach (System.IO.DirectoryInfo tDi in arrDi)
+                {
+                    DirectoryInfo lDi = new DirectoryInfo
+                    {
+                        Name = tDi.Name,
+                        FullName = Path.Combine(FullName, tDi.Name),
+                        LastWriteTime = tDi.LastWriteTimeUtc.Ticks
+                    };
+                    dirs.Add(lDi);
+                }
+                return dirs.ToArray();
+            }
+
+
 
             string dirName = NameFix.AddLongPathPrefix(FullName);
 
@@ -135,8 +156,7 @@ namespace ROMVault2.IO
                                            {
                                                Name = currentFileName,
                                                FullName = Path.Combine(FullName, currentFileName),
-                                               LastWriteTime = Convert.Time(findData.ftLastWriteTimeHigh, findData.ftLastWriteTimeLow),
-                                               fileAttributes = findData.dwFileAttributes
+                                               LastWriteTime = Convert.Time(findData.ftLastWriteTimeHigh, findData.ftLastWriteTimeLow)
                                            };
                     dirs.Add(di);
                 }
@@ -156,6 +176,23 @@ namespace ROMVault2.IO
         public FileInfo[] GetFiles(string SearchPattern, bool includeHidden = true)
         {
             List<FileInfo> files = new List<FileInfo>();
+
+            if (Settings.MonoFileIO)
+            {
+                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(FullName);
+                System.IO.FileInfo[] arrDi = di.GetFiles(SearchPattern);
+                foreach (System.IO.FileInfo tDi in arrDi)
+                {
+                    FileInfo lDi = new FileInfo
+                    {
+                        Name = tDi.Name,
+                        FullName = Path.Combine(FullName, tDi.Name),
+                        LastWriteTime = tDi.LastWriteTimeUtc.Ticks
+                    };
+                    files.Add(lDi);
+                }
+                return files.ToArray();
+            }
 
             string dirName = NameFix.AddLongPathPrefix(FullName);
 
@@ -177,8 +214,7 @@ namespace ROMVault2.IO
                         Name = currentFileName,
                         FullName = Path.Combine(FullName, currentFileName),
                         Length = Convert.Length(findData.nFileSizeHigh, findData.nFileSizeLow),
-                        LastWriteTime = Convert.Time(findData.ftLastWriteTimeHigh, findData.ftLastWriteTimeLow),
-                        fileAttributes = findData.dwFileAttributes
+                        LastWriteTime = Convert.Time(findData.ftLastWriteTimeHigh, findData.ftLastWriteTimeLow)
                     };
                     files.Add(fi);
                 }
@@ -196,6 +232,10 @@ namespace ROMVault2.IO
     {
         public static bool Exists(string path)
         {
+            if (Settings.MonoFileIO)
+                return System.IO.Directory.Exists(path);
+
+
             string fixPath = NameFix.AddLongPathPrefix(path);
 
             Win32Native.WIN32_FILE_ATTRIBUTE_DATA wIn32FileAttributeData = new Win32Native.WIN32_FILE_ATTRIBUTE_DATA();
@@ -205,6 +245,13 @@ namespace ROMVault2.IO
         }
         public static void Move(String sourceDirName, String destDirName)
         {
+            if (Settings.MonoFileIO)
+            {
+                System.IO.Directory.Move(sourceDirName, destDirName);
+                return;
+            }
+
+
             if (sourceDirName == null)
                 throw new ArgumentNullException("sourceDirName");
             if (sourceDirName.Length == 0)
@@ -234,6 +281,12 @@ namespace ROMVault2.IO
         }
         public static void Delete(String path)
         {
+            if (Settings.MonoFileIO)
+            {
+                System.IO.Directory.Delete(path);
+                return;
+            }
+
             String fullPath = NameFix.AddLongPathPrefix(path);
 
             Win32Native.RemoveDirectory(fullPath);
@@ -241,6 +294,13 @@ namespace ROMVault2.IO
 
         public static void CreateDirectory(String path)
         {
+            if (Settings.MonoFileIO)
+            {
+                System.IO.Directory.CreateDirectory(path);
+                return;
+            }
+
+
             if (path == null)
                 throw new ArgumentNullException("path");
             if (path.Length == 0)
@@ -256,6 +316,10 @@ namespace ROMVault2.IO
     {
         public static bool Exists(string path)
         {
+            if (Settings.MonoFileIO)
+                return System.IO.File.Exists(path);
+
+
             string fixPath = NameFix.AddLongPathPrefix(path);
 
             Win32Native.WIN32_FILE_ATTRIBUTE_DATA wIn32FileAttributeData = new Win32Native.WIN32_FILE_ATTRIBUTE_DATA();
@@ -269,6 +333,12 @@ namespace ROMVault2.IO
         }
         public static void Copy(String sourceFileName, String destFileName, bool overwrite)
         {
+            if (Settings.MonoFileIO)
+            {
+                System.IO.File.Copy(sourceFileName, destFileName, overwrite);
+                return;
+            }
+            
             if (sourceFileName == null || destFileName == null)
                 throw new ArgumentNullException((sourceFileName == null ? "sourceFileName" : "destFileName"), "ArgumentNull_FileName");
             if (sourceFileName.Length == 0 || destFileName.Length == 0)
@@ -310,6 +380,12 @@ namespace ROMVault2.IO
         }
         public static void Move(String sourceFileName, String destFileName)
         {
+            if (Settings.MonoFileIO)
+            {
+                System.IO.File.Move(sourceFileName, destFileName);
+                return;
+            }
+
             if (sourceFileName == null || destFileName == null)
                 throw new ArgumentNullException((sourceFileName == null ? "sourceFileName" : "destFileName"), "ArgumentNull_FileName");
             if (sourceFileName.Length == 0 || destFileName.Length == 0)
@@ -329,6 +405,13 @@ namespace ROMVault2.IO
         }
         public static void Delete(String path)
         {
+            if (Settings.MonoFileIO)
+            {
+                System.IO.File.Delete(path);
+                return;
+            }
+
+
             string fixPath = NameFix.AddLongPathPrefix(path);
 
             if (!Win32Native.DeleteFile(fixPath))
@@ -341,6 +424,20 @@ namespace ROMVault2.IO
 
         public static bool SetAttributes(String path, FileAttributes fileAttributes)
         {
+            if (Settings.MonoFileIO)
+            {
+                try
+                {
+                    System.IO.File.SetAttributes(path, (System.IO.FileAttributes) fileAttributes);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+
+
             String fullPath = NameFix.AddLongPathPrefix(path);
             return Win32Native.SetFileAttributes(fullPath, (int)fileAttributes);
         }
@@ -362,6 +459,9 @@ namespace ROMVault2.IO
         }
         public static string Combine(string path1, string path2)
         {
+            if (Settings.MonoFileIO)
+                return System.IO.Path.Combine(path1, path2);
+
             if (path1 == null || path2 == null)
                 throw new ArgumentNullException((path1 == null) ? "path1" : "path2");
             //CheckInvalidPathChars(path1);
@@ -431,6 +531,10 @@ namespace ROMVault2.IO
         }
         public static String GetDirectoryName(String path)
         {
+            if (Settings.MonoFileIO)
+                return System.IO.Path.GetDirectoryName(path);
+
+
             if (path != null)
             {
                 int root = GetRootLength(path);
@@ -489,6 +593,19 @@ namespace ROMVault2.IO
 
         public static int OpenFileRead(string path, out System.IO.Stream stream)
         {
+            if (Settings.MonoFileIO)
+            {
+                try
+                {
+                    stream=new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                    return 0;
+                }
+                catch (Exception)
+                {
+                    stream = null;
+                    return Marshal.GetLastWin32Error();
+                }
+            }
 
             string filename = NameFix.AddLongPathPrefix(path);
             SafeFileHandle hFile = Win32Native.CreateFile(filename,
@@ -510,6 +627,21 @@ namespace ROMVault2.IO
 
         public static int OpenFileWrite(string path, out System.IO.Stream stream)
         {
+            if (Settings.MonoFileIO)
+            {
+                try
+                {
+                    stream = new System.IO.FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                    return 0;
+                }
+                catch (Exception)
+                {
+                    stream = null;
+                    return Marshal.GetLastWin32Error();
+                }
+            }
+
+
             string filename = NameFix.AddLongPathPrefix(path);
             SafeFileHandle hFile = Win32Native.CreateFile(filename,
                                       GENERIC_WRITE,
@@ -536,6 +668,9 @@ namespace ROMVault2.IO
     {
         public static string GetShortPath(string path)
         {
+            if (Settings.MonoFileIO)
+                return path;
+
             int remove = 0;
             string retPath;
             if (path.StartsWith(@"\\"))

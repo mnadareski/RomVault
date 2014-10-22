@@ -76,8 +76,8 @@ namespace ROMVault2
                 RvDir game = dir.Child(i) as RvDir;
                 if (game != null && game.FileType == FileType.Zip)
                 {
-                    WriteLine(d + "<game name=\"" + clean(Path.GetFileNameWithoutExtension(game.Name)) + "\">");
-                    WriteLine(d + "    <description>" + clean(Path.GetFileNameWithoutExtension(game.Name)) + "</description>");
+                    WriteLine(d + "<game name=\"" + clean(game.Name) + "\">");
+                    WriteLine(d + "    <description>" + clean(game.Name) + "</description>");
                     
 
                     for (int j = 0; j < game.ChildCount; j++)

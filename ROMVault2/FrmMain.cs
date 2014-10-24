@@ -1,4 +1,4 @@
-﻿/******************************************************
+/******************************************************
  *     ROMVault2 is written by Gordon J.              *
  *     Contact gordon@romvault.com                    *
  *     Copyright 2010                                 *
@@ -40,7 +40,7 @@ namespace ROMVault2
 
         public static int[] GameGridColumnXPositions;
 
-        private frmKey _fk;
+        private FrmKey _fk;
 
         private Single _scaleFactorX = 1;
         private Single _scaleFactorY = 1;
@@ -1201,7 +1201,7 @@ namespace ROMVault2
         {
 
             if (_fk == null || _fk.IsDisposed)
-                _fk = new frmKey();
+                _fk = new FrmKey();
             _fk.Show();
         }
 
@@ -1215,7 +1215,7 @@ namespace ROMVault2
         private void BtnReportClick(object sender, EventArgs e)
         {
             Report.MakeFixFiles();
-            //frmReport newreporter = new frmReport();
+            //FrmReport newreporter = new FrmReport();
             //newreporter.ShowDialog();
             //newreporter.Dispose();
         }
@@ -1236,7 +1236,7 @@ namespace ROMVault2
 
         private void AboutRomVaultToolStripMenuItemClick(object sender, EventArgs e)
         {
-            frmHelpAbout fha = new frmHelpAbout();
+            FrmHelpAbout fha = new FrmHelpAbout();
             fha.ShowDialog(this);
             fha.Dispose();
         }

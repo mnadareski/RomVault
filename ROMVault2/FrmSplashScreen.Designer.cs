@@ -100,7 +100,7 @@
             this.Name = "FrmSplashScreen";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmSplashScreen";
+            this.Text = "FrmSplashScreen";
             this.Shown += new System.EventHandler(this.FrmSplashScreenShown);
             this.ResumeLayout(false);
             this.PerformLayout();

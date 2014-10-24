@@ -34,7 +34,7 @@ namespace ROMVault2
 
                 SendErrorMessage(message);
 
-                frmShowError fshow = new frmShowError();
+                FrmShowError fshow = new FrmShowError();
                 fshow.settype(message);
                 fshow.ShowDialog();
 
@@ -60,7 +60,7 @@ namespace ROMVault2
 
                 SendErrorMessage(message);
 
-                frmShowError fshow = new frmShowError();
+                FrmShowError fshow = new FrmShowError();
                 fshow.settype(message);
                 fshow.ShowDialog();
 
@@ -82,7 +82,7 @@ namespace ROMVault2
 
                 SendErrorMessage(message);
 
-                frmShowError fshow = new frmShowError();
+                FrmShowError fshow = new FrmShowError();
                 fshow.settype(message);
                 fshow.ShowDialog();
 

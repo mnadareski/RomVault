@@ -60,6 +60,9 @@ namespace ROMVault2.IO
             if (Settings.MonoFileIO)
             {
                 System.IO.FileInfo fi = new System.IO.FileInfo(path);
+
+                if(!fi.Exists) return;
+
                 Length = fi.Length;
                 LastWriteTime = fi.LastWriteTimeUtc.Ticks;
                 return;
@@ -94,6 +97,9 @@ namespace ROMVault2.IO
             if (Settings.MonoFileIO)
             {
                 System.IO.DirectoryInfo fi = new System.IO.DirectoryInfo(path);
+
+                if(!fi.Exists) return;
+
                 LastWriteTime = fi.LastWriteTimeUtc.Ticks;
                 return;
             }

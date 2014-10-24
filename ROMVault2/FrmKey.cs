@@ -11,14 +11,14 @@ using System.Windows.Forms;
 
 namespace ROMVault2
 {
-    public partial class frmKey : Form
+    public partial class FrmKey : Form
     {
-        public frmKey()
+        public FrmKey()
         {
             InitializeComponent();
         }
 
-        private void frmKey_Load(object sender, EventArgs e)
+        private void FrmKey_Load(object sender, EventArgs e)
         {
             List<RepStatus> displayList= new List<RepStatus>
                                              {

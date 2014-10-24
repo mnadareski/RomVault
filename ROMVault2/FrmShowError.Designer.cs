@@ -1,6 +1,6 @@
 ﻿namespace ROMVault2
 {
-    partial class frmShowError
+    partial class FrmShowError
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmShowError));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmShowError));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -62,7 +62,7 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "Sending Error Message to RomVault.Com";
             // 
-            // frmShowError
+            // FrmShowError
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -72,7 +72,7 @@
             this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "frmShowError";
+            this.Name = "FrmShowError";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "RomVault Error report";
             this.ResumeLayout(false);

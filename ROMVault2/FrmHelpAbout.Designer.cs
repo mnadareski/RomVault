@@ -1,6 +1,6 @@
 ﻿namespace ROMVault2
 {
-    partial class frmHelpAbout
+    partial class FrmHelpAbout
     {
         /// <summary>
         /// Required designer variable.
@@ -67,7 +67,7 @@
             this.label2.Text = "support@romvault.com";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // frmHelpAbout
+            // FrmHelpAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -79,10 +79,10 @@
             this.Controls.Add(this.lblVersion);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "frmHelpAbout";
+            this.Name = "FrmHelpAbout";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "frmHelpAbout";
+            this.Text = "FrmHelpAbout";
             this.ResumeLayout(false);
             this.PerformLayout();
 

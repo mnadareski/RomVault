@@ -27,7 +27,6 @@ namespace ROMVault2
             _sw.Close();
 
             Console.WriteLine("Dat creation complete");
-            Console.ReadLine();
         }
 
         private static void WriteDatFile(RvDir dir)

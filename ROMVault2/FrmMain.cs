@@ -13,6 +13,7 @@ using ROMVault2.Properties;
 using ROMVault2.RVRef;
 using ROMVault2.RvDB;
 using ROMVault2.Utils;
+using ROMVault2.SupportedFiles;
 
 namespace ROMVault2
 {
@@ -477,6 +478,108 @@ namespace ROMVault2
             DatMaker.MakeDatFromDir(thisDir);
         }
 
+        private void GameGrid_CellFormatting(object sender, System.Windows.Forms.DataGridViewCellFormattingEventArgs e)
+        {
+  
+            Rectangle cellBounds = GameGrid.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+            RvDir tRvDir = (ROMVault2.RvDB.RvDir)GameGrid.Rows[e.RowIndex].Tag;
+
+            if (GameGrid.Columns[e.ColumnIndex].Name == "Type")
+            {
+                Bitmap bmp = new Bitmap(cellBounds.Width, cellBounds.Height);
+                Graphics g = Graphics.FromImage(bmp);
+
+                string bitmapName;
+                switch (tRvDir.FileType)
+                {
+                    case FileType.Zip:
+                        if (tRvDir.RepStatus == RepStatus.DirCorrect && tRvDir.ZipStatus == ZipStatus.TrrntZip)
+                            bitmapName = "ZipTZ";
+                        else
+                            bitmapName = "Zip" + tRvDir.RepStatus;
+                        break;
+                    default:
+                        // hack because DirDirInToSort image doesnt exist.
+                        if (tRvDir.RepStatus ==  RepStatus.DirInToSort)
+                            bitmapName = "Dir" + RepStatus.DirUnknown;
+                        else
+                            bitmapName = "Dir" + tRvDir.RepStatus;
+
+                        break;
+                }
+
+                Bitmap bm = rvImages.GetBitmap(bitmapName);
+                if (bm != null)
+                {
+                    g.DrawImage(bm, (cellBounds.Width - cellBounds.Height) / 2, 0, 18, 18);
+                    bm.Dispose();
+                }
+                else
+                    Debug.WriteLine("Missing Graphic for " + bitmapName);
+
+                e.Value = bmp;
+
+            } else if (GameGrid.Columns[e.ColumnIndex].Name == "CCorrect") {
+                Bitmap bmp = new Bitmap(cellBounds.Width, cellBounds.Height);
+                Graphics g = Graphics.FromImage(bmp);
+                Font drawFont = new Font("Arial", 9);
+                SolidBrush drawBrushBlack = new SolidBrush(Color.Black);
+
+                int gOff;
+                int columnIndex = 0;
+                for (int l = 0; l < RepairStatus.DisplayOrder.Length; l++)
+                {
+                    if (l >= 13) columnIndex = l;
+
+                    if (tRvDir.DirStatus.Get(RepairStatus.DisplayOrder[l]) <= 0) continue;
+
+                    gOff = FrmMain.GameGridColumnXPositions[columnIndex];
+                    Bitmap bm = rvImages.GetBitmap(@"G_" + RepairStatus.DisplayOrder[l]);
+                    if (bm != null)
+                    {
+                        g.DrawImage(bm, gOff, 0, 21, 18);
+                        bm.Dispose();
+                    }
+                    else
+                        Debug.WriteLine("Missing Graphics for " + "G_" + RepairStatus.DisplayOrder[l]);
+
+                    columnIndex++;
+                }
+
+                columnIndex = 0;
+                for (int l = 0; l < RepairStatus.DisplayOrder.Length; l++)
+                {
+                    if (l >= 13)
+                        columnIndex = l;
+
+                    if (tRvDir.DirStatus.Get(RepairStatus.DisplayOrder[l]) > 0)
+                    {
+                        gOff = FrmMain.GameGridColumnXPositions[columnIndex];
+                        g.DrawString(tRvDir.DirStatus.Get(RepairStatus.DisplayOrder[l]).ToString(CultureInfo.InvariantCulture), drawFont, drawBrushBlack, new PointF(gOff + 20, 3));
+                        columnIndex++;
+                    }
+                }
+                drawBrushBlack.Dispose();
+                drawFont.Dispose();
+                e.Value = bmp;
+            }
+        }
+
+        private void RomGrid_CellFormatting(object sender, System.Windows.Forms.DataGridViewCellFormattingEventArgs e)
+        {
+            Rectangle cellBounds = RomGrid.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+            RvFile tRvFile = (ROMVault2.RvDB.RvFile)RomGrid.Rows[e.RowIndex].Tag;
+
+            if (RomGrid.Columns[e.ColumnIndex].Name == "CGot")
+            {
+                Bitmap bmp = new Bitmap(cellBounds.Width, cellBounds.Height);
+                Graphics g = Graphics.FromImage(bmp);
+                string bitmapName = "R_" + tRvFile.DatStatus + "_" + tRvFile.RepStatus;
+                g.DrawImage(rvImages.GetBitmap(bitmapName), 0, 0, 54, 18);
+                e.Value = bmp;
+            }
+        }
+
         private void splitContainer3_Panel1_Resize(object sender, EventArgs e)
         {
             gbDatInfo.Width = splitContainer3.Panel1.Width - (gbDatInfo.Left * 2);
@@ -670,23 +773,19 @@ namespace ROMVault2
                 GameGrid.Rows[iRow].Selected = false;
                 GameGrid.Rows[iRow].Tag = tChildDir;
 
-                GameGrid.Rows[iRow].Cells[0].Style.BackColor = bgCol;
-                GameGrid.Rows[iRow].Cells[1].Style.BackColor = bgCol;
-                GameGrid.Rows[iRow].Cells[2].Style.BackColor = bgCol;
+                GameGrid.Rows[iRow].Cells["Type"].Style.BackColor = bgCol;
+                GameGrid.Rows[iRow].Cells["Type"].Style.SelectionBackColor = bgCol;
+                GameGrid.Rows[iRow].Cells["CGame"].Style.BackColor = bgCol;
+                GameGrid.Rows[iRow].Cells["CDescription"].Style.BackColor = bgCol;
+                GameGrid.Rows[iRow].Cells["CCorrect"].Style.SelectionBackColor = Color.White;
 
                 if (String.IsNullOrEmpty(tChildDir.FileName))
-                    GameGrid.Rows[iRow].Cells[1].Value = tChildDir.Name;
+                    GameGrid.Rows[iRow].Cells["CGame"].Value = tChildDir.Name;
                 else
-                    GameGrid.Rows[iRow].Cells[1].Value = tChildDir.Name + " (Found: " + tChildDir.FileName + ")";
+                    GameGrid.Rows[iRow].Cells["CGame"].Value = tChildDir.Name + " (Found: " + tChildDir.FileName + ")";
 
                 if (tChildDir.Game != null)
-                    GameGrid.Rows[iRow].Cells[2].Value = tChildDir.Game.GetData(RvGame.GameData.Description);
-
-                DirCellDraw tDirCellDraw = new DirCellDraw(tChildDir, bgCol);
-                GameGrid.Rows[iRow].Cells[0] = tDirCellDraw;
-
-                DirCellStatusDraw tCellStatusDraw = new DirCellStatusDraw(tChildDir);
-                GameGrid.Rows[iRow].Cells[3] = tCellStatusDraw;
+                    GameGrid.Rows[iRow].Cells["CDescription"].Value = tChildDir.Game.GetData(RvGame.GameData.Description);
             }
 
             _updatingGameGrid = false;
@@ -1085,11 +1184,7 @@ namespace ROMVault2
             {
                 RomGrid.Rows.Add();
                 int row = RomGrid.Rows.Count - 1;
-
-                string imageName = "R_" + tRomTable.DatStatus + "_" + tRomTable.RepStatus;
-
-                RomCellDraw tDirCellDraw = new RomCellDraw(imageName, _displayColor[(int)tRomTable.RepStatus]);
-                RomGrid.Rows[row].Cells[0] = tDirCellDraw;
+                RomGrid.Rows[row].Tag = tRomTable;
 
                 for (int i = 0; i < RomGrid.Rows[row].Cells.Count; i++)
                     RomGrid.Rows[row].Cells[i].Style.BackColor = _displayColor[(int)tRomTable.RepStatus];

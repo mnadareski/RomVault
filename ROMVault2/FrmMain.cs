@@ -771,6 +771,8 @@ namespace ROMVault2
             } else if (GameGrid.Columns[e.ColumnIndex].Name == "CCorrect") {
                 Bitmap bmp = new Bitmap(cellBounds.Width, cellBounds.Height);
                 Graphics g = Graphics.FromImage(bmp);
+                g.Clear(Color.White);
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
                 Font drawFont = new Font("Arial", 9);
                 SolidBrush drawBrushBlack = new SolidBrush(Color.Black);
 

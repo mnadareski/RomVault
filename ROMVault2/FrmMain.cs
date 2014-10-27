@@ -481,7 +481,7 @@ namespace ROMVault2
         private void GameGrid_CellFormatting(object sender, System.Windows.Forms.DataGridViewCellFormattingEventArgs e)
         {
   
-            Rectangle cellBounds = GameGrid.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+            Rectangle cellBounds = GameGrid.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
             RvDir tRvDir = (ROMVault2.RvDB.RvDir)GameGrid.Rows[e.RowIndex].Tag;
 
             if (GameGrid.Columns[e.ColumnIndex].Name == "Type")
@@ -567,7 +567,7 @@ namespace ROMVault2
 
         private void RomGrid_CellFormatting(object sender, System.Windows.Forms.DataGridViewCellFormattingEventArgs e)
         {
-            Rectangle cellBounds = RomGrid.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+            Rectangle cellBounds = RomGrid.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
             RvFile tRvFile = (ROMVault2.RvDB.RvFile)RomGrid.Rows[e.RowIndex].Tag;
 
             if (RomGrid.Columns[e.ColumnIndex].Name == "CGot")

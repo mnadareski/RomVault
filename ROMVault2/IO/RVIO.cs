@@ -193,6 +193,7 @@ namespace ROMVault2.IO
                     {
                         Name = tDi.Name,
                         FullName = Path.Combine(FullName, tDi.Name),
+                        Length = tDi.Length,
                         LastWriteTime = tDi.LastWriteTimeUtc.Ticks
                     };
                     files.Add(lDi);

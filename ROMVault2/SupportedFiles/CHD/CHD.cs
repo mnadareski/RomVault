@@ -245,10 +245,14 @@ namespace ROMVault2.SupportedFiles.CHD
             _result = "";
             _resultType = CHDManCheck.Unset;
 
-            string chdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chdman.exe");
+            string chdExe = "chdman.exe";
+            if (Settings.MonoFileIO)
+                chdExe = "chdman";
+
+            string chdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, chdExe);
             if (!File.Exists(chdPath))
             {
-                result = "chdman not found";
+                result = chdExe + " Not Found.";
                 return CHDManCheck.ChdmanNotFound;
             }
 
@@ -421,7 +425,7 @@ namespace ROMVault2.SupportedFiles.CHD
 
             // check for Verifying message
             if (sOut.Length >= 24)
-                if (sOut.Substring(0, 11) == "Verifying, " && sOut.Substring(sOut.Length - 13, 13) == " complete... ")
+                if (System.Text.RegularExpressions.Regex.IsMatch(sOut, "Verifying, \\d+\\.\\d+\\% complete\\.\\.\\."))
                 {
                     //_resultType = CHDManCheck.Good;
                     return;

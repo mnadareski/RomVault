@@ -371,70 +371,61 @@ namespace ROMVault2.SupportedFiles.CHD
             // Collect the process command output.
             if (String.IsNullOrEmpty(outLine.Data)) return;
 
-            string sOut = outLine.Data;
-            ReportError.LogOut("CHDError: " + sOut);
+            // We can get fed multiple lines worth of data because of \r line feeds
+            string[] sLines = outLine.Data.Split(new string[] { "\r" }, StringSplitOptions.None);
 
-            _bgw.ReportProgress(0, new bgwText3(sOut));
+            foreach (string sLine in sLines) {
 
-            if (_resultType != CHDManCheck.Unset)
-            {
-                if(_errorLines>0)
+                if (string.IsNullOrEmpty(sLine)) continue;
+
+                ReportError.LogOut("CHDError: " + sLine);
+                _bgw.ReportProgress(0, new bgwText3(sLine));
+ 
+                if (_resultType != CHDManCheck.Unset)
                 {
-                    _errorLines -= 1;
-                    _result += "\r\n" + sOut;
+                    if (_errorLines>0)
+                    {
+                        _errorLines -= 1;
+                        _result += "\r\n" + sLine;
+                    }
                 }
-                return;
+                else if (System.Text.RegularExpressions.Regex.IsMatch(sLine, @"^No verification to be done; CHD has (uncompressed|no checksum)"))
+                {
+                    _result = sLine;
+                    _resultType = CHDManCheck.Corrupt;
+                } 
+                else if (System.Text.RegularExpressions.Regex.IsMatch(sLine, @"^Error (opening|reading) CHD file.*")) 
+                {
+                     _result = sLine;
+                    _resultType = CHDManCheck.Corrupt;
+                }
+                else if (System.Text.RegularExpressions.Regex.IsMatch(sLine, @"^Error opening parent CHD file .*:")) 
+                {
+                    _result = sLine;
+                    _resultType = CHDManCheck.Corrupt;
+                }
+                else if (System.Text.RegularExpressions.Regex.IsMatch(sLine, @"^Error: (Raw|Overall) SHA1 in header"))
+                {
+                    _result = sLine;
+                    _resultType = CHDManCheck.Corrupt;
+                }
+                else if (System.Text.RegularExpressions.Regex.IsMatch(sLine, @"^Out of memory"))
+                {
+                    _result = sLine;
+                    _resultType = CHDManCheck.Corrupt;
+                }
+                // Verifying messages are a non-error
+                else if (System.Text.RegularExpressions.Regex.IsMatch(sLine, @"Verifying, \d+\.\d+\% complete\.\.\."))
+                {
+
+                }
+                else
+                {
+                    ReportError.SendErrorMessage("CHDErrorHandler returned =" + sLine);
+                    _result = "Unknown message : " + sLine;
+                    _resultType = CHDManCheck.CHDUnknownError;
+                }
             }
-
-            if (sOut.Length > 44)
-                if (sOut.Substring(0, 23) == "Error reading CHD file " && sOut.Substring(sOut.Length - 21, 21) == ": decompression error")
-                {
-                    _result = sOut;
-                    _resultType = CHDManCheck.Corrupt;
-                    return;
-                }
-            if (sOut.Length > 35)
-                if (sOut.Substring(0, 23) == "Error opening CHD file " && sOut.Substring(sOut.Length - 21, 21) == ": decompression error")
-                {
-                    _result = sOut;
-                    _resultType = CHDManCheck.Corrupt;
-                    return;
-                }
-            if (sOut.Length > 35)
-                if (sOut.Substring(0, 23) == "Error opening CHD file " && sOut.Substring(sOut.Length - 12, 12) == ": read error")
-                {
-                    _result = sOut;
-                    _resultType = CHDManCheck.Corrupt;
-                    return;
-                }
-            if (sOut.Length > 25)
-                if (sOut.Substring(0, 25) == "Error: Raw SHA1 in header")
-                {
-                    _result = sOut;
-                    _errorLines = 1;
-                    _resultType = CHDManCheck.Corrupt;
-                    return;
-                }
-            if (sOut.Length == 13)
-                if (sOut == "Out of memory")
-                {
-                    _result = sOut;
-                    _resultType = CHDManCheck.Corrupt;
-                    return;
-                }
-
-            // check for Verifying message
-            if (sOut.Length >= 24)
-                if (System.Text.RegularExpressions.Regex.IsMatch(sOut, "Verifying, \\d+\\.\\d+\\% complete\\.\\.\\."))
-                {
-                    //_resultType = CHDManCheck.Good;
-                    return;
-                }
-
-
-            ReportError.SendErrorMessage("CHDErrorHandler returned =" + sOut);
-            _result = "Unknown message : " + sOut;
-            _resultType = CHDManCheck.CHDUnknownError;
         }
 
 

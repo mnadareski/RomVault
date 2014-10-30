@@ -820,11 +820,12 @@ namespace ROMVault2
                     tFile.FileStatusSet(FileStatus.SHA1CHDVerified);
                     return;
                 case CHD.CHDManCheck.Corrupt:
-                    _bgw.ReportProgress(0, new bgwShowError(error, filename));
+                    _bgw.ReportProgress(0, new bgwShowError(filename, error));
                     tFile.GotStatus = GotStatus.Corrupt;
                     return;
+                case CHD.CHDManCheck.CHDReturnError:
                 case CHD.CHDManCheck.CHDUnknownError:
-                    _bgw.ReportProgress(0, new bgwShowError(error, filename));
+                    _bgw.ReportProgress(0, new bgwShowError(filename, error));
                     return;
                 case CHD.CHDManCheck.ChdmanNotFound:
                     return;

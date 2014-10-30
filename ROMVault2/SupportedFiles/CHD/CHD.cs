@@ -334,7 +334,7 @@ namespace ROMVault2.SupportedFiles.CHD
             switch (_outputLineCount)
             {
                 case 0:
-                    if (sOut.Length < 53 || sOut.Substring(0, 53) != "chdman - MAME Compressed Hunks of Data (CHD) manager ")
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(sOut, @"^chdman - MAME Compressed Hunks of Data \(CHD\) manager ([0-9\.]+) \(.*\)")) 
                     {
                         _result = "Incorrect startup of CHDMan :" + sOut;
                         _resultType = CHDManCheck.CHDReturnError;

@@ -74,7 +74,7 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(420, 99);
+            this.cancelButton.Location = new System.Drawing.Point(424, 99);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 2;
@@ -123,7 +123,7 @@
             this.ErrorGrid.ShowCellToolTips = false;
             this.ErrorGrid.ShowEditingIcon = false;
             this.ErrorGrid.ShowRowErrors = false;
-            this.ErrorGrid.Size = new System.Drawing.Size(591, 186);
+            this.ErrorGrid.Size = new System.Drawing.Size(511, 186);
             this.ErrorGrid.TabIndex = 6;
             this.ErrorGrid.SelectionChanged += new System.EventHandler(this.ErrorGridSelectionChanged);
             // 
@@ -165,7 +165,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.ErrorGrid);
-            this.splitContainer1.Size = new System.Drawing.Size(591, 320);
+            this.splitContainer1.Size = new System.Drawing.Size(511, 320);
             this.splitContainer1.SplitterDistance = 130;
             this.splitContainer1.TabIndex = 8;
             // 
@@ -184,9 +184,8 @@
             // 
             // FrmProgressWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(591, 320);
+            this.ClientSize = new System.Drawing.Size(511, 320);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmProgressWindow";

@@ -584,6 +584,7 @@ namespace ROMVault2
 
             GameGridColumnXPositions = new int[(int)RepStatus.EndValue];
 
+            int rowCount = 0;
             for (int j = 0; j < tDir.ChildCount; j++)
             {
 
@@ -607,6 +608,8 @@ namespace ROMVault2
                 show = show || !(gCorrect || gMissing || gUnknown || gInToSort || gFixes);
 
                 if (!show) continue;
+
+                rowCount++;
 
                 int columnIndex = 0;
                 for (int l = 0; l < RepairStatus.DisplayOrder.Length; l++)
@@ -621,6 +624,7 @@ namespace ROMVault2
                     columnIndex++;
                 }
             }
+            GameGrid.RowCount = rowCount;
 
             int t = 0;
             for (int l = 0; l < (int)RepStatus.EndValue; l++)
@@ -630,6 +634,7 @@ namespace ROMVault2
                 t += colWidth;
             }
 
+            int row = 0;
             for (int j = 0; j < tDir.ChildCount; j++)
             {
                 RvDir tChildDir = tDir.Child(j) as RvDir;
@@ -652,38 +657,10 @@ namespace ROMVault2
                 show = show || !(gCorrect || gMissing || gUnknown || gInToSort || gFixes);
 
                 if (!show) continue;
-
-                Color bgCol = Color.FromArgb(255, 255, 255);
-
-
-                foreach (RepStatus t1 in RepairStatus.DisplayOrder)
-                {
-                    if (tDirStat.Get(t1) <= 0) continue;
-
-                    bgCol = _displayColor[(int)t1];
-                    break;
-                }
-
-
-                GameGrid.Rows.Add();
-                int iRow = GameGrid.Rows.Count - 1;
-
-                GameGrid.Rows[iRow].Selected = false;
-                GameGrid.Rows[iRow].Tag = tChildDir;
-
-                GameGrid.Rows[iRow].Cells["Type"].Style.BackColor = bgCol;
-                GameGrid.Rows[iRow].Cells["Type"].Style.SelectionBackColor = bgCol;
-                GameGrid.Rows[iRow].Cells["CGame"].Style.BackColor = bgCol;
-                GameGrid.Rows[iRow].Cells["CDescription"].Style.BackColor = bgCol;
-                GameGrid.Rows[iRow].Cells["CCorrect"].Style.SelectionBackColor = Color.White;
-
-                if (String.IsNullOrEmpty(tChildDir.FileName))
-                    GameGrid.Rows[iRow].Cells["CGame"].Value = tChildDir.Name;
-                else
-                    GameGrid.Rows[iRow].Cells["CGame"].Value = tChildDir.Name + " (Found: " + tChildDir.FileName + ")";
-
-                if (tChildDir.Game != null)
-                    GameGrid.Rows[iRow].Cells["CDescription"].Value = tChildDir.Game.GetData(RvGame.GameData.Description);
+               
+                GameGrid.Rows[row].Selected = false;
+                GameGrid.Rows[row].Tag = tChildDir;
+                row++;
             }
 
             _updatingGameGrid = false;
@@ -729,12 +706,31 @@ namespace ROMVault2
 
         private void GameGrid_CellFormatting(object sender, System.Windows.Forms.DataGridViewCellFormattingEventArgs e)
         {
+
+            if (_updatingGameGrid)
+                return;
   
             Rectangle cellBounds = GameGrid.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
             RvDir tRvDir = (ROMVault2.RvDB.RvDir)GameGrid.Rows[e.RowIndex].Tag;
+            ReportStatus tDirStat = tRvDir.DirStatus;
+            Color bgCol = Color.FromArgb(255, 255, 255);
+
+            if (cellBounds.Width == 0 || cellBounds.Height == 0)
+                return;
+
+            foreach (RepStatus t1 in RepairStatus.DisplayOrder)
+            {
+                if (tDirStat.Get(t1) <= 0) continue;
+
+                bgCol = _displayColor[(int)t1];
+                break;
+            }
 
             if (GameGrid.Columns[e.ColumnIndex].Name == "Type")
             {
+                e.CellStyle.BackColor = bgCol;
+                e.CellStyle.SelectionBackColor = bgCol;
+
                 Bitmap bmp = new Bitmap(cellBounds.Width, cellBounds.Height);
                 Graphics g = Graphics.FromImage(bmp);
 
@@ -768,7 +764,27 @@ namespace ROMVault2
 
                 e.Value = bmp;
 
-            } else if (GameGrid.Columns[e.ColumnIndex].Name == "CCorrect") {
+            } 
+            else if (GameGrid.Columns[e.ColumnIndex].Name == "CGame")
+            {
+                e.CellStyle.BackColor = bgCol;
+
+                if (String.IsNullOrEmpty(tRvDir.FileName))
+                    e.Value = tRvDir.Name;
+                else
+                    e.Value = tRvDir.Name + " (Found: " + tRvDir.FileName + ")";
+            }
+            else if (GameGrid.Columns[e.ColumnIndex].Name == "CDescription")
+            {
+                e.CellStyle.BackColor = bgCol;
+
+                if (tRvDir.Game != null)
+                    e.Value = tRvDir.Game.GetData(RvGame.GameData.Description);
+            }
+            else if (GameGrid.Columns[e.ColumnIndex].Name == "CCorrect")
+            {
+                e.CellStyle.SelectionBackColor = Color.White;
+
                 Bitmap bmp = new Bitmap(cellBounds.Width, cellBounds.Height);
                 Graphics g = Graphics.FromImage(bmp);
                 g.Clear(Color.White);
@@ -814,6 +830,8 @@ namespace ROMVault2
                 drawFont.Dispose();
                 e.Value = bmp;
             }
+            else
+              Console.WriteLine("WARN: GameGrid_CellFormatting() unknown column: {0}", GameGrid.Columns[e.ColumnIndex].Name);
         }
 
         #endregion
@@ -1254,8 +1272,15 @@ namespace ROMVault2
 
         private void RomGrid_CellFormatting(object sender, System.Windows.Forms.DataGridViewCellFormattingEventArgs e)
         {
+
+            if (_updatingGameGrid)
+                return;
+
             Rectangle cellBounds = RomGrid.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
             RvFile tRvFile = (ROMVault2.RvDB.RvFile)RomGrid.Rows[e.RowIndex].Tag;
+
+            if (cellBounds.Width == 0 || cellBounds.Height == 0)
+                return;
 
             if (RomGrid.Columns[e.ColumnIndex].Name == "CGot")
             {

@@ -362,7 +362,6 @@ namespace ROMVault2
                 {
                     int error = Error.GetLastError();
                     ReportProgress(new bgwShowError(sourceFullName, "Error Setting File Attributes to Normal. Before Case correction Rename. Code " + error));
-                    ReportError.SendErrorMessage("Error Setting File Attributes to Normal. Before Case correction Rename. Code" + error + " : " + sourceFullName);
                 }
 
                 File.Move(sourceFullName, fixFile.FullName);
@@ -383,7 +382,6 @@ namespace ROMVault2
                 {
                     int error = Error.GetLastError();
                     ReportProgress(new bgwShowError(filename, "Error Setting File Attributes to Normal. Before Delete. Code " + error));
-                    ReportError.SendErrorMessage("Error Setting File Attributes to Normal. Before Delete. Code " + error + " : " + filename);
                 }
                 File.Delete(filename);
             }
@@ -436,7 +434,6 @@ namespace ROMVault2
             {
                 int error = Error.GetLastError();
                 ReportProgress(new bgwShowError(fixFilePath, "Error Setting File Attributes to Normal. Before Delete Moving ToSort. Code " + error));
-                ReportError.SendErrorMessage("Error Setting File Attributes to Normal. Before Delete Moving ToSort. Code " + error + " : " + fixFilePath);
             }
             File.Delete(fixFilePath);
 
@@ -500,7 +497,6 @@ namespace ROMVault2
             {
                 int error = Error.GetLastError();
                 _bgw.ReportProgress(0, new bgwShowError(fixFilePath, "Error Setting File Attributes to Normal. Before Delete Moving ToSort. Code " + error));
-                ReportError.SendErrorMessage("Error Setting File Attributes to Normal. Before Delete Moving ToSort. Code " + error + " : " + fixFilePath);
             }
             File.Delete(fixFilePath);
 
@@ -1407,7 +1403,6 @@ namespace ROMVault2
                 {
                     int error = Error.GetLastError();
                     ReportProgress(new bgwShowError(filename, "Error Setting File Attributes to Normal. Deleting Original Fix File. Code " + error));
-                    ReportError.SendErrorMessage("Error Setting File Attributes to Normal. Deleting Original Fix File. Code " + error + " : " + filename);
                 }
                 try
                 {
@@ -1417,7 +1412,6 @@ namespace ROMVault2
                 {
                     int error = Error.GetLastError();
                     _error = "Error While trying to delete file " + filename + ". Code " + error;
-                    ReportError.SendErrorMessage("Error While trying to delete file. Code " + error + " : " + filename);
 
                     if (tempZipOut != null && tempZipOut.ZipOpen != ZipOpenType.Closed)
                         tempZipOut.ZipFileClose();
@@ -1684,7 +1678,6 @@ namespace ROMVault2
             {
                 int error = Error.GetLastError();
                 ReportProgress(new bgwShowError(fixZipFullName, "Error Setting File Attributes to Normal. Before Moving To Corrupt. Code " + error));
-                ReportError.SendErrorMessage("Error Setting File Attributes to Normal. Before Moving To Corrupt. Code " + error + " : " + fixZipFullName);
             }
 
 

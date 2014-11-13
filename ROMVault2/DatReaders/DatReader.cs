@@ -116,10 +116,6 @@ namespace ROMVault2.DatReaders
             {
                 fs.Close();
                 fs.Dispose();
-                string message = string.Format("Error Occured Reading Dat: {0}\r\nSource: {1}\r\nMessage: {2}\r\n", strFilename, e.Source, e.Message);
-                if (e.InnerException != null)
-                    message += string.Format("\r\nINNER EXCEPTION:\r\nSource: {0}\r\nMessage: {1}\r\n", e.InnerException.Source, e.InnerException.Message);
-                ReportError.SendErrorMessageDat(message, strFilename);
                 _bgw.ReportProgress(0, new bgwShowError(strFilename, string.Format("Error Occured Reading Dat:\r\n{0}\r\n", e.Message)));
                 return false;
             }

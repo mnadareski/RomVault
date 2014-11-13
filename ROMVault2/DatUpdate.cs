@@ -31,7 +31,6 @@ namespace ROMVault2
 
         public static void SendAndShowDat(string message, string filename)
         {
-            ReportError.SendErrorMessageDat(message, filename);
             if (_bgw != null)
                 _bgw.ReportProgress(0, new bgwShowError(filename, message));
         }

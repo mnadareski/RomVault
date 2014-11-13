@@ -10,7 +10,6 @@ using System.ServiceModel;
 using System.Threading;
 using System.Windows.Forms;
 using ROMVault2.Properties;
-using ROMVault2.RVRef;
 using ROMVault2.RvDB;
 
 namespace ROMVault2
@@ -42,64 +41,11 @@ namespace ROMVault2
 
         private void StartUpCode(object sender, DoWorkEventArgs e)
         {
-
-            BasicHttpBinding b = new BasicHttpBinding { SendTimeout = new TimeSpan(0, 0, 20), ReceiveTimeout = new TimeSpan(0, 0, 20) };
-            EndpointAddress ep = new EndpointAddress(@"http://services.romvault.com/Service1.svc");
-            Service1Client s = new Service1Client(b, ep);
-
-            if (string.IsNullOrEmpty(Settings.Username) || string.IsNullOrEmpty(Settings.EMail))
-            {
-                FrmRegistration freg = new FrmRegistration();
-                freg.ShowDialog();
-                freg.Dispose();
-            }
-            
-            bool isNetworkAvailable = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
-
-            string r = "OK";
-            try
-            {
-                if (isNetworkAvailable)
-                    r = s.SendUser1(Settings.Username, Settings.EMail, Program.Version, Program.SubVersion);
-            }
-            catch (Exception)
-            {
-                r = "OK";
-            }
-
-            if (r != "OK")
-            {
-                Program.ErrorMessage=Resources.Program_Main_You_are_not_Authorised_to_use_this_program;
-                return;
-            }
-            // normal check ends
-
-            string thisV = Program.Version + "." + Program.SubVersion.ToString("0000");
-            string v = thisV;
-            try
-            {
-                if (isNetworkAvailable)
-                    v = s.GetLatestVersion1(Program.Version, Program.SubVersion);
-            }
-            catch (Exception)
-            {
-                v = thisV;
-            }
-            if (String.Compare(v, thisV, StringComparison.Ordinal) > 0)
-            {
-                Program.URL = s.GetUpdateLink1(Program.Version, Program.SubVersion);
-                Program.ErrorMessage=Resources.Program_Main_There_is_a_new_release_download_now_from + Program.URL;
-                return;
-            }
-
-            s.Close();
-
             RepairStatus.InitStatusCheck();
 
             Settings.SetDefaults();
 
             DB.Read(sender,e);
-
         }
 
 

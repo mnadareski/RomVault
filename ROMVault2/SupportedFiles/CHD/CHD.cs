@@ -356,7 +356,6 @@ namespace ROMVault2.SupportedFiles.CHD
                     break;
                 default:
                     _result = "Unexpected output from chdman :" + sOut;
-                    ReportError.SendErrorMessage("CHDOutputHandler returned =" + sOut);
                     _resultType = CHDManCheck.CHDUnknownError;
                     break;
             }
@@ -421,7 +420,6 @@ namespace ROMVault2.SupportedFiles.CHD
                 }
                 else
                 {
-                    ReportError.SendErrorMessage("CHDErrorHandler returned =" + sLine);
                     _result = "Unknown message : " + sLine;
                     _resultType = CHDManCheck.CHDUnknownError;
                 }

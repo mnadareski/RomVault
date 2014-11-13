@@ -188,11 +188,6 @@
     <Compile Include="rvTree.Designer.cs">
       <DependentUpon>rvTree.cs</DependentUpon>
     </Compile>
-    <Compile Include="Service References\RVRef\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="RvDB\DB.cs" />
     <Compile Include="FrmMain.cs">
@@ -279,13 +274,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Service References\RVRef\Service1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\RVRef\Service11.wsdl" />
-    <None Include="Service References\RVRef\Service11.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -309,19 +297,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="chip.ico" />
-    <None Include="Service References\RVRef\Service11.disco" />
-    <None Include="Service References\RVRef\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\RVRef\configuration.svcinfo" />
-    <None Include="Service References\RVRef\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\RVRef\" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

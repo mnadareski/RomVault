@@ -10,7 +10,6 @@ using System.Globalization;
 using System.ServiceModel;
 using System.Windows.Forms;
 using ROMVault2.Properties;
-using ROMVault2.RVRef;
 using ROMVault2.RvDB;
 using ROMVault2.Utils;
 using ROMVault2.SupportedFiles;
@@ -1433,33 +1432,6 @@ namespace ROMVault2
             FrmRegistration freg = new FrmRegistration();
             freg.ShowDialog(this);
             freg.Dispose();
-        }
-
-        private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BasicHttpBinding b = new BasicHttpBinding();
-            EndpointAddress ep = new EndpointAddress(@"http://services.romvault.com/Service1.svc");
-
-            Service1Client s = new Service1Client(b, ep);
-
-            string v = s.GetLatestVersion1(Program.Version, Program.SubVersion);
-
-            string thisV = Program.Version + "." + Program.SubVersion.ToString("0000");
-
-            int res = String.Compare(v, thisV, StringComparison.Ordinal);
-
-            if (res > 0)
-            {
-                string url = s.GetUpdateLink1(Program.Version, Program.SubVersion);
-                MessageBox.Show(Resources.Program_Main_There_is_a_new_release_download_now_from + url);
-                Process.Start(url);
-            }
-            else
-            {
-                MessageBox.Show(@"You are running the latest version " + Program.Version + "." + Program.SubVersion);
-            }
-
-
         }
 
 

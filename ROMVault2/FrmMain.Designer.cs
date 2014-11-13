@@ -286,7 +286,7 @@
             this.gbDatInfo.Controls.Add(this.label8);
             this.gbDatInfo.Location = new System.Drawing.Point(5, 0);
             this.gbDatInfo.Name = "gbDatInfo";
-            this.gbDatInfo.Size = new System.Drawing.Size(440, 147);
+            this.gbDatInfo.Size = new System.Drawing.Size(468, 147);
             this.gbDatInfo.TabIndex = 3;
             this.gbDatInfo.TabStop = false;
             this.gbDatInfo.Text = "Dat Info :";
@@ -517,7 +517,7 @@
             // 
             // btnColorKey
             // 
-            this.btnColorKey.Location = new System.Drawing.Point(568, 85);
+            this.btnColorKey.Location = new System.Drawing.Point(547, 85);
             this.btnColorKey.Name = "btnColorKey";
             this.btnColorKey.Size = new System.Drawing.Size(89, 23);
             this.btnColorKey.TabIndex = 9;
@@ -528,7 +528,7 @@
             // chkBoxShowMerged
             // 
             this.chkBoxShowMerged.AutoSize = true;
-            this.chkBoxShowMerged.Location = new System.Drawing.Point(568, 68);
+            this.chkBoxShowMerged.Location = new System.Drawing.Point(547, 68);
             this.chkBoxShowMerged.Name = "chkBoxShowMerged";
             this.chkBoxShowMerged.Size = new System.Drawing.Size(125, 17);
             this.chkBoxShowMerged.TabIndex = 8;
@@ -541,7 +541,7 @@
             this.chkBoxShowFixed.AutoSize = true;
             this.chkBoxShowFixed.Checked = true;
             this.chkBoxShowFixed.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxShowFixed.Location = new System.Drawing.Point(568, 52);
+            this.chkBoxShowFixed.Location = new System.Drawing.Point(547, 52);
             this.chkBoxShowFixed.Name = "chkBoxShowFixed";
             this.chkBoxShowFixed.Size = new System.Drawing.Size(102, 17);
             this.chkBoxShowFixed.TabIndex = 7;
@@ -554,7 +554,7 @@
             this.chkBoxShowMissing.AutoSize = true;
             this.chkBoxShowMissing.Checked = true;
             this.chkBoxShowMissing.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxShowMissing.Location = new System.Drawing.Point(568, 36);
+            this.chkBoxShowMissing.Location = new System.Drawing.Point(547, 36);
             this.chkBoxShowMissing.Name = "chkBoxShowMissing";
             this.chkBoxShowMissing.Size = new System.Drawing.Size(124, 17);
             this.chkBoxShowMissing.TabIndex = 6;
@@ -567,7 +567,7 @@
             this.chkBoxShowCorrect.AutoSize = true;
             this.chkBoxShowCorrect.Checked = true;
             this.chkBoxShowCorrect.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxShowCorrect.Location = new System.Drawing.Point(568, 20);
+            this.chkBoxShowCorrect.Location = new System.Drawing.Point(547, 20);
             this.chkBoxShowCorrect.Name = "chkBoxShowCorrect";
             this.chkBoxShowCorrect.Size = new System.Drawing.Size(123, 17);
             this.chkBoxShowCorrect.TabIndex = 5;
@@ -579,7 +579,7 @@
             // 
             this.gbSetInfo.Location = new System.Drawing.Point(5, 0);
             this.gbSetInfo.Name = "gbSetInfo";
-            this.gbSetInfo.Size = new System.Drawing.Size(416, 147);
+            this.gbSetInfo.Size = new System.Drawing.Size(532, 147);
             this.gbSetInfo.TabIndex = 4;
             this.gbSetInfo.TabStop = false;
             this.gbSetInfo.Text = "Game Info :";
@@ -989,7 +989,7 @@
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1264, 762);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);

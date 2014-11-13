@@ -220,7 +220,7 @@
             // FrmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(545, 346);
             this.Controls.Add(this.chkDoubleCheckDelete);
             this.Controls.Add(this.label5);

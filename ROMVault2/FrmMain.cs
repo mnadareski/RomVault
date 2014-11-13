@@ -480,6 +480,9 @@ namespace ROMVault2
 
         private void splitContainer3_Panel1_Resize(object sender, EventArgs e)
         {
+            // fixes a rendering issue in mono
+            if (splitContainer3.Panel1.Width == 0) return;
+
             gbDatInfo.Width = splitContainer3.Panel1.Width - (gbDatInfo.Left * 2);
         }
 
@@ -840,6 +843,9 @@ namespace ROMVault2
 
         private void splitContainer4_Panel1_Resize(object sender, EventArgs e)
         {
+            // fixes a rendering issue in mono
+            if (splitContainer4.Panel1.Width == 0) return;
+
             int chkLeft = splitContainer4.Panel1.Width - 150;
             if (chkLeft < 430) chkLeft = 430;
 

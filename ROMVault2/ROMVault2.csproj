@@ -163,7 +163,6 @@
     <Compile Include="FrmSettings.Designer.cs">
       <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="DirCellDraw.cs" />
     <Compile Include="FrmShowError.cs">
       <SubType>Form</SubType>
     </Compile>

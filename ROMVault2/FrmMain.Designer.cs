@@ -654,6 +654,7 @@
             this.GameGrid.ShowRowErrors = false;
             this.GameGrid.Size = new System.Drawing.Size(697, 267);
             this.GameGrid.TabIndex = 4;
+            this.GameGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GameGrid_CellFormatting);
             this.GameGrid.SelectionChanged += new System.EventHandler(this.GameGridSelectionChanged);
             this.GameGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GameGridMouseDoubleClick);
             this.GameGrid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameGrid_MouseUp);
@@ -746,6 +747,7 @@
             this.RomGrid.ShowRowErrors = false;
             this.RomGrid.Size = new System.Drawing.Size(697, 315);
             this.RomGrid.TabIndex = 21;
+            this.RomGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RomGrid_CellFormatting);
             this.RomGrid.SelectionChanged += new System.EventHandler(this.RomGridSelectionChanged);
             this.RomGrid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RomGridMouseUp);
             // 

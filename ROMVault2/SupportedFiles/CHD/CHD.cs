@@ -246,7 +246,7 @@ namespace ROMVault2.SupportedFiles.CHD
             _resultType = CHDManCheck.Unset;
 
             string chdExe = "chdman.exe";
-            if (Settings.MonoFileIO)
+            if (Settings.IsUnix)
                 chdExe = "chdman";
 
             string chdPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, chdExe);

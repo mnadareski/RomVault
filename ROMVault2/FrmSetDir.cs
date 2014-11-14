@@ -35,6 +35,9 @@ namespace ROMVault2
 
         private void UpdateGrid()
         {
+            if (Settings.IsMono && DataGridGames.RowCount > 0)
+                DataGridGames.CurrentCell = DataGridGames[0,0];
+
             DataGridGames.Rows.Clear();
             foreach (DirMap t in Settings.DirPathMap)
             {

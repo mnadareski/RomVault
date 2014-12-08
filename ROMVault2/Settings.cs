@@ -56,45 +56,7 @@ namespace ROMVault2
                 return ((p == 4) || (p == 6) || (p == 128));
             }
         }
-
-        public static string EMail
-        {
-            get
-            {
-                RegistryKey regKey1 = Registry.CurrentUser;
-                regKey1 = regKey1.CreateSubKey("Software\\RomVault2\\User");
-                return regKey1.GetValue("Email", "").ToString();
-
-            }
-
-            set
-            {
-                RegistryKey regKey = Registry.CurrentUser;
-                regKey = regKey.CreateSubKey("Software\\RomVault2\\User");
-                regKey.SetValue("Email", value);
-            }
-        }
-
-        public static string Username
-        {
-            get
-            {
-                RegistryKey regKey1 = Registry.CurrentUser;
-                regKey1 = regKey1.CreateSubKey("Software\\RomVault2\\User");
-                return regKey1.GetValue("UserName", "").ToString();
-
-            }
-            set
-            {
-                RegistryKey regKey = Registry.CurrentUser;
-                regKey = regKey.CreateSubKey("Software\\RomVault2\\User");
-                regKey.SetValue("UserName", value);
-            }
-        }
-
-
-
-
+        
         public static void SetDefaults()
         {
             CacheFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2_" + DBVersion.Version + ".Cache");

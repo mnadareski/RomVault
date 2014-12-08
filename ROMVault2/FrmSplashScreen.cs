@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel;
-using System.ServiceModel;
 using System.Threading;
 using System.Windows.Forms;
 using ROMVault2.Properties;
@@ -24,8 +23,6 @@ namespace ROMVault2
             lblVersion.Text = @"Version " + Program.Version + @"." + Program.SubVersion + Resources.FixFiles_FixZip_Colon + Application.StartupPath;
             Opacity = 0;
             timer1.Interval = 50;
-
-            label1.Text = @"Registered to : " + Settings.Username + @"                      Contact Email (" + Settings.EMail + @")";
 
             bgWork.DoWork += StartUpCode;
             bgWork.ProgressChanged += BgwProgressChanged;

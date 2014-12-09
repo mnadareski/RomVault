@@ -106,7 +106,6 @@
             this.fixReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutRomVaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.registratioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.dataGridViewImageColumn2 = new System.Windows.Forms.DataGridViewImageColumn();
             this.dataGridViewImageColumn3 = new System.Windows.Forms.DataGridViewImageColumn();
@@ -929,8 +928,7 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutRomVaultToolStripMenuItem,
-            this.registratioToolStripMenuItem});
+            this.aboutRomVaultToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -941,13 +939,6 @@
             this.aboutRomVaultToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.aboutRomVaultToolStripMenuItem.Text = "About RomVault";
             this.aboutRomVaultToolStripMenuItem.Click += new System.EventHandler(this.AboutRomVaultToolStripMenuItemClick);
-            // 
-            // registratioToolStripMenuItem
-            // 
-            this.registratioToolStripMenuItem.Name = "registratioToolStripMenuItem";
-            this.registratioToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.registratioToolStripMenuItem.Text = "Registration";
-            this.registratioToolStripMenuItem.Click += new System.EventHandler(this.RegistratioToolStripMenuItemClick);
             // 
             // dataGridViewImageColumn1
             // 
@@ -1083,7 +1074,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CStatus;
         private System.Windows.Forms.DataGridViewTextBoxColumn ZipIndex;
         private System.Windows.Forms.DataGridViewTextBoxColumn ZipHeader;
-        private System.Windows.Forms.ToolStripMenuItem registratioToolStripMenuItem;
         private System.Windows.Forms.Label lblDITRomsFixable;
         private System.Windows.Forms.Label lblDIRomsFixable;
         private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;

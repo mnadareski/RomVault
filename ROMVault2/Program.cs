@@ -14,8 +14,8 @@ namespace ROMVault2
     {
         //public static UsernamePassword Up;
         public static readonly Encoding Enc = Encoding.GetEncoding(28591);
-        public const string Version = "2.1";
-        public const int SubVersion = 27;
+        public const string Version = "2.2";
+        public const int SubVersion = 0;
 
         public static string ErrorMessage;
         public static string URL;

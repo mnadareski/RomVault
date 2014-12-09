@@ -1447,14 +1447,6 @@ namespace ROMVault2
             }
 
         }
-
-        private void RegistratioToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            FrmRegistration freg = new FrmRegistration();
-            freg.ShowDialog(this);
-            freg.Dispose();
-        }
-
-
+        
     }
 }

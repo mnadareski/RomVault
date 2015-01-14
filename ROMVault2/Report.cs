@@ -40,7 +40,7 @@ namespace ROMVault2
             {
                 ShowNewFolderButton = true,
                 Description = @"Please select a folder for Dats",
-                RootFolder = Environment.SpecialFolder.DesktopDirectory,
+                RootFolder = (Settings.IsMono ? Environment.SpecialFolder.MyComputer : Environment.SpecialFolder.DesktopDirectory),
                 SelectedPath = @"apps"
             };
 

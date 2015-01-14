@@ -444,6 +444,15 @@ namespace ROMVault2
         private void DatSetSelected(RvBase cf)
         {
             DirTree.Refresh();
+
+            if (Settings.IsMono)
+            {
+                if (GameGrid.RowCount > 0)
+                    GameGrid.CurrentCell = GameGrid[0,0];
+                if (RomGrid.RowCount > 0)
+                    RomGrid.CurrentCell = RomGrid[0,0];
+            }
+
             GameGrid.Rows.Clear();
             RomGrid.Rows.Clear();
 
@@ -579,6 +588,15 @@ namespace ROMVault2
             lblDITRomsUnknown.Text = (tDir.DirStatus.CountUnknown() + tDir.DirStatus.CountInToSort()).ToString(CultureInfo.InvariantCulture);
 
             _updatingGameGrid = true;
+
+            if (Settings.IsMono)
+            {
+                if (GameGrid.RowCount > 0)
+                    GameGrid.CurrentCell = GameGrid[0,0];
+                if (RomGrid.RowCount > 0)
+                    RomGrid.CurrentCell = RomGrid[0,0];
+            }
+
             GameGrid.Rows.Clear();
             RomGrid.Rows.Clear();
 
@@ -1159,6 +1177,9 @@ namespace ROMVault2
 
                 }
             }
+
+            if (Settings.IsMono && RomGrid.RowCount > 0)
+                RomGrid.CurrentCell = RomGrid[0,0];
 
             RomGrid.Rows.Clear();
             AddDir(tGame, "");

@@ -35,6 +35,9 @@ namespace ROMVault2
 
         private void UpdateGrid()
         {
+            if (Settings.IsMono && DataGridGames.RowCount > 0)
+                DataGridGames.CurrentCell = DataGridGames[0,0];
+
             DataGridGames.Rows.Clear();
             foreach (DirMap t in Settings.DirPathMap)
             {
@@ -77,7 +80,7 @@ namespace ROMVault2
                                              {
                                                  ShowNewFolderButton = true,
                                                  Description = Resources.FrmSetDir_BtnSetRomLocationClick_Please_select_a_folder_for_This_Rom_Set,
-                                                 RootFolder = Environment.SpecialFolder.DesktopDirectory,
+                                                 RootFolder = (Settings.IsMono ? Environment.SpecialFolder.MyComputer : Environment.SpecialFolder.DesktopDirectory),
                                                  SelectedPath = DBHelper.GetRealPath(_datLocation)
                                              };
             if (browse.ShowDialog() == DialogResult.OK)

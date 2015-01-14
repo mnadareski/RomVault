@@ -48,7 +48,7 @@ namespace ROMVault2
         public static bool CacheSaveTimerEnabled = true;
         public static int CacheSaveTimePeriod = 10;
 
-        public static bool MonoFileIO
+        public static bool IsUnix
         {
             get
             {
@@ -56,7 +56,9 @@ namespace ROMVault2
                 return ((p == 4) || (p == 6) || (p == 128));
             }
         }
-        
+
+        public static bool IsMono { get { return (Type.GetType ("Mono.Runtime") != null); } }
+
         public static void SetDefaults()
         {
             CacheFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2_" + DBVersion.Version + ".Cache");

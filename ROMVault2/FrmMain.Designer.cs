@@ -656,6 +656,7 @@
             this.GameGrid.SelectionChanged += new System.EventHandler(this.GameGridSelectionChanged);
             this.GameGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GameGridMouseDoubleClick);
             this.GameGrid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameGrid_MouseUp);
+            this.GameGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.GameGridColumnHeaderMouseClick);
             // 
             // Type
             // 
@@ -664,7 +665,7 @@
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
             this.Type.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Type.Width = 40;
             // 
             // CGame
@@ -672,6 +673,7 @@
             this.CGame.HeaderText = "Game (Directory / Zip)";
             this.CGame.Name = "CGame";
             this.CGame.ReadOnly = true;
+            this.CGame.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.CGame.Width = 220;
             // 
             // CDescription
@@ -679,6 +681,7 @@
             this.CDescription.HeaderText = "Description";
             this.CDescription.Name = "CDescription";
             this.CDescription.ReadOnly = true;
+            this.CDescription.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.CDescription.Width = 220;
             // 
             // CCorrect
@@ -687,6 +690,7 @@
             this.CCorrect.Name = "CCorrect";
             this.CCorrect.ReadOnly = true;
             this.CCorrect.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.CCorrect.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.CCorrect.Width = 500;
             // 
             // RomGrid
@@ -756,7 +760,7 @@
             this.CGot.Name = "CGot";
             this.CGot.ReadOnly = true;
             this.CGot.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.CGot.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.CGot.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.CGot.Width = 65;
             // 
             // CRom

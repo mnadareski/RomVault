@@ -37,6 +37,9 @@ namespace ROMVault2
         private readonly Color[] _displayColor;
 
         private bool _updatingGameGrid;
+	
+        private int GameGridSortColumnIndex = 0;
+        private SortOrder GameGridSortOrder = SortOrder.Descending;
 
         public static int[] GameGridColumnXPositions;
 
@@ -456,6 +459,11 @@ namespace ROMVault2
             GameGrid.Rows.Clear();
             RomGrid.Rows.Clear();
 
+            // clear sorting
+            GameGrid.Columns[GameGridSortColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.None;
+            GameGridSortColumnIndex = 0;
+            GameGridSortOrder = SortOrder.Descending;
+
             if (cf == null)
                 return;
 
@@ -599,6 +607,12 @@ namespace ROMVault2
 
             GameGrid.Rows.Clear();
             RomGrid.Rows.Clear();
+
+            // clear sorting
+            GameGrid.Columns[GameGridSortColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.None;
+            GameGridSortColumnIndex = 0;
+            GameGridSortOrder = SortOrder.Descending;
+
 
             ReportStatus tDirStat;
 
@@ -851,9 +865,86 @@ namespace ROMVault2
                 e.Value = bmp;
             }
             else
-              Console.WriteLine("WARN: GameGrid_CellFormatting() unknown column: {0}", GameGrid.Columns[e.ColumnIndex].Name);
+                Console.WriteLine("WARN: GameGrid_CellFormatting() unknown column: {0}", GameGrid.Columns[e.ColumnIndex].Name);
         }
 
+        private void GameGridColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+
+            // only allow sort on CGame/CDescription
+            if (e.ColumnIndex != 1 && e.ColumnIndex != 2)
+                return;
+
+            DataGridViewColumn newColumn = GameGrid.Columns[e.ColumnIndex];
+            DataGridViewColumn oldColumn = GameGrid.Columns[GameGridSortColumnIndex];
+
+            if (newColumn == oldColumn)
+            {
+                if (GameGridSortOrder == SortOrder.Ascending)
+                    GameGridSortOrder = SortOrder.Descending;
+                else
+                    GameGridSortOrder = SortOrder.Ascending;
+            }
+            else
+            {
+                oldColumn.HeaderCell.SortGlyphDirection = SortOrder.None;
+                GameGridSortOrder = SortOrder.Ascending;
+            }
+
+            GameGrid.Sort(new GameGridRowComparer(GameGridSortOrder, e.ColumnIndex));
+            newColumn.HeaderCell.SortGlyphDirection = GameGridSortOrder;
+            GameGridSortColumnIndex = e.ColumnIndex;
+        }
+
+        private class GameGridRowComparer : System.Collections.IComparer
+        {
+            private int sortMod = 1;
+            private int columnIndex;
+
+            public GameGridRowComparer(SortOrder sortOrder, int index)
+            {
+                columnIndex = index;
+
+                if (sortOrder == SortOrder.Descending)
+                    sortMod = -1;
+            }
+
+            public int Compare(object a, object b)
+            {
+                DataGridViewRow aRow = (DataGridViewRow)a;
+                DataGridViewRow bRow = (DataGridViewRow)b;
+
+                RvDir aRvDir = (ROMVault2.RvDB.RvDir)aRow.Tag;
+                RvDir bRvDir = (ROMVault2.RvDB.RvDir)bRow.Tag;
+
+                int result = 0;
+                switch (columnIndex)
+                {
+                    case 1: // CGame
+                        result = System.String.Compare(aRvDir.Name, bRvDir.Name);
+                        break;
+                    case 2: // CDescription
+                        String aDes = "";
+                        String bDes = "";
+                        if (aRvDir.Game != null)
+                            aDes = aRvDir.Game.GetData(RvGame.GameData.Description);
+                        if (bRvDir.Game != null)
+                            bDes = bRvDir.Game.GetData(RvGame.GameData.Description);
+
+                        result = System.String.Compare(aDes, bDes);
+
+                        // if desciptions match, fall through to sorting by name
+                        if (result == 0)
+                            result = System.String.Compare(aRvDir.Name, bRvDir.Name);
+
+                        break;
+                    default:
+                        Console.WriteLine("WARN: GameGridRowComparer::Compare() Invalid columnIndex: {0}", columnIndex);
+                        break;
+                }
+                return sortMod * result;
+            }
+        }
         #endregion
 
         #region "Rom Grid Code"

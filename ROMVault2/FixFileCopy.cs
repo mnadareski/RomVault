@@ -7,9 +7,12 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Security.Cryptography;
 using ROMVault2.RvDB;
 using ROMVault2.SupportedFiles;
+using ROMVault2.SupportedFiles.SevenZip;
 using ROMVault2.SupportedFiles.Zip;
 using ROMVault2.SupportedFiles.Zip.ZLib;
 using ROMVault2.Utils;
@@ -44,7 +47,7 @@ namespace ROMVault2
         /// <param name="foundFile">If we are SHA1/MD5 checking the source file for the first time, and it is different from what we expected the correct values for this file are returned in foundFile</param>
         /// <returns>ReturnCode.Good is the valid return code otherwire we have an error</returns>
 
-        public static ReturnCode CopyFile(RvFile fileIn, ref ZipFile zipFileOut, string zipFilenameOut, RvFile fileOut, bool forceRaw, out string error, out RvFile foundFile)
+        public static ReturnCode CopyFile(RvFile fileIn, ref ICompress zipFileOut, string zipFilenameOut, RvFile fileOut, bool forceRaw, out string error, out RvFile foundFile)
         {
             foundFile = null;
             error = "";
@@ -59,120 +62,21 @@ namespace ROMVault2
             bool sourceTrrntzip = false;
 
 
-            ZipFile zipFileIn = null;
-            System.IO.Stream readStream = null;
+            ICompress zipFileIn = null;
+            Stream readStream = null;
+            ReturnCode retC;
 
 
             bool isZeroLengthFile = DBHelper.IsZeroLengthFile(fileOut);
             if (!isZeroLengthFile)
             {
-                #region check that the in and out file match
-                if (fileOut.FileStatusIs(FileStatus.SizeFromDAT) && fileOut.Size != null && fileIn.Size != fileOut.Size)
-                {
-                    error = "Source and destination Size does not match. Logic Error.";
-                    return ReturnCode.LogicError;
-                }
-                if (fileOut.FileStatusIs(FileStatus.CRCFromDAT) && fileOut.CRC != null && !ArrByte.bCompare(fileIn.CRC, fileOut.CRC))
-                {
-                    error = "Source and destination CRC does not match. Logic Error.";
-                    return ReturnCode.LogicError;
-                }
+                retC = CheckInputAndOutputFile(fileIn, fileOut, out error);
+                if (retC != ReturnCode.Good)
+                    return retC;
 
-                if (fileOut.FileStatusIs(FileStatus.SHA1FromDAT) && fileIn.FileStatusIs(FileStatus.SHA1Verified))
-                {
-                    if (fileIn.SHA1 != null && fileOut.SHA1 != null && !ArrByte.bCompare(fileIn.SHA1, fileOut.SHA1))
-                    {
-                        error = "Source and destination SHA1 does not match. Logic Error.";
-                        return ReturnCode.LogicError;
-                    }
-                }
-                if (fileOut.FileStatusIs(FileStatus.MD5CHDFromDAT) && fileIn.FileStatusIs(FileStatus.MD5Verified))
-                {
-                    if (fileIn.MD5 != null && fileOut.MD5 != null && !ArrByte.bCompare(fileIn.MD5, fileOut.MD5))
-                    {
-                        error = "Source and destination SHA1 does not match. Logic Error.";
-                        return ReturnCode.LogicError;
-                    }
-                }
-
-                #endregion
-
-                #region Find and Check/Open Input Files
-
-                if (fileIn.FileType == FileType.ZipFile) // Input is a ZipFile
-                {
-                    RvDir zZipFileIn = fileIn.Parent;
-                    if (zZipFileIn.FileType != FileType.Zip)
-                    {
-                        error = "Zip File Open but Source File is not a zip, Logic Error.";
-                        return ReturnCode.LogicError;
-                    }
-
-                    string fileNameIn = zZipFileIn.FullName;
-
-                    sourceTrrntzip = (zZipFileIn.ZipStatus & ZipStatus.TrrntZip) == ZipStatus.TrrntZip;
-
-                    //if (zZipFileIn.ZipFileType == RvZip.ZipType.Zip)
-                    //{
-                    zipFileIn = new ZipFile();
-
-                    ZipReturn zr1;
-                    if (fileIn.ZipFileHeaderPosition != null)
-                        zr1 = zipFileIn.ZipFileOpen(fileNameIn, zZipFileIn.TimeStamp, false);
-                    else
-                        zr1 = zipFileIn.ZipFileOpen(fileNameIn, zZipFileIn.TimeStamp, true);
-                    switch (zr1)
-                    {
-                        case ZipReturn.ZipGood:
-                            break;
-                        case ZipReturn.ZipErrorFileNotFound:
-                            error = "File not found, Rescan required before fixing " + fileIn.Name;
-                            return ReturnCode.FileSystemError;
-                        case ZipReturn.ZipErrorTimeStamp:
-                            error = "File has changed, Rescan required before fixing " + fileIn.Name;
-                            return ReturnCode.FileSystemError;
-                        default:
-                            error = "Error Open Zip" + zr1 + ", with File " + fileIn.DatFullName;
-                            return ReturnCode.FileSystemError;
-                    }
-                    if (fileIn.ZipFileHeaderPosition != null)
-                        zipFileIn.ZipFileOpenReadStreamQuick((ulong)fileIn.ZipFileHeaderPosition, rawCopy, out readStream, out streamSize, out compressionMethod);
-                    else
-                        zipFileIn.ZipFileOpenReadStream(fileIn.ZipFileIndex, rawCopy, out readStream, out streamSize, out compressionMethod);
-                }
-                else // Input is a regular file
-                {
-                    string fileNameIn = fileIn.FullName;
-                    if (!IO.File.Exists(fileNameIn))
-                    {
-                        error = "Rescan needed, File Changed :" + fileNameIn;
-                        return ReturnCode.RescanNeeded;
-                    }
-                    IO.FileInfo fileInInfo = new IO.FileInfo(fileNameIn);
-                    if (fileInInfo.LastWriteTime != fileIn.TimeStamp)
-                    {
-                        error = "Rescan needed, File Changed :" + fileNameIn;
-                        return ReturnCode.RescanNeeded;
-                    }
-                    int errorCode = IO.FileStream.OpenFileRead(fileNameIn, out readStream);
-                    if (errorCode != 0)
-                    {
-                        error = new Win32Exception(errorCode).Message + ". " + fileNameIn;
-                        return ReturnCode.FileSystemError;
-                    }
-                    if (fileIn.Size == null)
-                    {
-                        error = "Null File Size found in Fixing File :" + fileNameIn;
-                        return ReturnCode.LogicError;
-                    }
-                    streamSize = (ulong)fileIn.Size;
-                    if ((ulong)readStream.Length != streamSize)
-                    {
-                        error = "Rescan needed, File Length Changed :" + fileNameIn;
-                        return ReturnCode.RescanNeeded;
-                    }
-                }
-                #endregion
+                retC = OpenInputStream(fileIn, rawCopy, out zipFileIn, out sourceTrrntzip, out readStream, out streamSize, out compressionMethod, out error);
+                if (retC != ReturnCode.Good)
+                    return retC;
             }
             else
             {
@@ -184,72 +88,12 @@ namespace ROMVault2
 
             #region Find and Check/Open Output Files
 
-            System.IO.Stream writeStream;
-            if (fileOut.FileType == FileType.ZipFile)
-            {
-                // if ZipFileOut == null then we have not open the output zip yet so open it from writing.
-                if (zipFileOut == null)
-                {
-                    if (IO.Path.GetFileName(zipFilenameOut) == "__RomVault.tmp")
-                    {
-                        if (IO.File.Exists(zipFilenameOut))
-                            IO.File.Delete(zipFilenameOut);
-                    }
-                    else if (IO.File.Exists(zipFilenameOut))
-                    {
-                        error = "Rescan needed, File Changed :" + zipFilenameOut;
-                        return ReturnCode.RescanNeeded;
-                    }
+            Stream writeStream;
 
-                    zipFileOut = new ZipFile();
-                    ZipReturn zrf = zipFileOut.ZipFileCreate(zipFilenameOut);
-                    if (zrf != ZipReturn.ZipGood)
-                    {
-                        error = "Error Opening Write Stream " + zrf;
-                        return ReturnCode.FileSystemError;
-                    }
-                }
-                else
-                {
-                    if (zipFileOut.ZipOpen != ZipOpenType.OpenWrite)
-                    {
-                        error = "Output Zip File is not set to OpenWrite, Logic Error.";
-                        return ReturnCode.LogicError;
-                    }
+            retC = OpenOutputStream(fileOut, fileIn, ref zipFileOut, zipFilenameOut, compressionMethod, rawCopy, sourceTrrntzip, out writeStream, out error);
+            if (retC != ReturnCode.Good)
+                return retC;
 
-                    if (zipFileOut.ZipFilename != (new IO.FileInfo(zipFilenameOut).FullName))
-                    {
-                        error = "Output Zip file has changed name from " + zipFileOut.ZipFilename + " to " + zipFilenameOut + ". Logic Error";
-                        return ReturnCode.LogicError;
-                    }
-                }
-
-                if (fileIn.Size == null)
-                {
-                    error = "Null File Size found in Fixing File :" + fileIn.FullName;
-                    return ReturnCode.LogicError;
-                }
-                ZipReturn zr = zipFileOut.ZipFileOpenWriteStream(rawCopy, sourceTrrntzip, fileOut.Name, (ulong)fileIn.Size, compressionMethod, out writeStream);
-                if (zr != ZipReturn.ZipGood)
-                {
-                    error = "Error Opening Write Stream " + zr;
-                    return ReturnCode.FileSystemError;
-                }
-            }
-            else
-            {
-                if (IO.File.Exists(zipFilenameOut) && fileOut.GotStatus != GotStatus.Corrupt)
-                {
-                    error = "Rescan needed, File Changed :" + zipFilenameOut;
-                    return ReturnCode.RescanNeeded;
-                }
-                int errorCode = IO.FileStream.OpenFileWrite(zipFilenameOut, out writeStream);
-                if (errorCode != 0)
-                {
-                    error = new Win32Exception(errorCode).Message + ". " + zipFilenameOut;
-                    return ReturnCode.FileSystemError;
-                }
-            }
             #endregion
 
             byte[] bCRC;
@@ -374,7 +218,7 @@ namespace ROMVault2
 
                 #region close the ReadStream
 
-                if (fileIn.FileType == FileType.ZipFile && zipFileIn != null)
+                if ((fileIn.FileType == FileType.ZipFile || fileIn.FileType == FileType.SevenZipFile) && zipFileIn != null)
                 {
                     ZipReturn zr = zipFileIn.ZipFileCloseReadStream();
                     if (zr != ZipReturn.ZipGood)
@@ -408,7 +252,7 @@ namespace ROMVault2
 
 
             #region close the WriteStream
-            if (fileOut.FileType == FileType.ZipFile)
+            if (fileOut.FileType == FileType.ZipFile || fileOut.FileType == FileType.SevenZipFile)
             {
                 ZipReturn zr = zipFileOut.ZipFileCloseWriteStream(bCRC);
                 if (zr != ZipReturn.ZipGood)
@@ -516,7 +360,7 @@ namespace ROMVault2
 
                     if (sourceFailed)
                     {
-                        if (fileIn.FileType == FileType.ZipFile)
+                        if (fileIn.FileType == FileType.ZipFile || fileIn.FileType == FileType.SevenZipFile)
                         {
                             RvFile tZFile = new RvFile(FileType.ZipFile);
                             foundFile = tZFile;
@@ -548,7 +392,7 @@ namespace ROMVault2
                 }
             }
 
-            if (fileOut.FileType == FileType.ZipFile)
+            if (fileOut.FileType == FileType.ZipFile || fileOut.FileType == FileType.SevenZipFile)
             {
                 fileOut.FileStatusSet(FileStatus.SizeFromHeader | FileStatus.CRCFromHeader);
             }
@@ -671,5 +515,227 @@ namespace ROMVault2
             return false;
         }
 
+
+        private static ReturnCode CheckInputAndOutputFile(RvFile fileIn, RvFile fileOut, out string error)
+        {
+            if (fileOut.FileStatusIs(FileStatus.SizeFromDAT) && fileOut.Size != null && fileIn.Size != fileOut.Size)
+            {
+                error = "Source and destination Size does not match. Logic Error.";
+                return ReturnCode.LogicError;
+            }
+            if (fileOut.FileStatusIs(FileStatus.CRCFromDAT) && fileOut.CRC != null && !ArrByte.bCompare(fileIn.CRC, fileOut.CRC))
+            {
+                error = "Source and destination CRC does not match. Logic Error.";
+                return ReturnCode.LogicError;
+            }
+
+            if (fileOut.FileStatusIs(FileStatus.SHA1FromDAT) && fileIn.FileStatusIs(FileStatus.SHA1Verified))
+            {
+                if (fileIn.SHA1 != null && fileOut.SHA1 != null && !ArrByte.bCompare(fileIn.SHA1, fileOut.SHA1))
+                {
+                    error = "Source and destination SHA1 does not match. Logic Error.";
+                    return ReturnCode.LogicError;
+                }
+            }
+            if (fileOut.FileStatusIs(FileStatus.MD5CHDFromDAT) && fileIn.FileStatusIs(FileStatus.MD5Verified))
+            {
+                if (fileIn.MD5 != null && fileOut.MD5 != null && !ArrByte.bCompare(fileIn.MD5, fileOut.MD5))
+                {
+                    error = "Source and destination SHA1 does not match. Logic Error.";
+                    return ReturnCode.LogicError;
+                }
+            }
+            error = "";
+            return ReturnCode.Good;
+        }
+
+        private static ReturnCode OpenInputStream(RvFile fileIn, bool rawCopy, out ICompress zipFileIn, out bool sourceTrrntzip, out Stream readStream, out ulong streamSize, out ushort compressionMethod, out string error)
+        {
+            zipFileIn = null;
+            sourceTrrntzip = false;
+            readStream = null;
+            streamSize = 0;
+            compressionMethod = 0;
+
+            switch (fileIn.FileType)
+            {
+                case FileType.SevenZipFile:
+                case FileType.ZipFile:
+                    {
+                        RvDir zZipFileIn = fileIn.Parent;
+                        if (zZipFileIn.FileType != DBTypeGet.DirFromFile(fileIn.FileType))
+                        {
+                            error = "SevenZip File Open but Source File is not a SevenZip, Logic Error.";
+                            return ReturnCode.LogicError;
+                        }
+
+                        string fileNameIn = zZipFileIn.FullName;
+                        ZipReturn zr1;
+
+                        if (fileIn.FileType == FileType.SevenZipFile)
+                        {
+                            sourceTrrntzip = false;
+                            zipFileIn = new SevenZ();
+                            zr1 = zipFileIn.ZipFileOpen(fileNameIn, zZipFileIn.TimeStamp, true);
+                        }
+                        else
+                        {
+                            sourceTrrntzip = (zZipFileIn.ZipStatus & ZipStatus.TrrntZip) == ZipStatus.TrrntZip;
+                            zipFileIn = new ZipFile();
+                            zr1 = zipFileIn.ZipFileOpen(fileNameIn, zZipFileIn.TimeStamp, fileIn.ZipFileHeaderPosition == null);
+                        }
+
+                        switch (zr1)
+                        {
+                            case ZipReturn.ZipGood:
+                                break;
+                            case ZipReturn.ZipErrorFileNotFound:
+                                error = "File not found, Rescan required before fixing " + fileIn.Name;
+                                return ReturnCode.FileSystemError;
+                            case ZipReturn.ZipErrorTimeStamp:
+                                error = "File has changed, Rescan required before fixing " + fileIn.Name;
+                                return ReturnCode.FileSystemError;
+                            default:
+                                error = "Error Open Zip" + zr1 + ", with File " + fileIn.DatFullName;
+                                return ReturnCode.FileSystemError;
+                        }
+
+                        if (fileIn.FileType == FileType.SevenZipFile)
+                        {
+
+                            SevenZ z = zipFileIn as SevenZ;
+                            z.ZipFileOpenReadStream(fileIn.ZipFileIndex, out readStream, out streamSize);
+                        }
+                        else
+                        {
+                            ZipFile z = zipFileIn as ZipFile;
+                            if (fileIn.ZipFileHeaderPosition != null)
+                                z.ZipFileOpenReadStreamQuick((ulong)fileIn.ZipFileHeaderPosition, rawCopy, out readStream, out streamSize, out compressionMethod);
+                            else
+                                z.ZipFileOpenReadStream(fileIn.ZipFileIndex, rawCopy, out readStream, out streamSize, out compressionMethod);
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        string fileNameIn = fileIn.FullName;
+                        if (!IO.File.Exists(fileNameIn))
+                        {
+                            error = "Rescan needed, File Changed :" + fileNameIn;
+                            return ReturnCode.RescanNeeded;
+                        }
+                        IO.FileInfo fileInInfo = new IO.FileInfo(fileNameIn);
+                        if (fileInInfo.LastWriteTime != fileIn.TimeStamp)
+                        {
+                            error = "Rescan needed, File Changed :" + fileNameIn;
+                            return ReturnCode.RescanNeeded;
+                        }
+                        int errorCode = IO.FileStream.OpenFileRead(fileNameIn, out readStream);
+                        if (errorCode != 0)
+                        {
+                            error = new Win32Exception(errorCode).Message + ". " + fileNameIn;
+                            return ReturnCode.FileSystemError;
+                        }
+                        if (fileIn.Size == null)
+                        {
+                            error = "Null File Size found in Fixing File :" + fileNameIn;
+                            return ReturnCode.LogicError;
+                        }
+                        streamSize = (ulong)fileIn.Size;
+                        if ((ulong)readStream.Length != streamSize)
+                        {
+                            error = "Rescan needed, File Length Changed :" + fileNameIn;
+                            return ReturnCode.RescanNeeded;
+                        }
+                    }
+                    break;
+            }
+
+            error = "";
+            return ReturnCode.Good;
+        }
+
+        private static ReturnCode OpenOutputStream(RvFile fileOut, RvFile fileIn, ref ICompress zipFileOut, string zipFilenameOut, ushort compressionMethod, bool rawCopy, bool sourceTrrntzip, out System.IO.Stream writeStream, out string error)
+        {
+            writeStream = null;
+
+            switch (fileOut.FileType)
+            {
+                case FileType.ZipFile:
+                case FileType.SevenZipFile:
+                    {
+                        // if ZipFileOut == null then we have not open the output zip yet so open it from writing.
+                        if (zipFileOut == null)
+                        {
+                            if (IO.Path.GetFileName(zipFilenameOut) == "__RomVault.tmp")
+                            {
+                                if (IO.File.Exists(zipFilenameOut))
+                                    IO.File.Delete(zipFilenameOut);
+                            }
+                            else if (IO.File.Exists(zipFilenameOut))
+                            {
+                                error = "Rescan needed, File Changed :" + zipFilenameOut;
+                                return ReturnCode.RescanNeeded;
+                            }
+                            if (fileOut.FileType == FileType.ZipFile)
+                                zipFileOut = new ZipFile();
+                            else
+                                zipFileOut = new SevenZ();
+
+                            ZipReturn zrf = zipFileOut.ZipFileCreate(zipFilenameOut);
+                            if (zrf != ZipReturn.ZipGood)
+                            {
+                                error = "Error Opening Write Stream " + zrf;
+                                return ReturnCode.FileSystemError;
+                            }
+                        }
+                        else
+                        {
+                            if (zipFileOut.ZipOpen != ZipOpenType.OpenWrite)
+                            {
+                                error = "Output Zip File is not set to OpenWrite, Logic Error.";
+                                return ReturnCode.LogicError;
+                            }
+
+                            if (zipFileOut.ZipFilename != (new IO.FileInfo(zipFilenameOut).FullName))
+                            {
+                                error = "Output Zip file has changed name from " + zipFileOut.ZipFilename + " to " + zipFilenameOut + ". Logic Error";
+                                return ReturnCode.LogicError;
+                            }
+                        }
+
+                        if (fileIn.Size == null)
+                        {
+                            error = "Null File Size found in Fixing File :" + fileIn.FullName;
+                            return ReturnCode.LogicError;
+                        }
+                        ZipReturn zr = zipFileOut.ZipFileOpenWriteStream(rawCopy, sourceTrrntzip, fileOut.Name, (ulong)fileIn.Size, compressionMethod, out writeStream);
+                        if (zr != ZipReturn.ZipGood)
+                        {
+                            error = "Error Opening Write Stream " + zr;
+                            return ReturnCode.FileSystemError;
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        if (IO.File.Exists(zipFilenameOut) && fileOut.GotStatus != GotStatus.Corrupt)
+                        {
+                            error = "Rescan needed, File Changed :" + zipFilenameOut;
+                            return ReturnCode.RescanNeeded;
+                        }
+                        int errorCode = IO.FileStream.OpenFileWrite(zipFilenameOut, out writeStream);
+                        if (errorCode != 0)
+                        {
+                            error = new Win32Exception(errorCode).Message + ". " + zipFilenameOut;
+                            return ReturnCode.FileSystemError;
+                        }
+                    }
+                    break;
+            }
+
+            error = "";
+            return ReturnCode.Good;
+        }
     }
 }

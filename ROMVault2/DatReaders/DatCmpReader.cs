@@ -7,6 +7,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 using ROMVault2.Properties;
 using ROMVault2.RvDB;
 using ROMVault2.Utils;
@@ -548,7 +549,7 @@ namespace ROMVault2.DatReaders
                 int errorCode = IO.FileStream.OpenFileRead(strFilename, out _fileStream);
                 if (errorCode != 0)
                     return errorCode;
-                _streamReader = new StreamReader(_fileStream, Program.Enc);
+                _streamReader = new StreamReader(_fileStream, Encoding.UTF8);
                 return 0;
             }
             public static void Close()
@@ -578,7 +579,7 @@ namespace ROMVault2.DatReaders
                 while ((_line.Trim().Length == 0) && (!_streamReader.EndOfStream))
                 {
                     _line = _streamReader.ReadLine();
-                    _line = (_line??"").Replace("" + (char)9, " ");
+                    _line = (_line ?? "").Replace("" + (char)9, " ");
                     if (_line.TrimStart().Length > 2 && _line.TrimStart().Substring(0, 2) == @"//") _line = "";
                     if (_line.TrimStart().Length > 1 && _line.TrimStart().Substring(0, 1) == @"#") _line = "";
                     if (_line.TrimStart().Length > 1 && _line.TrimStart().Substring(0, 1) == @";") _line = "";

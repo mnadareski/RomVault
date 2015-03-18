@@ -124,6 +124,12 @@ namespace ROMVault2.DatReaders
                             tDat.AddData(RvDat.DatData.FileType, "zip");
                             thisFileType = FileType.ZipFile;
                             break;
+#if sevenzip
+                        case "7z":
+                            tDat.AddData(RvDat.DatData.FileType, "7z");
+                            thisFileType = FileType.SevenZipFile;
+                            break;
+#endif
                         case "unzip":
                         case "file":
                             tDat.AddData(RvDat.DatData.FileType, "file");

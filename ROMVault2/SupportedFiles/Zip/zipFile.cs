@@ -18,7 +18,7 @@ using ROMVault2.SupportedFiles.Zip.ZLib;
 namespace ROMVault2.SupportedFiles.Zip
 {
   
-    public class ZipFile
+    public class ZipFile : ICompress
     {
         const int Buffersize = 4096 * 128;
         private static byte[] _buffer;
@@ -807,7 +807,7 @@ namespace ROMVault2.SupportedFiles.Zip
 
         private ZipStatus _pZipStatus;
         private bool _zip64;
-        public ZipOpenType ZipOpen;
+        public ZipOpenType ZipOpen { get; private set; }
 
         public ZipStatus ZipStatus { get { return _pZipStatus; } }
 
@@ -823,7 +823,7 @@ namespace ROMVault2.SupportedFiles.Zip
         public byte[] CRC32(int i) { return _localFiles[i].CRC; }
         public byte[] MD5(int i) { return _localFiles[i].md5; }
         public byte[] SHA1(int i) { return _localFiles[i].sha1; }
-
+      
 
         ~ZipFile()
         {

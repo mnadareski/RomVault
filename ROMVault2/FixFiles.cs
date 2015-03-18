@@ -14,6 +14,7 @@ using ROMVault2.Properties;
 using ROMVault2.RvDB;
 using ROMVault2.SupportedFiles;
 using ROMVault2.SupportedFiles.Zip;
+using ROMVault2.Utils;
 
 namespace ROMVault2
 {
@@ -133,6 +134,7 @@ namespace ROMVault2
                 switch (child.FileType)
                 {
                     case FileType.Zip:
+                    case FileType.SevenZip:
                         if (!thisSelected)
                             continue;
                         RvDir tZip = (RvDir)child;
@@ -221,6 +223,23 @@ namespace ROMVault2
                     {
                         string strDir = child.Parent.FullName;
                         File.Move(Path.Combine(strDir, child.FileName + ".zip"), Path.Combine(strDir, child.Name + ".zip"));
+                        child.FileName = null;
+                    }
+
+                    do
+                    {
+                        returnCode = FixZip((RvDir)child);
+                    } while (returnCode == ReturnCode.StartOver);
+                    break;
+
+                case FileType.SevenZip:
+                    if (!thisSelected)
+                        return ReturnCode.Good;
+
+                    if (!String.IsNullOrEmpty(child.FileName))
+                    {
+                        string strDir = child.Parent.FullName;
+                        File.Move(Path.Combine(strDir, child.FileName + ".z7"), Path.Combine(strDir, child.Name + ".z7"));
                         child.FileName = null;
                     }
 
@@ -418,7 +437,7 @@ namespace ROMVault2
 
             ReportProgress(new bgwShowFix(Path.GetDirectoryName(fixFileFullName), "", Path.GetFileName(fixFileFullName), fixFile.Size, "-->", "ToSort", "", fixFile.Name));
 
-            ZipFile tempZipOut = null;
+            ICompress tempZipOut = null;
             RvFile foundFile;
             ReturnCode returnCode = FixFileCopy.CopyFile(fixFile, ref tempZipOut, toSortFullName, toSortRom, false, out _error, out foundFile);
             switch (returnCode)
@@ -481,7 +500,7 @@ namespace ROMVault2
 
             _bgw.ReportProgress(0, new bgwShowFix(Path.GetDirectoryName(fixFileFullName), "", Path.GetFileName(fixFileFullName), fixFile.Size, "-->", "Corrupt", "", fixFile.Name));
 
-            ZipFile tempZipOut = null;
+            ICompress tempZipOut = null;
             RvFile foundFile;
             ReturnCode returnCode = FixFileCopy.CopyFile(fixFile, ref tempZipOut, toSortCorruptFullName, toSortCorruptRom, false, out _error, out foundFile);
             switch (returnCode)
@@ -642,7 +661,7 @@ namespace ROMVault2
 
 
             // now we can fix the file.
-            ZipFile tempZipOut = null;
+            ICompress tempZipOut = null;
             RvFile foundFile;
             ReturnCode returnCode;
 
@@ -851,7 +870,8 @@ namespace ROMVault2
                 return ReturnCode.Good;
             }
 
-
+            if (!fixZip.DirStatus.HasFixable() && needsTrrntzipped && fixZip.FileType == FileType.SevenZip)
+                return ReturnCode.Good;
 
             string fixZipFullName = fixZip.TreeFullName;
 
@@ -869,10 +889,10 @@ namespace ROMVault2
                 ReportError.LogOut((RvFile)fixZip.Child(intLoop));
             ReportError.LogOut("");
 
-            ZipFile tempZipOut = null;
+            ICompress tempZipOut = null;
 
-            ZipFile toSortCorruptOut = null;
-            ZipFile toSortZipOut = null;
+            ICompress toSortCorruptOut = null;
+            ICompress toSortZipOut = null;
 
             RvDir toSortGame = null;
             RvDir toSortCorruptGame = null;
@@ -880,9 +900,11 @@ namespace ROMVault2
             ReturnCode returnCode;
             List<RvFile> fixZipTemp = new List<RvFile>();
 
+            FileType fixFileType = fixZip.FileType;
+
             for (int iRom = 0; iRom < fixZip.ChildCount; iRom++)
             {
-                RvFile zipFileFixing = new RvFile(FileType.ZipFile);
+                RvFile zipFileFixing = new RvFile(DBTypeGet.FileFromDir(fixFileType));
                 fixZip.Child(iRom).CopyTo(zipFileFixing);
 
                 if (iRom == fixZipTemp.Count)
@@ -1063,7 +1085,7 @@ namespace ROMVault2
                                 string ts = lstFixRomTable[0].Parent.FullName;
                                 string sourceDir;
                                 string sourceFile;
-                                if (lstFixRomTable[0].FileType == FileType.ZipFile)
+                                if (lstFixRomTable[0].FileType == FileType.ZipFile || lstFixRomTable[0].FileType == FileType.SevenZipFile)
                                 {
                                     sourceDir = Path.GetDirectoryName(ts);
                                     sourceFile = Path.GetFileName(ts);
@@ -1593,6 +1615,7 @@ namespace ROMVault2
             switch (fileToCheck.FileType)
             {
                 case FileType.ZipFile:
+                case FileType.SevenZipFile:
                     {
                         string fullPathCheckDelete = fileToCheck.Parent.FullName;
                         if (!File.Exists(fullPathCheckDelete))
@@ -1775,6 +1798,7 @@ namespace ROMVault2
                         _processList.Add(tCheck);
                     break;
                 case FileType.ZipFile:
+                case FileType.SevenZipFile:
 
                     RvDir p = tCheck.Parent;
                     if (fastProcess)

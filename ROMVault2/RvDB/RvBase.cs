@@ -13,7 +13,7 @@ namespace ROMVault2.RvDB
 {
     public enum DatStatus { InDatCollect, InDatMerged, InDatBad, NotInDat, InToSort }
     public enum GotStatus { NotGot, Got, Corrupt, FileLocked }
-    public enum FileType { Unknown, Dir, Zip, xSevenZip, xRAR, File, ZipFile, xSevenZipFile }
+    public enum FileType { Unknown, Dir, Zip, SevenZip, xRAR, File, ZipFile, SevenZipFile }
 
     public abstract class RvBase
     {
@@ -184,7 +184,7 @@ namespace ROMVault2.RvDB
                 switch (FileType)
                 {
                     case FileType.Zip: return ".zip";
-                    //case FileType.SevenZip: return ".7z";
+                    case FileType.SevenZip: return ".7z";
                     //case FileType.RAR: return ".rar";
                 }
                 return "";

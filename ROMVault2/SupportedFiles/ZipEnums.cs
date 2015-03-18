@@ -34,6 +34,7 @@ namespace ROMVault2.SupportedFiles
         ZipErrorReadingFile,
         ZipErrorTimeStamp,
         ZipErrorRollBackFile,
+        ZipTryingToAccessADirectory,
         ZipUntested
 
     }

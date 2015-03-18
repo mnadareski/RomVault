@@ -170,7 +170,7 @@ namespace ROMVault2
             if (!pTree.Tree.RExpand.IsEmpty)
                 if (pTree.Tree.RExpand.IntersectsWith(t))
                 {
-                    g.DrawImage(pTree.Tree.TreeExpanded ? rvImages.ExpandBoxMinus : rvImages.ExpandBoxPlus, RSub(pTree.Tree.RExpand, _hScroll, _vScroll));
+                    g.DrawImage(pTree.Tree.TreeExpanded ? rvImages1.ExpandBoxMinus : rvImages1.ExpandBoxPlus, RSub(pTree.Tree.RExpand, _hScroll, _vScroll));
                 }
 
 
@@ -179,13 +179,13 @@ namespace ROMVault2
                 switch (pTree.Tree.Checked)
                 {
                     case RvTreeRow.TreeSelect.Disabled:
-                        g.DrawImage(rvImages.TickBoxDisabled, RSub(pTree.Tree.RChecked, _hScroll, _vScroll));
+                        g.DrawImage(rvImages1.TickBoxDisabled, RSub(pTree.Tree.RChecked, _hScroll, _vScroll));
                         break;
                     case RvTreeRow.TreeSelect.UnSelected:
-                        g.DrawImage(rvImages.TickBoxUnTicked, RSub(pTree.Tree.RChecked, _hScroll, _vScroll));
+                        g.DrawImage(rvImages1.TickBoxUnTicked, RSub(pTree.Tree.RChecked, _hScroll, _vScroll));
                         break;
                     case RvTreeRow.TreeSelect.Selected:
-                        g.DrawImage(rvImages.TickBoxTicked, RSub(pTree.Tree.RChecked, _hScroll, _vScroll));
+                        g.DrawImage(rvImages1.TickBoxTicked, RSub(pTree.Tree.RChecked, _hScroll, _vScroll));
                         break;
                 }
             }

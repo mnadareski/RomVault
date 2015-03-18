@@ -92,6 +92,19 @@ namespace ROMVault2
             StatusCheck[(int)FileType.Zip, (int)DatStatus.NotInDat, (int)GotStatus.FileLocked] = new List<RepStatus> { RepStatus.UnScanned };
             StatusCheck[(int)FileType.Zip, (int)DatStatus.NotInDat, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.Deleted };
 
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.InDatCollect, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.DirCorrect };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.InDatCollect, (int)GotStatus.Corrupt] = new List<RepStatus> { RepStatus.DirCorrupt };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.InDatCollect, (int)GotStatus.FileLocked] = new List<RepStatus> { RepStatus.UnScanned };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.InDatCollect, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.DirMissing };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.InToSort, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.DirInToSort };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.InToSort, (int)GotStatus.Corrupt] = new List<RepStatus> { RepStatus.DirCorrupt };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.InToSort, (int)GotStatus.FileLocked] = new List<RepStatus> { RepStatus.UnScanned };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.InToSort, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.Deleted };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.NotInDat, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.DirUnknown };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.NotInDat, (int)GotStatus.Corrupt] = new List<RepStatus> { RepStatus.DirCorrupt };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.NotInDat, (int)GotStatus.FileLocked] = new List<RepStatus> { RepStatus.UnScanned };
+            StatusCheck[(int)FileType.SevenZip, (int)DatStatus.NotInDat, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.Deleted };
+
 
             StatusCheck[(int)FileType.File, (int)DatStatus.InDatBad, (int)GotStatus.FileLocked] = new List<RepStatus> { RepStatus.UnScanned };
             StatusCheck[(int)FileType.File, (int)DatStatus.InDatBad, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.NotCollected };
@@ -111,7 +124,7 @@ namespace ROMVault2
             StatusCheck[(int)FileType.File, (int)DatStatus.NotInDat, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.Unknown, RepStatus.Ignore, RepStatus.Delete, RepStatus.MoveToSort, RepStatus.NeededForFix, RepStatus.Rename };
             StatusCheck[(int)FileType.File, (int)DatStatus.NotInDat, (int)GotStatus.FileLocked] = new List<RepStatus> { RepStatus.UnScanned };
             StatusCheck[(int)FileType.File, (int)DatStatus.NotInDat, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.Deleted };
-         
+
 
             StatusCheck[(int)FileType.ZipFile, (int)DatStatus.InDatBad, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.NotCollected };
             StatusCheck[(int)FileType.ZipFile, (int)DatStatus.InDatBad, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.Correct };
@@ -127,6 +140,22 @@ namespace ROMVault2
             StatusCheck[(int)FileType.ZipFile, (int)DatStatus.NotInDat, (int)GotStatus.Corrupt] = new List<RepStatus> { RepStatus.Corrupt, RepStatus.MoveToCorrupt, RepStatus.Delete };
             StatusCheck[(int)FileType.ZipFile, (int)DatStatus.NotInDat, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.Unknown, RepStatus.Delete, RepStatus.MoveToSort, RepStatus.NeededForFix, RepStatus.Rename };
             StatusCheck[(int)FileType.ZipFile, (int)DatStatus.NotInDat, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.Deleted };
+
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InDatBad, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.NotCollected };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InDatBad, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.Correct };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InDatCollect, (int)GotStatus.Corrupt] = new List<RepStatus> { RepStatus.Corrupt, RepStatus.MoveToCorrupt, RepStatus.CorruptCanBeFixed };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InDatCollect, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.Correct };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InDatCollect, (int)GotStatus.FileLocked] = new List<RepStatus> { RepStatus.UnScanned };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InDatCollect, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.Missing, RepStatus.CanBeFixed };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InDatMerged, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.UnNeeded, RepStatus.Delete, RepStatus.NeededForFix, RepStatus.Rename };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InDatMerged, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.NotCollected };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InToSort, (int)GotStatus.Corrupt] = new List<RepStatus> { RepStatus.Corrupt, RepStatus.Delete };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InToSort, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.InToSort, RepStatus.NeededForFix, RepStatus.Delete };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.InToSort, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.Deleted };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.NotInDat, (int)GotStatus.Corrupt] = new List<RepStatus> { RepStatus.Corrupt, RepStatus.MoveToCorrupt, RepStatus.Delete };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.NotInDat, (int)GotStatus.Got] = new List<RepStatus> { RepStatus.Unknown, RepStatus.Delete, RepStatus.MoveToSort, RepStatus.NeededForFix, RepStatus.Rename };
+            StatusCheck[(int)FileType.SevenZipFile, (int)DatStatus.NotInDat, (int)GotStatus.NotGot] = new List<RepStatus> { RepStatus.Deleted };
+          
 
             DisplayOrder = new[]
             {
@@ -169,7 +198,7 @@ namespace ROMVault2
             tBase.RepStatusReset();
 
             FileType ftBase = tBase.FileType;
-            if (ftBase != FileType.Zip && ftBase != FileType.Dir) return;
+            if (ftBase != FileType.Zip && ftBase != FileType.SevenZip && ftBase != FileType.Dir) return;
 
             RvDir tDir = (RvDir)tBase;
 

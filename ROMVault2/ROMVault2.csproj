@@ -70,7 +70,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>..\..\Stage\</OutputPath>
-    <DefineConstants>TRACE;UNMANAGED;COMPRESS;LZMA_STREAM;DOTNET20</DefineConstants>
+    <DefineConstants>TRACE;UNMANAGED;COMPRESS;LZMA_STREAM;DOTNET20;sevenzip</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -82,6 +82,7 @@
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>chip.ico</ApplicationIcon>
@@ -118,6 +119,36 @@
     <Compile Include="rvTreeRow.cs" />
     <Compile Include="rvImages.cs" />
     <Compile Include="SupportedFiles\Files\UnCompFiles.cs" />
+    <Compile Include="SupportedFiles\ICompress.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Common\CRC.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Common\ICoder.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Compress\LZMA\LzmaBase.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Compress\LZMA\LzmaDecoder.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Compress\LZMA\LzmaEncoder.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Compress\LZ\IMatchFinder.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Compress\LZ\LzBinTree.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Compress\LZ\LzInWindow.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Compress\LZ\LzOutWindow.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Compress\RangeCoder\RangeCoder.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Compress\RangeCoder\RangeCoderBit.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Compress\RangeCoder\RangeCoderBitTree.cs" />
+    <Compile Include="SupportedFiles\SevenZip\DirUtil.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Filters\BCJ2Filter.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Filters\BCJFilter.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Filters\Filter.cs" />
+    <Compile Include="SupportedFiles\SevenZip\LZMACompressFile.cs" />
+    <Compile Include="SupportedFiles\SevenZip\SevenZip.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Structure\BindPair.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Structure\Coder.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Structure\FileInfo.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Structure\Folder.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Structure\Header.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Structure\PackedStreamInfo.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Structure\SignatureHeader.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Structure\StreamsInfo.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Structure\UnpackedStreamInfo.cs" />
+    <Compile Include="SupportedFiles\SevenZip\TesterStream.cs" />
+    <Compile Include="SupportedFiles\SevenZip\Util.cs" />
     <Compile Include="SupportedFiles\ZipEnums.cs" />
     <Compile Include="Utils\ArrByte.cs" />
     <Compile Include="BackGroundWorkerInterface.cs" />

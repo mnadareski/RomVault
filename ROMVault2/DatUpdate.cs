@@ -284,7 +284,7 @@ namespace ROMVault2
 
             FileType ft = dbDir.FileType;
             // if we are checking a dir or zip recurse into it.
-            if (ft != FileType.Zip && ft != FileType.Dir) return EFile.Keep;
+            if (ft != FileType.Zip && ft != FileType.Dir && ft!=FileType.SevenZip) return EFile.Keep;
             RvDir tDir = dbDir as RvDir;
 
             // remove all DATStatus's here they will get set back correctly when adding dats back in below.
@@ -296,7 +296,7 @@ namespace ROMVault2
                 tDir.ChildRemove(i);
                 i--;
             }
-            if (ft == FileType.Zip && dbDir.GotStatus == GotStatus.Corrupt) return EFile.Keep;
+            if ((ft == FileType.Zip || ft==FileType.SevenZip) && dbDir.GotStatus == GotStatus.Corrupt) return EFile.Keep;
 
             // if this directory is now empty it should be deleted
             return tDir.ChildCount == 0 ? EFile.Delete : EFile.Keep;
@@ -544,7 +544,7 @@ namespace ROMVault2
 
                                 FileType ft = dbChild.FileType;
 
-                                if (ft == FileType.Zip || ft == FileType.Dir)
+                                if (ft == FileType.Zip || ft==FileType.SevenZip || ft == FileType.Dir)
                                 {
                                     RvDir dChild = (RvDir)dbChild;
                                     RvDir dNewChild = (RvDir)newDatChild;
@@ -605,7 +605,7 @@ namespace ROMVault2
 
 
             FileType ft = dbChild.FileType;
-            if (ft == FileType.Zip || ft == FileType.Dir)
+            if (ft == FileType.Zip || ft == FileType.Dir || ft==FileType.SevenZip)
             {
                 RvDir dbDir = (RvDir)dbChild;
                 for (int i = 0; i < dbDir.ChildCount; i++)
@@ -627,7 +627,7 @@ namespace ROMVault2
             // filetypes are now know to be the same
 
             // Dir's and Zip's are not deep scanned so matching here is done
-            if ((v1 == FileType.Dir) || (v1 == FileType.Zip))
+            if ((v1 == FileType.Dir) || (v1 == FileType.Zip) || (v1==FileType.SevenZip))
                 return true;
 
             RvFile f1 = (RvFile)var1;

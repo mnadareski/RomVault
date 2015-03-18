@@ -774,6 +774,12 @@ namespace ROMVault2
                         else
                             bitmapName = "Zip" + tRvDir.RepStatus;
                         break;
+                    case FileType.SevenZip:
+                        if (tRvDir.RepStatus == RepStatus.DirCorrect && tRvDir.ZipStatus == ZipStatus.TrrntZip)
+                            bitmapName = "SevenZipTZ";
+                        else
+                            bitmapName = "SevenZip" + tRvDir.RepStatus;
+                        break;
                     default:
                         // hack because DirDirInToSort image doesnt exist.
                         if (tRvDir.RepStatus ==  RepStatus.DirInToSort)

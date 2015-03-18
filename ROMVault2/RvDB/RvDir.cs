@@ -26,7 +26,7 @@ namespace ROMVault2.RvDB
         public RvDir(FileType type)
             : base(type)
         {
-            if (type != FileType.Dir && type != FileType.Zip)
+            if (type != FileType.Dir && type != FileType.Zip && type !=FileType.SevenZip)
                 ReportError.SendAndShow("Trying to set Dir type to " + type);
         }
 

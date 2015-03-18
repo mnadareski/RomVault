@@ -15,6 +15,7 @@ using ROMVault2.RvDB;
 using ROMVault2.SupportedFiles;
 using ROMVault2.SupportedFiles.CHD;
 using ROMVault2.SupportedFiles.Files;
+using ROMVault2.SupportedFiles.SevenZip;
 using ROMVault2.SupportedFiles.Zip;
 using ROMVault2.Utils;
 using FileInfo = ROMVault2.IO.FileInfo;
@@ -140,11 +141,16 @@ namespace ROMVault2
             switch (ft)
             {
                 case FileType.Zip:
+                case FileType.SevenZip:
                     {
                         fileDir = new RvDir(ft);
 
                         // open the zip file
-                        ZipFile checkZ = new ZipFile();
+                        ICompress checkZ;
+                        if (ft == FileType.Zip)
+                            checkZ = new ZipFile();
+                        else
+                            checkZ = new SevenZ();
 
                         ZipReturn zr = checkZ.ZipFileOpen(fullDir, dbDir.TimeStamp, true);
 
@@ -251,6 +257,19 @@ namespace ROMVault2
                             string fExt = Path.GetExtension(oFile.Name);
                             switch (fExt.ToLower())
                             {
+#if sevenzip
+                                case ".7z":
+                                    {
+                                        RvDir tGame = new RvDir(FileType.SevenZip)
+                                        {
+                                            Name = Path.GetFileNameWithoutExtension(oFile.Name),
+                                            TimeStamp = oFile.LastWriteTime,
+                                        };
+                                        tGame.SetStatus(chechingDatStatus, GotStatus.Got);
+                                        fileDir.ChildAdd(tGame);
+                                    }
+                                    break;
+#endif
                                 case ".zip":
                                     {
                                         RvDir tGame = new RvDir(FileType.Zip)
@@ -510,6 +529,7 @@ namespace ROMVault2
             switch (dbChild.FileType)
             {
                 case FileType.Zip:
+                case FileType.SevenZip:
                     if (dbChild.TimeStamp != fileChild.TimeStamp || EScanLevel == eScanLevel.Level3 ||
                         (EScanLevel == eScanLevel.Level2 && !IsDeepScanned((RvDir)dbChild)))
                     {
@@ -530,7 +550,8 @@ namespace ROMVault2
                     break;
                 case FileType.File:
                 case FileType.ZipFile:
-                if (dbChild.TimeStamp == fileChild.TimeStamp && dbChild.GotStatus == GotStatus.Corrupt)
+                case FileType.SevenZipFile:
+                    if (dbChild.TimeStamp == fileChild.TimeStamp && dbChild.GotStatus == GotStatus.Corrupt)
                         fileChild.GotStatus = GotStatus.Corrupt;
 
                     dbChild.FileAdd(fileChild);
@@ -555,6 +576,7 @@ namespace ROMVault2
             switch (fileChild.FileType)
             {
                 case FileType.Zip:
+                case FileType.SevenZip:
                     dbDir.ChildAdd(fileChild, dbIndex);
                     CheckADir((RvDir)fileChild, false);
                     break;
@@ -576,6 +598,7 @@ namespace ROMVault2
                     dbDir.ChildAdd(fileChild, dbIndex);
                     break;
                 case FileType.ZipFile:
+                case FileType.SevenZipFile:
                     dbDir.ChildAdd(fileChild, dbIndex);
                     break;
                 default:
@@ -669,7 +692,7 @@ namespace ROMVault2
             // filetypes are now know to be the same
 
             // Dir's and Zip's are not deep scanned so matching here is done
-            if ((dbfileType == FileType.Dir) || (dbfileType == FileType.Zip))
+            if ((dbfileType == FileType.Dir) || (dbfileType == FileType.Zip) || (dbfileType==FileType.SevenZip))
                 return true;
 
             RvFile dbFileF = (RvFile)dbFile;

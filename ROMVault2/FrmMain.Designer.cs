@@ -28,19 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.btnReport = new System.Windows.Forms.Button();
-            this.btnFixFiles = new System.Windows.Forms.Button();
-            this.btnFindFixes = new System.Windows.Forms.Button();
-            this.btnScanRoms = new System.Windows.Forms.Button();
-            this.btnUpdateDats = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.gbDatInfo = new System.Windows.Forms.GroupBox();
@@ -109,6 +104,11 @@
             this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.dataGridViewImageColumn2 = new System.Windows.Forms.DataGridViewImageColumn();
             this.dataGridViewImageColumn3 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.btnReport = new System.Windows.Forms.Button();
+            this.btnFixFiles = new System.Windows.Forms.Button();
+            this.btnFindFixes = new System.Windows.Forms.Button();
+            this.btnScanRoms = new System.Windows.Forms.Button();
+            this.btnUpdateDats = new System.Windows.Forms.Button();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -153,71 +153,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(1264, 738);
             this.splitContainer1.SplitterDistance = 80;
             this.splitContainer1.TabIndex = 5;
-            // 
-            // btnReport
-            // 
-            this.btnReport.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnReport.BackgroundImage")));
-            this.btnReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnReport.Location = new System.Drawing.Point(0, 320);
-            this.btnReport.Name = "btnReport";
-            this.btnReport.Size = new System.Drawing.Size(80, 80);
-            this.btnReport.TabIndex = 13;
-            this.btnReport.Text = "Generate Reports";
-            this.btnReport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnReport.UseVisualStyleBackColor = true;
-            this.btnReport.Click += new System.EventHandler(this.BtnReportClick);
-            // 
-            // btnFixFiles
-            // 
-            this.btnFixFiles.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFixFiles.BackgroundImage")));
-            this.btnFixFiles.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnFixFiles.Location = new System.Drawing.Point(0, 240);
-            this.btnFixFiles.Name = "btnFixFiles";
-            this.btnFixFiles.Size = new System.Drawing.Size(80, 80);
-            this.btnFixFiles.TabIndex = 10;
-            this.btnFixFiles.Text = "Fix ROMs";
-            this.btnFixFiles.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnFixFiles.UseVisualStyleBackColor = true;
-            this.btnFixFiles.Click += new System.EventHandler(this.BtnFixFilesClick);
-            // 
-            // btnFindFixes
-            // 
-            this.btnFindFixes.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFindFixes.BackgroundImage")));
-            this.btnFindFixes.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnFindFixes.Location = new System.Drawing.Point(0, 160);
-            this.btnFindFixes.Name = "btnFindFixes";
-            this.btnFindFixes.Size = new System.Drawing.Size(80, 80);
-            this.btnFindFixes.TabIndex = 9;
-            this.btnFindFixes.Text = "Find Fixes";
-            this.btnFindFixes.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnFindFixes.UseVisualStyleBackColor = true;
-            this.btnFindFixes.Click += new System.EventHandler(this.BtnFindFixesClick);
-            // 
-            // btnScanRoms
-            // 
-            this.btnScanRoms.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnScanRoms.BackgroundImage")));
-            this.btnScanRoms.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnScanRoms.Location = new System.Drawing.Point(0, 80);
-            this.btnScanRoms.Name = "btnScanRoms";
-            this.btnScanRoms.Size = new System.Drawing.Size(80, 80);
-            this.btnScanRoms.TabIndex = 8;
-            this.btnScanRoms.Text = "Scan ROMs";
-            this.btnScanRoms.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnScanRoms.UseVisualStyleBackColor = true;
-            this.btnScanRoms.Click += new System.EventHandler(this.BtnScanRomsClick);
-            // 
-            // btnUpdateDats
-            // 
-            this.btnUpdateDats.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnUpdateDats.BackgroundImage")));
-            this.btnUpdateDats.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnUpdateDats.Location = new System.Drawing.Point(0, 0);
-            this.btnUpdateDats.Name = "btnUpdateDats";
-            this.btnUpdateDats.Size = new System.Drawing.Size(80, 80);
-            this.btnUpdateDats.TabIndex = 0;
-            this.btnUpdateDats.Text = "Update DATs";
-            this.btnUpdateDats.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnUpdateDats.UseVisualStyleBackColor = true;
-            this.btnUpdateDats.Click += new System.EventHandler(this.BtnUpdateDatsClick);
             // 
             // splitContainer2
             // 
@@ -653,10 +588,10 @@
             this.GameGrid.Size = new System.Drawing.Size(697, 267);
             this.GameGrid.TabIndex = 4;
             this.GameGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GameGrid_CellFormatting);
+            this.GameGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.GameGridColumnHeaderMouseClick);
             this.GameGrid.SelectionChanged += new System.EventHandler(this.GameGridSelectionChanged);
             this.GameGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GameGridMouseDoubleClick);
             this.GameGrid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameGrid_MouseUp);
-            this.GameGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.GameGridColumnHeaderMouseClick);
             // 
             // Type
             // 
@@ -665,7 +600,6 @@
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
             this.Type.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Type.Width = 40;
             // 
             // CGame
@@ -690,7 +624,6 @@
             this.CCorrect.Name = "CCorrect";
             this.CCorrect.ReadOnly = true;
             this.CCorrect.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.CCorrect.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.CCorrect.Width = 500;
             // 
             // RomGrid
@@ -760,7 +693,6 @@
             this.CGot.Name = "CGot";
             this.CGot.ReadOnly = true;
             this.CGot.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.CGot.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.CGot.Width = 65;
             // 
             // CRom
@@ -971,6 +903,71 @@
             this.dataGridViewImageColumn3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewImageColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.dataGridViewImageColumn3.Width = 65;
+            // 
+            // btnReport
+            // 
+            this.btnReport.BackgroundImage = global::ROMVault2.rvImages1.btnReport_BackgroundImage;
+            this.btnReport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnReport.Location = new System.Drawing.Point(0, 320);
+            this.btnReport.Name = "btnReport";
+            this.btnReport.Size = new System.Drawing.Size(80, 80);
+            this.btnReport.TabIndex = 13;
+            this.btnReport.Text = "Generate Reports";
+            this.btnReport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnReport.UseVisualStyleBackColor = true;
+            this.btnReport.Click += new System.EventHandler(this.BtnReportClick);
+            // 
+            // btnFixFiles
+            // 
+            this.btnFixFiles.BackgroundImage = global::ROMVault2.rvImages1.btnFixFiles_BackgroundImage;
+            this.btnFixFiles.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnFixFiles.Location = new System.Drawing.Point(0, 240);
+            this.btnFixFiles.Name = "btnFixFiles";
+            this.btnFixFiles.Size = new System.Drawing.Size(80, 80);
+            this.btnFixFiles.TabIndex = 10;
+            this.btnFixFiles.Text = "Fix ROMs";
+            this.btnFixFiles.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnFixFiles.UseVisualStyleBackColor = true;
+            this.btnFixFiles.Click += new System.EventHandler(this.BtnFixFilesClick);
+            // 
+            // btnFindFixes
+            // 
+            this.btnFindFixes.BackgroundImage = global::ROMVault2.rvImages1.btnFindFixes_BackgroundImage;
+            this.btnFindFixes.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnFindFixes.Location = new System.Drawing.Point(0, 160);
+            this.btnFindFixes.Name = "btnFindFixes";
+            this.btnFindFixes.Size = new System.Drawing.Size(80, 80);
+            this.btnFindFixes.TabIndex = 9;
+            this.btnFindFixes.Text = "Find Fixes";
+            this.btnFindFixes.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnFindFixes.UseVisualStyleBackColor = true;
+            this.btnFindFixes.Click += new System.EventHandler(this.BtnFindFixesClick);
+            // 
+            // btnScanRoms
+            // 
+            this.btnScanRoms.BackgroundImage = global::ROMVault2.rvImages1.btnScanRoms_BackgroundImage;
+            this.btnScanRoms.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnScanRoms.Location = new System.Drawing.Point(0, 80);
+            this.btnScanRoms.Name = "btnScanRoms";
+            this.btnScanRoms.Size = new System.Drawing.Size(80, 80);
+            this.btnScanRoms.TabIndex = 8;
+            this.btnScanRoms.Text = "Scan ROMs";
+            this.btnScanRoms.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnScanRoms.UseVisualStyleBackColor = true;
+            this.btnScanRoms.Click += new System.EventHandler(this.BtnScanRomsClick);
+            // 
+            // btnUpdateDats
+            // 
+            this.btnUpdateDats.BackgroundImage = global::ROMVault2.rvImages1.btnUpdateDats_BackgroundImage;
+            this.btnUpdateDats.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnUpdateDats.Location = new System.Drawing.Point(0, 0);
+            this.btnUpdateDats.Name = "btnUpdateDats";
+            this.btnUpdateDats.Size = new System.Drawing.Size(80, 80);
+            this.btnUpdateDats.TabIndex = 0;
+            this.btnUpdateDats.Text = "Update DATs";
+            this.btnUpdateDats.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnUpdateDats.UseVisualStyleBackColor = true;
+            this.btnUpdateDats.Click += new System.EventHandler(this.BtnUpdateDatsClick);
             // 
             // FrmMain
             // 

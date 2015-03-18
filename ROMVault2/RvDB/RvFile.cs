@@ -32,7 +32,7 @@ namespace ROMVault2.RvDB
         public RvFile(FileType type)
             : base(type)
         {
-            if (type != FileType.File && type != FileType.ZipFile)
+            if (type != FileType.File && type != FileType.ZipFile && type != FileType.SevenZipFile)
                 ReportError.SendAndShow("Trying to set file type to " + type);
         }
 

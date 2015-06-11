@@ -270,6 +270,10 @@ namespace ROMVault2.DatReaders
                             // loop the ROMs in the parent sets
                             for (int r1 = 0; r1 < romofGame.ChildCount; r1++)
                             {
+                                // don't search fixes for files marked as nodump
+                                if (((RvFile)mGame.Child(r)).Status == "nodump" || ((RvFile)romofGame.Child(r1)).Status == "nodump")
+                                    continue;
+
                                 // only find fixes if the Name and the Size of the ROMs are the same
                                 if (mGame.Child(r).Name != romofGame.Child(r1).Name || ((RvFile)mGame.Child(r)).Size != ((RvFile)romofGame.Child(r1)).Size)
                                     continue;
@@ -285,11 +289,13 @@ namespace ROMVault2.DatReaders
                                 if (b1)
                                 {
                                     ((RvFile)mGame.Child(r)).CRC = ((RvFile)romofGame.Child(r1)).CRC;
+                                    ((RvFile)mGame.Child(r)).FileStatusSet(FileStatus.CRCFromDAT);
                                     ((RvFile)mGame.Child(r)).Status = "(CRCFound)";
                                 }
                                 else
                                 {
                                     ((RvFile)romofGame.Child(r1)).CRC = ((RvFile)mGame.Child(r)).CRC;
+                                    ((RvFile)romofGame.Child(r1)).FileStatusSet(FileStatus.CRCFromDAT);
                                     ((RvFile)romofGame.Child(r1)).Status = "(CRCFound)";
                                 }
 
@@ -428,6 +434,8 @@ namespace ROMVault2.DatReaders
                                     byte[] chdMD51 = ((RvFile)romofGame.Child(r1)).MD5CHD;
                                     if (chdMD50 != null && chdMD51 != null && !ArrByte.bCompare(chdMD50, chdMD51)) continue;
 
+                                    // don't merge if only one of the ROM is nodump
+                                    if ((((RvFile)romofGame.Child(r1)).Status == "nodump") != (((RvFile)mGame.Child(r)).Status == "nodump")) continue;
 
                                     found = true;
                                     break;
@@ -446,9 +454,9 @@ namespace ROMVault2.DatReaders
                 return;
 
             string parentName = searchGame.Game.GetData(RvGame.GameData.RomOf);
-            if (String.IsNullOrEmpty(parentName) || parentName==searchGame.Name)
+            if (String.IsNullOrEmpty(parentName) || parentName == searchGame.Name)
                 parentName = searchGame.Game.GetData(RvGame.GameData.CloneOf);
-            if (String.IsNullOrEmpty(parentName) || parentName==searchGame.Name)
+            if (String.IsNullOrEmpty(parentName) || parentName == searchGame.Name)
                 return;
 
             int intIndex;

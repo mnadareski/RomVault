@@ -59,6 +59,13 @@ namespace ROMVault2
             _scaleFactorY *= factor.Height;
         }
 
+        // returns either white or black, depending of quick luminance of Color "a"
+        // probably should be pre-computed into a table, corresponding to _displayColor
+        private Color contrasty(Color a)
+        {
+            return (a.R << 1) + a.B + a.G + (a.G << 2) < 1024 ? Color.White : Color.Black;
+        }
+
         public FrmMain()
         {
 
@@ -745,6 +752,7 @@ namespace ROMVault2
             RvDir tRvDir = (RvDir)GameGrid.Rows[e.RowIndex].Tag;
             ReportStatus tDirStat = tRvDir.DirStatus;
             Color bgCol = Color.FromArgb(255, 255, 255);
+            Color fgCol = contrasty(bgCol);
 
             if (cellBounds.Width == 0 || cellBounds.Height == 0)
                 return;
@@ -754,13 +762,16 @@ namespace ROMVault2
                 if (tDirStat.Get(t1) <= 0) continue;
 
                 bgCol = _displayColor[(int)t1];
+                fgCol = contrasty(bgCol);
                 break;
             }
 
             if (GameGrid.Columns[e.ColumnIndex].Name == "Type")
             {
+            	
                 e.CellStyle.BackColor = bgCol;
                 e.CellStyle.SelectionBackColor = bgCol;
+                e.CellStyle.ForeColor = fgCol;
 
                 Bitmap bmp = new Bitmap(cellBounds.Width, cellBounds.Height);
                 Graphics g = Graphics.FromImage(bmp);
@@ -799,7 +810,8 @@ namespace ROMVault2
             else if (GameGrid.Columns[e.ColumnIndex].Name == "CGame")
             {
                 e.CellStyle.BackColor = bgCol;
-
+                e.CellStyle.ForeColor = contrasty(bgCol);
+                
                 if (String.IsNullOrEmpty(tRvDir.FileName))
                     e.Value = tRvDir.Name;
                 else
@@ -808,7 +820,8 @@ namespace ROMVault2
             else if (GameGrid.Columns[e.ColumnIndex].Name == "CDescription")
             {
                 e.CellStyle.BackColor = bgCol;
-
+                e.CellStyle.ForeColor = contrasty(bgCol);
+                
                 if (tRvDir.Game != null)
                     e.Value = tRvDir.Game.GetData(RvGame.GameData.Description);
             }
@@ -1302,8 +1315,13 @@ namespace ROMVault2
                 RomGrid.Rows[row].Tag = tRomTable;
 
                 for (int i = 0; i < RomGrid.Rows[row].Cells.Count; i++)
-                    RomGrid.Rows[row].Cells[i].Style.BackColor = _displayColor[(int)tRomTable.RepStatus];
-
+                {
+                    Color bc;
+                    DataGridViewCellStyle cs = RomGrid.Rows[row].Cells[i].Style;
+                    cs.BackColor = (bc = _displayColor[(int)tRomTable.RepStatus]);
+                    cs.ForeColor = contrasty(bc);
+                }
+                
                 string fname = pathAdd + tRomTable.Name;
                 if (!string.IsNullOrEmpty(tRomTable.FileName))
                     fname += " (Found: " + tRomTable.FileName + ")";

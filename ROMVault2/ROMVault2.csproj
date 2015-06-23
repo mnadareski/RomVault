@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ROMVault2</RootNamespace>
-    <AssemblyName>ROMVault21</AssemblyName>
+    <AssemblyName>ROMVault22</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -35,8 +35,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>.\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNMANAGED, COMPRESS, LZMA_STREAM, DOTNET20</DefineConstants>
+    <OutputPath>..\..\Stage\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNMANAGED;COMPRESS;LZMA_STREAM;DOTNET20</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -55,7 +55,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\Stage\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNMANAGED, COMPRESS, LZMA_STREAM, DOTNET20</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;UNMANAGED;COMPRESS;LZMA_STREAM;DOTNET20</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisLogFile>..\..\Stage2\ROMVault2.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -70,7 +70,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>..\..\Stage\</OutputPath>
-    <DefineConstants>TRACE;UNMANAGED, COMPRESS, LZMA_STREAM, DOTNET20</DefineConstants>
+    <DefineConstants>TRACE;UNMANAGED;COMPRESS;LZMA_STREAM;DOTNET20</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -89,7 +89,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -107,7 +106,7 @@
     <Compile Include="FrmProgressWindowFix.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmProgressWindowFix.designer.cs">
+    <Compile Include="FrmProgressWindowFix.Designer.cs">
       <DependentUpon>FrmProgressWindowFix.cs</DependentUpon>
     </Compile>
     <Compile Include="RvDB\FileStatus.cs" />
@@ -128,17 +127,17 @@
     <Compile Include="DatReaders\DatXMLReader.cs" />
     <Compile Include="DatUpdate.cs" />
     <Compile Include="FileScanning.cs" />
-    <Compile Include="frmHelpAbout.cs">
+    <Compile Include="FrmHelpAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmHelpAbout.Designer.cs">
-      <DependentUpon>frmHelpAbout.cs</DependentUpon>
+    <Compile Include="FrmHelpAbout.Designer.cs">
+      <DependentUpon>FrmHelpAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmKey.cs">
+    <Compile Include="FrmKey.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmKey.designer.cs">
-      <DependentUpon>frmKey.cs</DependentUpon>
+    <Compile Include="FrmKey.Designer.cs">
+      <DependentUpon>FrmKey.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmProgressWindow.cs">
       <SubType>Form</SubType>
@@ -146,36 +145,29 @@
     <Compile Include="FrmProgressWindow.Designer.cs">
       <DependentUpon>FrmProgressWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmRegistration.cs">
+    <Compile Include="FrmSetDir.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmRegistration.Designer.cs">
-      <DependentUpon>FrmRegistration.cs</DependentUpon>
+    <Compile Include="FrmSetDir.Designer.cs">
+      <DependentUpon>FrmSetDir.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSetDir.cs">
+    <Compile Include="FrmSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSetDir.Designer.cs">
-      <DependentUpon>frmSetDir.cs</DependentUpon>
+    <Compile Include="FrmSettings.Designer.cs">
+      <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSettings.cs">
+    <Compile Include="FrmShowError.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSettings.Designer.cs">
-      <DependentUpon>frmSettings.cs</DependentUpon>
+    <Compile Include="FrmShowError.Designer.cs">
+      <DependentUpon>FrmShowError.cs</DependentUpon>
     </Compile>
-    <Compile Include="DirCellDraw.cs" />
-    <Compile Include="frmShowError.cs">
+    <Compile Include="FrmSplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmShowError.designer.cs">
-      <DependentUpon>frmShowError.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmSplashScreen.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSplashScreen.Designer.cs">
-      <DependentUpon>frmSplashScreen.cs</DependentUpon>
+    <Compile Include="FrmSplashScreen.Designer.cs">
+      <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="ReportError.cs" />
     <Compile Include="rvImages1.Designer.cs">
@@ -189,11 +181,6 @@
     </Compile>
     <Compile Include="rvTree.Designer.cs">
       <DependentUpon>rvTree.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Service References\RVRef\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="RvDB\DB.cs" />
@@ -225,11 +212,11 @@
     <Compile Include="SupportedFiles\Zip\ZLib\ZlibCodec.cs" />
     <Compile Include="SupportedFiles\Zip\ZLib\ZlibConstants.cs" />
     <Compile Include="SupportedFiles\Zip\ZLib\ZlibStream.cs" />
-    <EmbeddedResource Include="frmHelpAbout.resx">
-      <DependentUpon>frmHelpAbout.cs</DependentUpon>
+    <EmbeddedResource Include="FrmHelpAbout.resx">
+      <DependentUpon>FrmHelpAbout.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmKey.resx">
-      <DependentUpon>frmKey.cs</DependentUpon>
+    <EmbeddedResource Include="FrmKey.resx">
+      <DependentUpon>FrmKey.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
@@ -241,18 +228,15 @@
     <EmbeddedResource Include="FrmProgressWindowFix.resx">
       <DependentUpon>FrmProgressWindowFix.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmRegistration.resx">
-      <DependentUpon>FrmRegistration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSettings.resx">
-      <DependentUpon>frmSettings.cs</DependentUpon>
+    <EmbeddedResource Include="FrmSettings.resx">
+      <DependentUpon>FrmSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmShowError.resx">
-      <DependentUpon>frmShowError.cs</DependentUpon>
+    <EmbeddedResource Include="FrmShowError.resx">
+      <DependentUpon>FrmShowError.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSplashScreen.resx">
-      <DependentUpon>frmSplashScreen.cs</DependentUpon>
+    <EmbeddedResource Include="FrmSplashScreen.resx">
+      <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -281,13 +265,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Service References\RVRef\Service1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\RVRef\Service11.wsdl" />
-    <None Include="Service References\RVRef\Service11.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -311,19 +288,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="chip.ico" />
-    <None Include="Service References\RVRef\Service11.disco" />
-    <None Include="Service References\RVRef\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\RVRef\configuration.svcinfo" />
-    <None Include="Service References\RVRef\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\RVRef\" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -48,47 +48,20 @@ namespace ROMVault2
         public static bool CacheSaveTimerEnabled = true;
         public static int CacheSaveTimePeriod = 10;
 
-        public static string EMail
+        public static bool IsUnix
         {
             get
             {
-                RegistryKey regKey1 = Registry.CurrentUser;
-                regKey1 = regKey1.CreateSubKey("Software\\RomVault2\\User");
-                return regKey1.GetValue("Email", "").ToString();
-
-            }
-
-            set
-            {
-                RegistryKey regKey = Registry.CurrentUser;
-                regKey = regKey.CreateSubKey("Software\\RomVault2\\User");
-                regKey.SetValue("Email", value);
+                int p = (int)Environment.OSVersion.Platform;
+                return ((p == 4) || (p == 6) || (p == 128));
             }
         }
 
-        public static string Username
-        {
-            get
-            {
-                RegistryKey regKey1 = Registry.CurrentUser;
-                regKey1 = regKey1.CreateSubKey("Software\\RomVault2\\User");
-                return regKey1.GetValue("UserName", "").ToString();
-
-            }
-            set
-            {
-                RegistryKey regKey = Registry.CurrentUser;
-                regKey = regKey.CreateSubKey("Software\\RomVault2\\User");
-                regKey.SetValue("UserName", value);
-            }
-        }
-
-
-
+        public static bool IsMono { get { return (Type.GetType ("Mono.Runtime") != null); } }
 
         public static void SetDefaults()
         {
-            CacheFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2_"+DBVersion.Version+".Cache");
+            CacheFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2_" + DBVersion.Version + ".Cache");
 
             //DatRoot = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DatRoot");
             DatRoot = "DatRoot";
@@ -135,10 +108,10 @@ namespace ROMVault2
 
             bw.Write(ver);                  //int
             bw.Write(DatRoot);              //string
-            bw.Write((Int32)ScanLevel);     
+            bw.Write((Int32)ScanLevel);
             bw.Write((Int32)FixLevel);
             bw.Write(DebugLogsEnabled);     //bool
-                
+
             bw.Write(IgnoreFiles.Count);    //int
             foreach (string t in IgnoreFiles)
             {

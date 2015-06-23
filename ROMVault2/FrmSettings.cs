@@ -88,7 +88,7 @@ namespace ROMVault2
                                              {
                                                  ShowNewFolderButton = true,
                                                  Description = Resources.FrmSettings_BtnDatClick_Please_select_a_folder_for_DAT_Root,
-                                                 RootFolder = Environment.SpecialFolder.DesktopDirectory,
+                                                 RootFolder = (Settings.IsMono ? Environment.SpecialFolder.MyComputer : Environment.SpecialFolder.DesktopDirectory),
                                                  SelectedPath = Settings.DatRoot
                                              };
 

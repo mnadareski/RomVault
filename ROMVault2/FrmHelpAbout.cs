@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace ROMVault2
 {
-    public partial class frmHelpAbout : Form
+    public partial class FrmHelpAbout : Form
     {
-        public frmHelpAbout()
+        public FrmHelpAbout()
         {
 
             InitializeComponent();

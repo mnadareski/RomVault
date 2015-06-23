@@ -106,8 +106,6 @@
             this.fixReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutRomVaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.registratioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.dataGridViewImageColumn2 = new System.Windows.Forms.DataGridViewImageColumn();
             this.dataGridViewImageColumn3 = new System.Windows.Forms.DataGridViewImageColumn();
@@ -286,7 +284,7 @@
             this.gbDatInfo.Controls.Add(this.label8);
             this.gbDatInfo.Location = new System.Drawing.Point(5, 0);
             this.gbDatInfo.Name = "gbDatInfo";
-            this.gbDatInfo.Size = new System.Drawing.Size(440, 147);
+            this.gbDatInfo.Size = new System.Drawing.Size(468, 147);
             this.gbDatInfo.TabIndex = 3;
             this.gbDatInfo.TabStop = false;
             this.gbDatInfo.Text = "Dat Info :";
@@ -517,7 +515,7 @@
             // 
             // btnColorKey
             // 
-            this.btnColorKey.Location = new System.Drawing.Point(568, 85);
+            this.btnColorKey.Location = new System.Drawing.Point(547, 85);
             this.btnColorKey.Name = "btnColorKey";
             this.btnColorKey.Size = new System.Drawing.Size(89, 23);
             this.btnColorKey.TabIndex = 9;
@@ -528,7 +526,7 @@
             // chkBoxShowMerged
             // 
             this.chkBoxShowMerged.AutoSize = true;
-            this.chkBoxShowMerged.Location = new System.Drawing.Point(568, 68);
+            this.chkBoxShowMerged.Location = new System.Drawing.Point(547, 68);
             this.chkBoxShowMerged.Name = "chkBoxShowMerged";
             this.chkBoxShowMerged.Size = new System.Drawing.Size(125, 17);
             this.chkBoxShowMerged.TabIndex = 8;
@@ -541,7 +539,7 @@
             this.chkBoxShowFixed.AutoSize = true;
             this.chkBoxShowFixed.Checked = true;
             this.chkBoxShowFixed.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxShowFixed.Location = new System.Drawing.Point(568, 52);
+            this.chkBoxShowFixed.Location = new System.Drawing.Point(547, 52);
             this.chkBoxShowFixed.Name = "chkBoxShowFixed";
             this.chkBoxShowFixed.Size = new System.Drawing.Size(102, 17);
             this.chkBoxShowFixed.TabIndex = 7;
@@ -554,7 +552,7 @@
             this.chkBoxShowMissing.AutoSize = true;
             this.chkBoxShowMissing.Checked = true;
             this.chkBoxShowMissing.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxShowMissing.Location = new System.Drawing.Point(568, 36);
+            this.chkBoxShowMissing.Location = new System.Drawing.Point(547, 36);
             this.chkBoxShowMissing.Name = "chkBoxShowMissing";
             this.chkBoxShowMissing.Size = new System.Drawing.Size(124, 17);
             this.chkBoxShowMissing.TabIndex = 6;
@@ -567,7 +565,7 @@
             this.chkBoxShowCorrect.AutoSize = true;
             this.chkBoxShowCorrect.Checked = true;
             this.chkBoxShowCorrect.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxShowCorrect.Location = new System.Drawing.Point(568, 20);
+            this.chkBoxShowCorrect.Location = new System.Drawing.Point(547, 20);
             this.chkBoxShowCorrect.Name = "chkBoxShowCorrect";
             this.chkBoxShowCorrect.Size = new System.Drawing.Size(123, 17);
             this.chkBoxShowCorrect.TabIndex = 5;
@@ -579,7 +577,7 @@
             // 
             this.gbSetInfo.Location = new System.Drawing.Point(5, 0);
             this.gbSetInfo.Name = "gbSetInfo";
-            this.gbSetInfo.Size = new System.Drawing.Size(416, 147);
+            this.gbSetInfo.Size = new System.Drawing.Size(532, 147);
             this.gbSetInfo.TabIndex = 4;
             this.gbSetInfo.TabStop = false;
             this.gbSetInfo.Text = "Game Info :";
@@ -654,9 +652,11 @@
             this.GameGrid.ShowRowErrors = false;
             this.GameGrid.Size = new System.Drawing.Size(697, 267);
             this.GameGrid.TabIndex = 4;
+            this.GameGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GameGrid_CellFormatting);
             this.GameGrid.SelectionChanged += new System.EventHandler(this.GameGridSelectionChanged);
             this.GameGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GameGridMouseDoubleClick);
             this.GameGrid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GameGrid_MouseUp);
+            this.GameGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.GameGridColumnHeaderMouseClick);
             // 
             // Type
             // 
@@ -665,7 +665,7 @@
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
             this.Type.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Type.Width = 40;
             // 
             // CGame
@@ -673,6 +673,7 @@
             this.CGame.HeaderText = "Game (Directory / Zip)";
             this.CGame.Name = "CGame";
             this.CGame.ReadOnly = true;
+            this.CGame.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.CGame.Width = 220;
             // 
             // CDescription
@@ -680,6 +681,7 @@
             this.CDescription.HeaderText = "Description";
             this.CDescription.Name = "CDescription";
             this.CDescription.ReadOnly = true;
+            this.CDescription.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.CDescription.Width = 220;
             // 
             // CCorrect
@@ -688,6 +690,7 @@
             this.CCorrect.Name = "CCorrect";
             this.CCorrect.ReadOnly = true;
             this.CCorrect.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.CCorrect.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.CCorrect.Width = 500;
             // 
             // RomGrid
@@ -746,6 +749,7 @@
             this.RomGrid.ShowRowErrors = false;
             this.RomGrid.Size = new System.Drawing.Size(697, 315);
             this.RomGrid.TabIndex = 21;
+            this.RomGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RomGrid_CellFormatting);
             this.RomGrid.SelectionChanged += new System.EventHandler(this.RomGridSelectionChanged);
             this.RomGrid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RomGridMouseUp);
             // 
@@ -756,7 +760,7 @@
             this.CGot.Name = "CGot";
             this.CGot.ReadOnly = true;
             this.CGot.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.CGot.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.CGot.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.CGot.Width = 65;
             // 
             // CRom
@@ -928,9 +932,7 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutRomVaultToolStripMenuItem,
-            this.checkForUpdateToolStripMenuItem,
-            this.registratioToolStripMenuItem});
+            this.aboutRomVaultToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -938,23 +940,9 @@
             // aboutRomVaultToolStripMenuItem
             // 
             this.aboutRomVaultToolStripMenuItem.Name = "aboutRomVaultToolStripMenuItem";
-            this.aboutRomVaultToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.aboutRomVaultToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.aboutRomVaultToolStripMenuItem.Text = "About RomVault";
             this.aboutRomVaultToolStripMenuItem.Click += new System.EventHandler(this.AboutRomVaultToolStripMenuItemClick);
-            // 
-            // checkForUpdateToolStripMenuItem
-            // 
-            this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
-            this.checkForUpdateToolStripMenuItem.Text = "Check For Update";
-            this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
-            // 
-            // registratioToolStripMenuItem
-            // 
-            this.registratioToolStripMenuItem.Name = "registratioToolStripMenuItem";
-            this.registratioToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
-            this.registratioToolStripMenuItem.Text = "Registration";
-            this.registratioToolStripMenuItem.Click += new System.EventHandler(this.RegistratioToolStripMenuItemClick);
             // 
             // dataGridViewImageColumn1
             // 
@@ -986,8 +974,7 @@
             // 
             // FrmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1264, 762);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
@@ -1075,7 +1062,6 @@
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutRomVaultToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
         private System.Windows.Forms.DataGridViewImageColumn Type;
         private System.Windows.Forms.DataGridViewTextBoxColumn CGame;
         private System.Windows.Forms.DataGridViewTextBoxColumn CDescription;
@@ -1092,7 +1078,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CStatus;
         private System.Windows.Forms.DataGridViewTextBoxColumn ZipIndex;
         private System.Windows.Forms.DataGridViewTextBoxColumn ZipHeader;
-        private System.Windows.Forms.ToolStripMenuItem registratioToolStripMenuItem;
         private System.Windows.Forms.Label lblDITRomsFixable;
         private System.Windows.Forms.Label lblDIRomsFixable;
         private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;

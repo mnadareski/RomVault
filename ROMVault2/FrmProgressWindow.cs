@@ -26,7 +26,7 @@ namespace ROMVault2
             _titleRoot = titleRoot;
             InitializeComponent();
 
-            ClientSize = new Size(498, 131);
+            ClientSize = new Size(511, 131);
 
             _titleRoot = titleRoot;
 
@@ -128,8 +128,8 @@ namespace ROMVault2
                 if (!_errorOpen)
                 {
                     _errorOpen = true;
-                    ClientSize = new Size(498, 292);
-                    MinimumSize = new Size(498, 292);
+                    ClientSize = new Size(511, 292);
+                    MinimumSize = new Size(511, 292);
                     FormBorderStyle = FormBorderStyle.SizableToolWindow;
                 }
 
@@ -153,8 +153,8 @@ namespace ROMVault2
                 if (!_errorOpen)
                 {
                     _errorOpen = true;
-                    ClientSize = new Size(498, 292);
-                    MinimumSize = new Size(498, 292);
+                    ClientSize = new Size(511, 292);
+                    MinimumSize = new Size(511, 292);
                     FormBorderStyle = FormBorderStyle.SizableToolWindow;
                 }
 

@@ -28,20 +28,16 @@ namespace ROMVault2.DatReaders
             XmlNodeList dirNodeList = doc.DocumentElement.SelectNodes("dir");
             if (dirNodeList != null)
             {
-                for (int i = 0; i < dirNodeList.Count; i++)
-                {
-                    LoadDirFromDat(ref tDat, dirNodeList[i], thisFileType);
-                }
+                foreach (XmlNode dirNode in dirNodeList)
+                    LoadDirFromDat(ref tDat, dirNode, thisFileType);
             }
 
             XmlNodeList gameNodeList = doc.DocumentElement.SelectNodes("game");
 
             if (gameNodeList != null)
             {
-                for (int i = 0; i < gameNodeList.Count; i++)
-                {
-                    LoadGameFromDat(ref tDat, gameNodeList[i], thisFileType);
-                }
+                foreach (XmlNode gameNode in gameNodeList)
+                    LoadGameFromDat(ref tDat, gameNode, thisFileType);
             }
 
             return true;
@@ -60,21 +56,26 @@ namespace ROMVault2.DatReaders
             XmlNodeList dirNodeList = doc.DocumentElement.SelectNodes("dir");
             if (dirNodeList != null)
             {
-                for (int i = 0; i < dirNodeList.Count; i++)
-                {
-                    LoadDirFromDat(ref tDat, dirNodeList[i], thisFileType);
-                }
+                foreach (XmlNode dirNode in dirNodeList)
+                    LoadDirFromDat(ref tDat, dirNode, thisFileType);
             }
 
             XmlNodeList gameNodeList = doc.DocumentElement.SelectNodes("game");
 
             if (gameNodeList != null)
             {
-                for (int i = 0; i < gameNodeList.Count; i++)
-                {
-                    LoadGameFromDat(ref tDat, gameNodeList[i], thisFileType);
-                }
+                foreach (XmlNode gameNode in gameNodeList)
+                    LoadGameFromDat(ref tDat, gameNode, thisFileType);
             }
+
+            XmlNodeList machineNodeList = doc.DocumentElement.SelectNodes("machine");
+
+            if (machineNodeList != null)
+            {
+                foreach (XmlNode machineNode in machineNodeList)
+                    LoadGameFromDat(ref tDat, machineNode, thisFileType);
+            }
+
 
             return true;
         }
@@ -149,7 +150,7 @@ namespace ROMVault2.DatReaders
                     }
                     val = VarFix.String(packingNode.Attributes.GetNamedItem("dir")).ToLower(); // noautodir , nogame
                     if (!String.IsNullOrEmpty(val))
-                        tDat.AddData(RvDat.DatData.DirSetup,val);
+                        tDat.AddData(RvDat.DatData.DirSetup, val);
                 }
             }
 

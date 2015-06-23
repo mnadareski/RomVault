@@ -9,20 +9,21 @@ using System.Windows.Forms;
 
 namespace ROMVault2
 {
-    public partial class FrmRegistration : Form
+    public partial class FrmShowError : Form
     {
-        public FrmRegistration()
+        public FrmShowError()
         {
             InitializeComponent();
-            txtName.Text = Settings.Username;
-            txtEmail.Text = Settings.EMail;
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        public void settype(string s)
         {
-            Settings.Username = txtName.Text;
-            Settings.EMail = txtEmail.Text;
-            Close();
+            textBox1.Text = s;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }

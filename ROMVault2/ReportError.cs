@@ -10,7 +10,6 @@ using System.Globalization;
 using System.IO;
 using System.ServiceModel;
 using System.Windows.Forms;
-using ROMVault2.RVRef;
 using ROMVault2.RvDB;
 using ROMVault2.Utils;
 
@@ -32,9 +31,7 @@ namespace ROMVault2
                 }
                 message += string.Format("\r\nSTACK TRACE:\r\n{0}", e.Exception.StackTrace);
 
-                SendErrorMessage(message);
-
-                frmShowError fshow = new frmShowError();
+                FrmShowError fshow = new FrmShowError();
                 fshow.settype(message);
                 fshow.ShowDialog();
 
@@ -58,9 +55,7 @@ namespace ROMVault2
                 }
                 message += string.Format("\r\nSTACK TRACE:\r\n{0}", e.StackTrace);
 
-                SendErrorMessage(message);
-
-                frmShowError fshow = new frmShowError();
+                FrmShowError fshow = new FrmShowError();
                 fshow.settype(message);
                 fshow.ShowDialog();
 
@@ -80,9 +75,7 @@ namespace ROMVault2
 
                 message += string.Format("\r\nSTACK TRACE:\r\n{0}", Environment.StackTrace);
 
-                SendErrorMessage(message);
-
-                frmShowError fshow = new frmShowError();
+                FrmShowError fshow = new FrmShowError();
                 fshow.settype(message);
                 fshow.ShowDialog();
 
@@ -103,7 +96,6 @@ namespace ROMVault2
 
         public static void SendAndShow(string message, string caption = "RomVault", MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Exclamation)
         {
-            SendErrorMessage(message);
             Show(message, caption, buttons, icon);
         }
 
@@ -113,49 +105,6 @@ namespace ROMVault2
                 Program.SyncCont.Send(callback => MessageBox.Show(text, caption, buttons, icon), null);
             else
                 MessageBox.Show(text, caption, buttons, icon);
-        }
-
-        public static void SendErrorMessage(string message)
-        {
-
-            bool isNetworkAvailable = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
-            if (!isNetworkAvailable) return;
-
-            string st = Environment.StackTrace;
-
-            BasicHttpBinding b = new BasicHttpBinding { SendTimeout = new TimeSpan(0, 0, 5), ReceiveTimeout = new TimeSpan(0, 0, 5) };
-            EndpointAddress e = new EndpointAddress(@"http://services.romvault.com/Service1.svc");
-
-            Service1Client s = new Service1Client(b, e);
-
-            try
-            {
-                s.SendErrorMessage3(Settings.Username, Settings.EMail, Program.Version, Program.SubVersion, message + "\n" + st);
-            }
-            catch
-            {
-            }
-            s.Close();
-        }
-
-        public static void SendErrorMessageDat(string message, string filename)
-        {
-            bool isNetworkAvailable = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
-            if (!isNetworkAvailable) return;
-
-            BasicHttpBinding b = new BasicHttpBinding { SendTimeout = new TimeSpan(0, 0, 5), ReceiveTimeout = new TimeSpan(0, 0, 5) };
-            EndpointAddress e = new EndpointAddress(@"http://services.romvault.com/Service1.svc");
-
-            Service1Client s = new Service1Client(b, e);
-
-            try
-            {
-                s.SendDATErrorMessage3(Settings.Username, Settings.EMail, Program.Version, Program.SubVersion, message, filename);
-            }
-            catch
-            {
-            }
-            s.Close();
         }
 
         private static string _logfilename;

@@ -60,7 +60,7 @@ namespace ROMVault2
 
             pTree.Tree.TreeBranches = pTreeBranches;
 
-            pTree.Tree.RTree = new Rectangle(0, _yPos - 8, nodeDepth * 18, 16);
+            pTree.Tree.RTree = new Rectangle(0, _yPos - 8, 1 + nodeDepth * 18, 16);
             pTree.Tree.RExpand = new Rectangle(5 + nodeDepth * 18, _yPos + 4, 9, 9);
             pTree.Tree.RChecked = new Rectangle(20 + nodeDepth * 18, _yPos + 2, 13, 13);
             pTree.Tree.RIcon = new Rectangle(35 + nodeDepth * 18, _yPos, 16, 16);

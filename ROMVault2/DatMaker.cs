@@ -57,11 +57,11 @@ namespace ROMVault2
 
         private static string clean(string s)
         {
+            s = s.Replace("&", "&amp;");
             s = s.Replace("\"", "&quot;");
             s = s.Replace("'", "&apos;");
             s = s.Replace("<", "&lt;");
             s = s.Replace(">", "&gt;");
-            s = s.Replace("&", "&amp;");
             return s;
         }
 

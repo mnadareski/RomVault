@@ -15,40 +15,6 @@ namespace ROMVault2.DatReaders
 {
     public static class DatMessBIOSXmlReader
     {
-        private static bool _cleanFileNames = true;
-
-        public static bool ReadDat(ref RvDir tDat, XmlDocument doc)
-        {
-            FileType thisFileType = FileType.Unknown;
-
-            if (!LoadHeaderFromDat(ref tDat, ref doc, ref thisFileType))
-                return false;
-
-            if (doc.DocumentElement == null)
-                return false;
-
-            XmlNodeList dirNodeList = doc.DocumentElement.SelectNodes("dir");
-            if (dirNodeList != null)
-            {
-                for (int i = 0; i < dirNodeList.Count; i++)
-                {
-                    LoadDirFromDat(ref tDat, dirNodeList[i], thisFileType);
-                }
-            }
-
-            XmlNodeList machineNodeList = doc.DocumentElement.SelectNodes("machine");
-
-            if (machineNodeList != null)
-            {
-                for (int i = 0; i < machineNodeList.Count; i++)
-                {
-                    LoadMachineFromDat(ref tDat, machineNodeList[i], thisFileType);
-                }
-            }
-
-            return true;
-        }
-
         public static bool ReadMessDat(ref RvDir tDat, XmlDocument doc)
         {
             FileType thisFileType = FileType.Unknown;
@@ -104,10 +70,6 @@ namespace ROMVault2.DatReaders
             tDat.AddData(RvDat.DatData.URL, VarFix.String(head.SelectSingleNode("url")));
 
 
-            string superDAT = VarFix.String(head.SelectSingleNode("type"));
-            _cleanFileNames = superDAT.ToLower() != "superdat" && superDAT.ToLower() != "gigadat";
-            if (!_cleanFileNames) tDat.AddData(RvDat.DatData.SuperDat, "superdat");
-
             thisFileType = FileType.ZipFile;
 
             // Look for:   <romvault forcepacking="unzip"/>
@@ -151,7 +113,7 @@ namespace ROMVault2.DatReaders
                     }
                     val = VarFix.String(packingNode.Attributes.GetNamedItem("dir")).ToLower(); // noautodir , nogame
                     if (!String.IsNullOrEmpty(val))
-                        tDat.AddData(RvDat.DatData.DirSetup,val);
+                        tDat.AddData(RvDat.DatData.DirSetup, val);
                 }
             }
 
@@ -204,24 +166,24 @@ namespace ROMVault2.DatReaders
                 else
                 {
                     RvDir tpDir = new RvDir(FileType.Dir)
-                                      {
-                                          Name = dir,
-                                          DatStatus = DatStatus.InDatCollect,
-                                          Dat = tDat.Dat,
-                                          Tree = new RvTreeRow()
-                                      };
+                    {
+                        Name = dir,
+                        DatStatus = DatStatus.InDatCollect,
+                        Dat = tDat.Dat,
+                        Tree = new RvTreeRow()
+                    };
                     parent.ChildAdd(tpDir, index);
                     parent = tpDir;
                 }
             }
 
             RvDir tDir = new RvDir(FileType.Dir)
-                             {
-                                 Name = fullname,
-                                 DatStatus = DatStatus.InDatCollect,
-                                 Dat = tDat.Dat,
-                                 Tree = new RvTreeRow()
-                             };
+            {
+                Name = fullname,
+                DatStatus = DatStatus.InDatCollect,
+                Dat = tDat.Dat,
+                Tree = new RvTreeRow()
+            };
 
             int index1;
             if (parent.ChildNameSearch(tDir, out index1) == 0)
@@ -258,43 +220,15 @@ namespace ROMVault2.DatReaders
             int index1 = 0;
 
             string fullname = VarFix.CleanFullFileName(machineNode.Attributes.GetNamedItem("name"));
-            if (_cleanFileNames)
-                fullname = fullname.Replace("/", "-");
-            else
-            {
-                while (fullname.Contains("/"))
-                {
-                    int firstSlash = fullname.IndexOf("/", StringComparison.Ordinal);
-                    string dir = fullname.Substring(0, firstSlash);
-                    dir = VarFix.CleanFileName(dir);
 
-                    fullname = fullname.Substring(firstSlash + 1);
-                    int index;
-                    if (parent.ChildNameSearch(new RvDir(FileType.Dir) { Name = dir }, out index) == 0)
-                    {
-                        parent = (RvDir)parent.Child(index);
-                    }
-                    else
-                    {
-                        RvDir tpDir = new RvDir(FileType.Dir)
-                                          {
-                                              Name = dir,
-                                              DatStatus = DatStatus.InDatCollect,
-                                              Dat = tDat.Dat,
-                                              Tree = new RvTreeRow()
-                                          };
-                        parent.ChildAdd(tpDir, index);
-                        parent = tpDir;
-                    }
-                }
-            }
+            fullname = fullname.Replace("/", "-");
 
             tDir = new RvDir(DBTypeGet.DirFromFile(thisFileType))
-                       {
-                           Name = fullname,
-                           DatStatus = DatStatus.InDatCollect,
-                           Dat = tDat.Dat
-                       };
+            {
+                Name = fullname,
+                DatStatus = DatStatus.InDatCollect,
+                Dat = tDat.Dat
+            };
 
             string testName = tDir.Name;
             int nameCount = 0;
@@ -337,12 +271,12 @@ namespace ROMVault2.DatReaders
             }
 
             RvDir tDirCHD = new RvDir(FileType.Dir)
-                                {
-                                    Name = tDir.Name,
-                                    DatStatus = tDir.DatStatus,
-                                    Dat = tDir.Dat,
-                                    Game = tDir.Game
-                                };
+            {
+                Name = tDir.Name,
+                DatStatus = tDir.DatStatus,
+                Dat = tDir.Dat,
+                Game = tDir.Game
+            };
 
             XmlNodeList romNodeList = machineNode.SelectNodes("rom");
             if (romNodeList != null)
@@ -367,16 +301,16 @@ namespace ROMVault2.DatReaders
 
 
             RvFile tRom = new RvFile(thisFileType)
-                              {
-                                  Dat = tGame.Dat,
-                                  Size = VarFix.ULong(romNode.Attributes.GetNamedItem("size")),
-                                  Name = VarFix.CleanFullFileName(romNode.Attributes.GetNamedItem("name")),
-                                  CRC = VarFix.CleanMD5SHA1(romNode.Attributes.GetNamedItem("crc"), 8),
-                                  SHA1 = VarFix.CleanMD5SHA1(romNode.Attributes.GetNamedItem("sha1"), 40),
-                                  MD5 = VarFix.CleanMD5SHA1(romNode.Attributes.GetNamedItem("md5"), 32),
-                                  Merge = VarFix.CleanFullFileName(romNode.Attributes.GetNamedItem("merge")),
-                                  Status = VarFix.ToLower(romNode.Attributes.GetNamedItem("status"))
-                              };
+            {
+                Dat = tGame.Dat,
+                Size = VarFix.ULong(romNode.Attributes.GetNamedItem("size")),
+                Name = VarFix.CleanFullFileName(romNode.Attributes.GetNamedItem("name")),
+                CRC = VarFix.CleanMD5SHA1(romNode.Attributes.GetNamedItem("crc"), 8),
+                SHA1 = VarFix.CleanMD5SHA1(romNode.Attributes.GetNamedItem("sha1"), 40),
+                MD5 = VarFix.CleanMD5SHA1(romNode.Attributes.GetNamedItem("md5"), 32),
+                Merge = VarFix.CleanFullFileName(romNode.Attributes.GetNamedItem("merge")),
+                Status = VarFix.ToLower(romNode.Attributes.GetNamedItem("status"))
+            };
 
             if (tRom.Size != null) tRom.FileStatusSet(FileStatus.SizeFromDAT);
             if (tRom.CRC != null) tRom.FileStatusSet(FileStatus.CRCFromDAT);

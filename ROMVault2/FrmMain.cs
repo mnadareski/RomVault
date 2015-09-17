@@ -33,6 +33,7 @@ namespace ROMVault2
         private static readonly Color CWhite = Color.FromArgb(255, 255, 255);
 
         private readonly Color[] _displayColor;
+        private readonly Color[] _fontColor;
 
         private bool _updatingGameGrid;
 	
@@ -70,6 +71,7 @@ namespace ROMVault2
 
 
             _displayColor = new Color[(int)RepStatus.EndValue];
+            _fontColor = new Color[(int)RepStatus.EndValue];
 
             // RepStatus.UnSet
 
@@ -100,6 +102,9 @@ namespace ROMVault2
 
 
             _displayColor[(int)RepStatus.Deleted] = CWhite;
+
+            for (int i = 0; i < (int)RepStatus.EndValue; i++)
+                _fontColor[i] = contrasty(_displayColor[i]);
 
             _gameGridColumnXPositions = new int[(int)RepStatus.EndValue];
 
@@ -745,6 +750,7 @@ namespace ROMVault2
             RvDir tRvDir = (RvDir)GameGrid.Rows[e.RowIndex].Tag;
             ReportStatus tDirStat = tRvDir.DirStatus;
             Color bgCol = Color.FromArgb(255, 255, 255);
+            Color fgCol = Color.FromArgb(0, 0, 0);
 
             if (cellBounds.Width == 0 || cellBounds.Height == 0)
                 return;
@@ -754,6 +760,7 @@ namespace ROMVault2
                 if (tDirStat.Get(t1) <= 0) continue;
 
                 bgCol = _displayColor[(int)t1];
+                fgCol = _fontColor[(int)t1];
                 break;
             }
 
@@ -761,6 +768,7 @@ namespace ROMVault2
             {
                 e.CellStyle.BackColor = bgCol;
                 e.CellStyle.SelectionBackColor = bgCol;
+                e.CellStyle.ForeColor = fgCol;
 
                 Bitmap bmp = new Bitmap(cellBounds.Width, cellBounds.Height);
                 Graphics g = Graphics.FromImage(bmp);
@@ -799,6 +807,7 @@ namespace ROMVault2
             else if (GameGrid.Columns[e.ColumnIndex].Name == "CGame")
             {
                 e.CellStyle.BackColor = bgCol;
+                e.CellStyle.ForeColor = fgCol;
 
                 if (String.IsNullOrEmpty(tRvDir.FileName))
                     e.Value = tRvDir.Name;
@@ -808,6 +817,7 @@ namespace ROMVault2
             else if (GameGrid.Columns[e.ColumnIndex].Name == "CDescription")
             {
                 e.CellStyle.BackColor = bgCol;
+                e.CellStyle.ForeColor = fgCol;
 
                 if (tRvDir.Game != null)
                     e.Value = tRvDir.Game.GetData(RvGame.GameData.Description);
@@ -1292,6 +1302,13 @@ namespace ROMVault2
             }
         }
 
+        // returns either white or black, depending of quick luminance of the Color " a "
+        // called when the _displayColor is finished, in order to populate the _fontColor table.
+        private Color contrasty(Color a)
+        {
+            return (a.R << 1) + a.B + a.G + (a.G << 2) < 1024 ? Color.White : Color.Black;
+        }
+
         private void AddRom(RvFile tRomTable, string pathAdd)
         {
 
@@ -1302,8 +1319,11 @@ namespace ROMVault2
                 RomGrid.Rows[row].Tag = tRomTable;
 
                 for (int i = 0; i < RomGrid.Rows[row].Cells.Count; i++)
-                    RomGrid.Rows[row].Cells[i].Style.BackColor = _displayColor[(int)tRomTable.RepStatus];
-
+                {
+                    DataGridViewCellStyle cs = RomGrid.Rows[row].Cells[i].Style;
+                    cs.BackColor = _displayColor[(int)tRomTable.RepStatus];
+                    cs.ForeColor = _fontColor[(int)tRomTable.RepStatus];
+                }
                 string fname = pathAdd + tRomTable.Name;
                 if (!string.IsNullOrEmpty(tRomTable.FileName))
                     fname += " (Found: " + tRomTable.FileName + ")";

@@ -40,8 +40,8 @@ namespace ROMVault2
             {
                 ShowNewFolderButton = true,
                 Description = @"Please select a folder for Dats",
-                RootFolder =  Environment.SpecialFolder.MyComputer ,
-                SelectedPath = @"apps"
+                RootFolder = Environment.SpecialFolder.MyComputer,
+                SelectedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Reports")
             };
 
             if (browse.ShowDialog() != DialogResult.OK) return;
@@ -195,7 +195,7 @@ namespace ROMVault2
             SaveFileDialog saveFileDialog1 = new SaveFileDialog
             {
                 Title = @"Generate Full Report",
-                FileName = @"RVFullReport"+CleanTime()+".txt",
+                FileName = @"RVFullReport" + CleanTime() + ".txt",
                 Filter = @"Rom Vault Report (*.txt)|*.txt|All Files (*.*)|*.*",
                 FilterIndex = 1
             };
@@ -226,7 +226,7 @@ namespace ROMVault2
             SaveFileDialog saveFileDialog1 = new SaveFileDialog
             {
                 Title = @"Generate Fix Report",
-                FileName = @"RVFixReport"+CleanTime()+".txt",
+                FileName = @"RVFixReport" + CleanTime() + ".txt",
                 Filter = @"Rom Vault Fixing Report (*.txt)|*.txt|All Files (*.*)|*.*",
                 FilterIndex = 1
             };

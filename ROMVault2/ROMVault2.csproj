@@ -97,7 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatMaker.cs" />
-    <Compile Include="DatReaders\DatMessBIOSReader.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="SupportedFiles\CHD\CHD.cs" />
     <Compile Include="DatReaders\DatDOSReader.cs" />

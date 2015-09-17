@@ -129,10 +129,6 @@ namespace ROMVault2.DatReaders
             if (mame != null)
                 return DatXmlReader.ReadMameDat(ref tDat, doc);
 
-            XmlNode mess = doc.SelectSingleNode("mess");
-            if (mess != null)
-                return DatMessBIOSXmlReader.ReadMessDat(ref tDat, doc);
-
             if (doc.DocumentElement != null)
             {
                 XmlNode head = doc.DocumentElement.SelectSingleNode("header");

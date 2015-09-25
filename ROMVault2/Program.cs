@@ -15,11 +15,8 @@ namespace ROMVault2
         //public static UsernamePassword Up;
         public static readonly Encoding Enc = Encoding.GetEncoding(28591);
         public const string Version = "2.2";
-        public const int SubVersion = 3;
-
-        public static string ErrorMessage;
-        public static string URL;
-
+        public const int SubVersion = 4;
+        
         public static SynchronizationContext SyncCont;
 
         /// <summary>
@@ -39,15 +36,7 @@ namespace ROMVault2
             progress.ShowDialog();
 
             progress.Dispose();
-
-            if (!String.IsNullOrEmpty(ErrorMessage))
-            {
-                MessageBox.Show(ErrorMessage);
-                if (!String.IsNullOrEmpty(URL))
-                    System.Diagnostics.Process.Start(URL);
-                return;
-            }
-
+                       
             Application.Run(new FrmMain());
         }
     }

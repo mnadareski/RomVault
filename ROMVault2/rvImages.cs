@@ -11,10 +11,7 @@ namespace ROMVault2
 {
     public static class rvImages
     {
-        private static List<string> names;
-        private static List<Bitmap> images; 
-
-
+     
         public static Bitmap GetBitmap(string bitmapName)
         {
             object bmObj = rvImages1.ResourceManager.GetObject(bitmapName);

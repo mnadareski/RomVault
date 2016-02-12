@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using ROMVault2.SupportedFiles.Zip.ZLib;
 
 // UInt16 = ushort
@@ -17,11 +18,12 @@ using ROMVault2.SupportedFiles.Zip.ZLib;
 
 namespace ROMVault2.SupportedFiles.Zip
 {
-  
+
     public class ZipFile
     {
-        const int Buffersize = 4096 * 128;
-        private static byte[] _buffer;
+        const int Buffersize = 4096 * 1024;
+        private static byte[] _buffer0;
+        private static byte[] _buffer1;
 
         private const uint LocalFileHeaderSignature = 0x04034b50;
         private const uint CentralDirectoryHeaderSigniature = 0x02014b50;
@@ -48,10 +50,10 @@ namespace ROMVault2.SupportedFiles.Zip
 
             public bool Zip64 { get; private set; }
             public bool TrrntZip { get; private set; }
-            
+
             public byte[] sha1 { get; private set; }
             public byte[] md5 { get; private set; }
-            
+
             public ZipReturn FileStatus = ZipReturn.ZipUntested;
             public LocalFile(Stream zipFs)
             {
@@ -414,7 +416,7 @@ namespace ROMVault2.SupportedFiles.Zip
                     _generalPurposeBitFlag = br.ReadUInt16();
                     if ((_generalPurposeBitFlag & 8) == 8)
                         return ZipReturn.ZipCannotFastOpen;
-                    
+
                     _compressionMethod = br.ReadUInt16();
                     _lastModFileTime = br.ReadUInt16();
                     _lastModFileDate = br.ReadUInt16();
@@ -482,7 +484,7 @@ namespace ROMVault2.SupportedFiles.Zip
 
                     _dataLocation = (ulong)_zipFs.Position;
                     return ZipReturn.ZipGood;
-                    
+
                 }
                 catch
                 {
@@ -717,25 +719,53 @@ namespace ROMVault2.SupportedFiles.Zip
                     MD5 lmd5 = System.Security.Cryptography.MD5.Create();
                     SHA1 lsha1 = System.Security.Cryptography.SHA1.Create();
 
-                    ulong sizetogo = UncompressedSize;
-                    if (_buffer == null)
-                        _buffer = new byte[Buffersize];
-
-                    while (sizetogo > 0)
+                    if (_buffer0 == null)
                     {
-                        int sizenow = sizetogo > Buffersize ? Buffersize : (int)sizetogo;
-                        sInput.Read(_buffer, 0, sizenow);
-
-                        crc32.TransformBlock(_buffer, 0, sizenow, null, 0);
-                        lmd5.TransformBlock(_buffer, 0, sizenow, null, 0);
-                        lsha1.TransformBlock(_buffer, 0, sizenow, null, 0);
-
-                        sizetogo = sizetogo - (ulong)sizenow;
+                        _buffer0 = new byte[Buffersize];
+                        _buffer1 = new byte[Buffersize];
                     }
 
-                    crc32.TransformFinalBlock(_buffer, 0, 0);
-                    lmd5.TransformFinalBlock(_buffer, 0, 0);
-                    lsha1.TransformFinalBlock(_buffer, 0, 0);
+                    ulong sizetogo = UncompressedSize;
+
+                    // Pre load the first buffer0
+                    int sizeNext = sizetogo > Buffersize ? Buffersize : (int)sizetogo;
+                    sInput.Read(_buffer0, 0, sizeNext);
+                    int sizebuffer = sizeNext;
+                    sizetogo -= (ulong)sizeNext;
+                    bool whichBuffer = true;
+
+                    while (sizebuffer > 0)
+                    {
+                        sizeNext = sizetogo > Buffersize ? Buffersize : (int)sizetogo;
+
+                        Thread t0 = null;
+                        if (sizeNext > 0)
+                        {
+                            t0 = new Thread(() => { sInput.Read(whichBuffer ? _buffer1 : _buffer0, 0, sizeNext); });
+                            t0.Start();
+                        }
+
+                        byte[] buffer = whichBuffer ? _buffer0 : _buffer1;
+                        Thread t1 = new Thread(() => { crc32.TransformBlock(buffer, 0, sizebuffer, null, 0); });
+                        Thread t2 = new Thread(() => { lmd5.TransformBlock(buffer, 0, sizebuffer, null, 0); });
+                        Thread t3 = new Thread(() => { lsha1.TransformBlock(buffer, 0, sizebuffer, null, 0); });
+                        t1.Start();
+                        t2.Start();
+                        t3.Start();
+                        if (t0 != null)
+                            t0.Join();
+                        t1.Join();
+                        t2.Join();
+                        t3.Join();
+
+                        sizebuffer = sizeNext;
+                        sizetogo -= (ulong)sizeNext;
+                        whichBuffer = !whichBuffer;
+                    }
+
+                    crc32.TransformFinalBlock(_buffer0, 0, 0);
+                    lmd5.TransformFinalBlock(_buffer0, 0, 0);
+                    lsha1.TransformFinalBlock(_buffer0, 0, 0);
 
                     byte[] testcrc = crc32.Hash;
                     md5 = lmd5.Hash;
@@ -1365,7 +1395,7 @@ namespace ROMVault2.SupportedFiles.Zip
             _localFiles[_localFiles.Count - 1].LocalFileAddDirectory();
         }
 
-        
+
         /*
         public void BreakTrrntZip(string filename)
         {
@@ -1525,7 +1555,7 @@ namespace ROMVault2.SupportedFiles.Zip
             int pos1 = 0;
             int pos2 = 0;
 
-            for (; ; )
+            for (;;)
             {
                 if (pos1 == bytes1.Length)
                     return ((pos2 == bytes2.Length) ? 0 : -1);

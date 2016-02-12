@@ -16,7 +16,7 @@ namespace ROMVault2.DatReaders
 
         public static bool ReadDat(ref RvDir tDat, XmlDocument doc)
         {
-            FileType thisFileType = FileType.Unknown; // added
+            FileType thisFileType = FileType.Unknown;
 
             if (!LoadHeaderFromDat(ref tDat, ref doc, ref thisFileType))
                 return false;
@@ -65,7 +65,6 @@ namespace ROMVault2.DatReaders
                     break;
             }
             
-            // deterime whether to compress to .zip or store as files
             val = VarFix.String(head[0].Attributes.GetNamedItem("forcepacking")).ToLower();
             switch (val.ToLower())
             {

@@ -288,13 +288,13 @@ namespace ROMVault2.DatReaders
 
                                 if (b1)
                                 {
-                                    ((RvFile)mGame.Child(r)).CRC = ((RvFile)romofGame.Child(r1)).CRC;
+                                    ((RvFile)mGame.Child(r)).CRC =ArrByte.Copy( ((RvFile)romofGame.Child(r1)).CRC);
                                     ((RvFile)mGame.Child(r)).FileStatusSet(FileStatus.CRCFromDAT);
                                     ((RvFile)mGame.Child(r)).Status = "(CRCFound)";
                                 }
                                 else
                                 {
-                                    ((RvFile)romofGame.Child(r1)).CRC = ((RvFile)mGame.Child(r)).CRC;
+                                    ((RvFile)romofGame.Child(r1)).CRC =ArrByte.Copy( ((RvFile)mGame.Child(r)).CRC);
                                     ((RvFile)romofGame.Child(r1)).FileStatusSet(FileStatus.CRCFromDAT);
                                     ((RvFile)romofGame.Child(r1)).Status = "(CRCFound)";
                                 }
@@ -408,7 +408,7 @@ namespace ROMVault2.DatReaders
                             {
                                 for (int r1 = 0; r1 < romofGame.ChildCount; r1++)
                                 {
-                                    if (mGame.Child(r).Name != romofGame.Child(r1).Name) continue;
+                                    if (mGame.Child(r).Name.ToLower() != romofGame.Child(r1).Name.ToLower()) continue;
 
                                     ulong? Size0 = ((RvFile)mGame.Child(r)).Size;
                                     ulong? Size1 = ((RvFile)romofGame.Child(r1)).Size;

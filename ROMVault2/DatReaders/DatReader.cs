@@ -340,9 +340,12 @@ namespace ROMVault2.DatReaders
 
                     for (int r1 = 0; r1 < romofGame.ChildCount; r1++)
                     {
-                        if ((name == romofGame.Child(r1).Name || mergename == romofGame.Child(r1).Name) &&
+                        if (
+                            (name == romofGame.Child(r1).Name.ToLower() || mergename == romofGame.Child(r1).Name.ToLower()) &&
                              (ArrByte.iCompare(((RvFile)mGame.Child(r)).CRC, ((RvFile)romofGame.Child(r1)).CRC) != 0 ||
-                             ((RvFile)mGame.Child(r)).Size != ((RvFile)romofGame.Child(r1)).Size))
+                             ((RvFile)mGame.Child(r)).Size != ((RvFile)romofGame.Child(r1)).Size)
+                             
+                           )
                             founderror = true;
 
                     }
@@ -361,7 +364,7 @@ namespace ROMVault2.DatReaders
                     bool found = false;
                     for (int r1 = 0; r1 < romofGame.ChildCount; r1++)
                     {
-                        if ((name == romofGame.Child(r1).Name || mergename == romofGame.Child(r1).Name) &&
+                        if ((name == romofGame.Child(r1).Name.ToLower() || mergename == romofGame.Child(r1).Name.ToLower()) &&
                             (ArrByte.iCompare(((RvFile)mGame.Child(r)).CRC, ((RvFile)romofGame.Child(r1)).CRC) == 0 &&
                              ((RvFile)mGame.Child(r)).Size == ((RvFile)romofGame.Child(r1)).Size))
                         {
@@ -493,7 +496,6 @@ namespace ROMVault2.DatReaders
 
             if (tRom.Status == "nodump")
             {
-                tRom.CRC = null;
                 tRom.DatStatus = DatStatus.InDatBad;
                 return;
             }

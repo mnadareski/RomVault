@@ -119,6 +119,11 @@
     <Compile Include="rvImages.cs" />
     <Compile Include="SupportedFiles\Files\UnCompFiles.cs" />
     <Compile Include="SupportedFiles\ZipEnums.cs" />
+    <Compile Include="SupportedFiles\Zip\ZLib\Crc32.cs" />
+    <Compile Include="ThreadReaders\ThreadCRC.cs" />
+    <Compile Include="ThreadReaders\ThreadLoadBuffer.cs" />
+    <Compile Include="ThreadReaders\ThreadMD5.cs" />
+    <Compile Include="ThreadReaders\ThreadSHA1.cs" />
     <Compile Include="Utils\ArrByte.cs" />
     <Compile Include="BackGroundWorkerInterface.cs" />
     <Compile Include="DatReaders\DatCmpReader.cs" />
@@ -200,7 +205,6 @@
     <Compile Include="Utils\VarFix.cs" />
     <Compile Include="IO\Win32Native.cs" />
     <Compile Include="SupportedFiles\Zip\zipFile.cs" />
-    <Compile Include="SupportedFiles\Zip\ZLib\Crc32.cs" />
     <Compile Include="SupportedFiles\Zip\ZLib\Deflate.cs" />
     <Compile Include="SupportedFiles\Zip\ZLib\DeflateStream.cs" />
     <Compile Include="SupportedFiles\Zip\ZLib\GZipStream.cs" />
@@ -256,6 +260,7 @@
     <EmbeddedResource Include="rvTree.resx">
       <DependentUpon>rvTree.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

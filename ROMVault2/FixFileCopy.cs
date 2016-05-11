@@ -8,6 +8,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Security.Cryptography;
+using RomVaultX.SupportedFiles.Files;
 using ROMVault2.RvDB;
 using ROMVault2.SupportedFiles;
 using ROMVault2.SupportedFiles.Zip;
@@ -259,15 +260,15 @@ namespace ROMVault2
             {
                 #region Do Data Tranfer
 
-                CRC32Hash crc32 = null;
-                MD5 md5 = null;
-                SHA1 sha1 = null;
+                ThreadCRC tcrc32 =null;
+                ThreadMD5 tmd5 = null;
+                ThreadSHA1 tsha1 = null;
 
                 if (!rawCopy)
                 {
-                    crc32 = new CRC32Hash();
-                    md5 = MD5.Create();
-                    sha1 = SHA1.Create();
+                    tcrc32 = new ThreadCRC();
+                    tmd5 = new ThreadMD5();
+                    tsha1 = new ThreadSHA1();
                 }
 
                 ulong sizetogo = streamSize;
@@ -326,9 +327,13 @@ namespace ROMVault2
 
                     if (!rawCopy)
                     {
-                        crc32.TransformBlock(_buffer, 0, sizenow, null, 0);
-                        md5.TransformBlock(_buffer, 0, sizenow, null, 0);
-                        sha1.TransformBlock(_buffer, 0, sizenow, null, 0);
+                        tcrc32.Trigger(_buffer, sizenow);
+                        tmd5.Trigger(_buffer, sizenow);
+                        tsha1.Trigger(_buffer, sizenow);
+
+                        tcrc32.Wait();
+                        tmd5.Wait();
+                        tsha1.Wait();
                     }
                     try
                     {
@@ -353,14 +358,17 @@ namespace ROMVault2
                 if (!rawCopy)
                 {
 
-                    crc32.TransformFinalBlock(_buffer, 0, 0);
-                    md5.TransformFinalBlock(_buffer, 0, 0);
-                    sha1.TransformFinalBlock(_buffer, 0, 0);
+                    tcrc32.Finish();
+                    tmd5.Finish();
+                    tsha1.Finish();
 
-                    bCRC = crc32.Hash;
-                    bMD5 = md5.Hash;
-                    bSHA1 = sha1.Hash;
+                    bCRC = tcrc32.Hash;
+                    bMD5 = tmd5.Hash;
+                    bSHA1 = tsha1.Hash;
 
+                    tcrc32.Dispose();
+                    tmd5.Dispose();
+                    tsha1.Dispose();
                 }
                 // if we raw copied and the source file has been FileChecked then we can trust the checksums in the source file
                 else

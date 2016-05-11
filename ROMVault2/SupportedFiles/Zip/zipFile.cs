@@ -10,6 +10,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using RomVaultX.SupportedFiles.Files;
 using ROMVault2.SupportedFiles.Zip.ZLib;
 
 // UInt16 = ushort
@@ -715,9 +716,6 @@ namespace ROMVault2.SupportedFiles.Zip
                         return;
                     }
 
-                    CRC32Hash crc32 = new CRC32Hash();
-                    MD5 lmd5 = System.Security.Cryptography.MD5.Create();
-                    SHA1 lsha1 = System.Security.Cryptography.SHA1.Create();
 
                     if (_buffer0 == null)
                     {
@@ -726,6 +724,11 @@ namespace ROMVault2.SupportedFiles.Zip
                     }
 
                     ulong sizetogo = UncompressedSize;
+
+                    ThreadLoadBuffer lbuffer = new ThreadLoadBuffer(sInput);
+                    ThreadCRC tcrc32 = new ThreadCRC();
+                    ThreadMD5 tmd5 = new ThreadMD5();
+                    ThreadSHA1 tsha1 = new ThreadSHA1();
 
                     // Pre load the first buffer0
                     int sizeNext = sizetogo > Buffersize ? Buffersize : (int)sizetogo;
@@ -738,39 +741,39 @@ namespace ROMVault2.SupportedFiles.Zip
                     {
                         sizeNext = sizetogo > Buffersize ? Buffersize : (int)sizetogo;
 
-                        Thread t0 = null;
                         if (sizeNext > 0)
-                        {
-                            t0 = new Thread(() => { sInput.Read(whichBuffer ? _buffer1 : _buffer0, 0, sizeNext); });
-                            t0.Start();
-                        }
+                            lbuffer.Trigger(whichBuffer ? _buffer1 : _buffer0, sizeNext);
 
                         byte[] buffer = whichBuffer ? _buffer0 : _buffer1;
-                        Thread t1 = new Thread(() => { crc32.TransformBlock(buffer, 0, sizebuffer, null, 0); });
-                        Thread t2 = new Thread(() => { lmd5.TransformBlock(buffer, 0, sizebuffer, null, 0); });
-                        Thread t3 = new Thread(() => { lsha1.TransformBlock(buffer, 0, sizebuffer, null, 0); });
-                        t1.Start();
-                        t2.Start();
-                        t3.Start();
-                        if (t0 != null)
-                            t0.Join();
-                        t1.Join();
-                        t2.Join();
-                        t3.Join();
+                        tcrc32.Trigger(buffer, sizebuffer);
+                        tmd5.Trigger(buffer, sizebuffer);
+                        tsha1.Trigger(buffer, sizebuffer);
+
+                        if (sizeNext > 0)
+                            lbuffer.Wait();
+                        tcrc32.Wait();
+                        tmd5.Wait();
+                        tsha1.Wait();
 
                         sizebuffer = sizeNext;
                         sizetogo -= (ulong)sizeNext;
                         whichBuffer = !whichBuffer;
                     }
 
-                    crc32.TransformFinalBlock(_buffer0, 0, 0);
-                    lmd5.TransformFinalBlock(_buffer0, 0, 0);
-                    lsha1.TransformFinalBlock(_buffer0, 0, 0);
+                    lbuffer.Finish();
+                    tcrc32.Finish();
+                    tmd5.Finish();
+                    tsha1.Finish();
+                    
+                    byte[] testcrc = tcrc32.Hash;
+                    md5 = tmd5.Hash;
+                    sha1 = tsha1.Hash;
 
-                    byte[] testcrc = crc32.Hash;
-                    md5 = lmd5.Hash;
-                    sha1 = lsha1.Hash;
-
+                    lbuffer.Dispose();
+                    tcrc32.Dispose();
+                    tmd5.Dispose();
+                    tsha1.Dispose();
+                    
                     if (_compressionMethod == 8)
                     {
                         sInput.Close();

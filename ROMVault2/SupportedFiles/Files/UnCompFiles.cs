@@ -5,9 +5,7 @@
  ******************************************************/
 
 using System.IO;
-using System.Security.Cryptography;
-using System.Threading;
-using ROMVault2.SupportedFiles.Zip.ZLib;
+using RomVaultX.SupportedFiles.Files;
 
 namespace ROMVault2.SupportedFiles.Files
 {
@@ -30,18 +28,24 @@ namespace ROMVault2.SupportedFiles.Files
             crc = null;
 
             Stream ds = null;
-            CRC32Hash crc32 = new CRC32Hash();
-
-            MD5 md5 = null;
-            if (testDeep) md5 = MD5.Create();
-            SHA1 sha1 = null;
-            if (testDeep) sha1 = SHA1.Create();
+            ThreadLoadBuffer lbuffer = null;
+            ThreadCRC tcrc32 = null;
+            ThreadMD5 tmd5 = null;
+            ThreadSHA1 tsha1 = null;
 
             try
             {
                 int errorCode = IO.FileStream.OpenFileRead(filename, out ds);
                 if (errorCode != 0)
                     return errorCode;
+
+                lbuffer = new ThreadLoadBuffer(ds);
+                tcrc32 = new ThreadCRC();
+                if (testDeep)
+                {
+                    tmd5 = new ThreadMD5();
+                    tsha1 = new ThreadSHA1();
+                }
 
                 long sizetogo = ds.Length;
 
@@ -56,52 +60,55 @@ namespace ROMVault2.SupportedFiles.Files
                 {
                     sizeNext = sizetogo > Buffersize ? Buffersize : (int)sizetogo;
 
-                    Thread t0 = null;
                     if (sizeNext > 0)
-                    {
-                        t0 = new Thread(() => { ds.Read(whichBuffer ? Buffer1 : Buffer0, 0, sizeNext); });
-                        t0.Start();
-                    }
+                        lbuffer.Trigger(whichBuffer ? Buffer1 : Buffer0, sizeNext);
 
                     byte[] buffer = whichBuffer ? Buffer0 : Buffer1;
-                    Thread t1 = new Thread(() => { crc32.TransformBlock(buffer, 0, sizebuffer, null, 0); });
-                    t1.Start();
-                    if (testDeep)
-                    {
-                        Thread t2 = new Thread(() => { md5.TransformBlock(buffer, 0, sizebuffer, null, 0); });
-                        Thread t3 = new Thread(() => { sha1.TransformBlock(buffer, 0, sizebuffer, null, 0); });
-                        t2.Start();
-                        t3.Start();
-                        t2.Join();
-                        t3.Join();
-                    }
-                    if (t0 != null)
-                        t0.Join();
-                    t1.Join();
+                    tcrc32.Trigger(buffer, sizebuffer);
+                    tmd5?.Trigger(buffer, sizebuffer);
+                    tsha1?.Trigger(buffer, sizebuffer);
+
+                    if (sizeNext > 0)
+                        lbuffer.Wait();
+                    tcrc32.Wait();
+                    tmd5?.Wait();
+                    tsha1?.Wait();
 
                     sizebuffer = sizeNext;
                     sizetogo -= sizeNext;
                     whichBuffer = !whichBuffer;
                 }
 
-                crc32.TransformFinalBlock(Buffer0, 0, 0);
-                if (testDeep) md5.TransformFinalBlock(Buffer0, 0, 0);
-                if (testDeep) sha1.TransformFinalBlock(Buffer0, 0, 0);
+                lbuffer.Finish();
+                tcrc32.Finish();
+                tmd5?.Finish();
+                tsha1?.Finish();
 
                 ds.Close();
             }
             catch
             {
-                if (ds != null)
-                    ds.Close();
+                ds?.Close();
+                lbuffer?.Dispose();
+                tcrc32?.Dispose();
+                tmd5?.Dispose();
+                tsha1?.Dispose();
 
                 return 0x17;
             }
 
-            crc = crc32.Hash;
-            if (testDeep) bMD5 = md5.Hash;
-            if (testDeep) bSHA1 = sha1.Hash;
+            crc = tcrc32.Hash;
+            if (testDeep)
+            {
+                bMD5 = tmd5.Hash;
+                bSHA1 = tsha1.Hash;
+            }
 
+            lbuffer.Dispose();
+            tcrc32.Dispose();
+            tmd5?.Dispose();
+            tsha1?.Dispose();
+            
             return 0;
         }
     }

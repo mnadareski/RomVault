@@ -57,7 +57,7 @@ namespace ROMVault2.IO
             FullName = path;
             Name = Path.GetFileName(path);
 
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 System.IO.FileInfo fi = new System.IO.FileInfo(path);
 
@@ -94,7 +94,7 @@ namespace ROMVault2.IO
             FullName = path;
             Name = Path.GetFileName(path);
 
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 System.IO.DirectoryInfo fi = new System.IO.DirectoryInfo(path);
 
@@ -123,7 +123,7 @@ namespace ROMVault2.IO
         {
             List<DirectoryInfo> dirs = new List<DirectoryInfo>();
 
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(FullName);
                 System.IO.DirectoryInfo[] arrDi = di.GetDirectories(SearchPattern);
@@ -183,7 +183,7 @@ namespace ROMVault2.IO
         {
             List<FileInfo> files = new List<FileInfo>();
 
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(FullName);
                 System.IO.FileInfo[] arrDi = di.GetFiles(SearchPattern);
@@ -239,7 +239,7 @@ namespace ROMVault2.IO
     {
         public static bool Exists(string path)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
                 return System.IO.Directory.Exists(path);
 
 
@@ -252,7 +252,7 @@ namespace ROMVault2.IO
         }
         public static void Move(String sourceDirName, String destDirName)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 System.IO.Directory.Move(sourceDirName, destDirName);
                 return;
@@ -288,7 +288,7 @@ namespace ROMVault2.IO
         }
         public static void Delete(String path)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 System.IO.Directory.Delete(path);
                 return;
@@ -301,7 +301,7 @@ namespace ROMVault2.IO
 
         public static void CreateDirectory(String path)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 System.IO.Directory.CreateDirectory(path);
                 return;
@@ -323,7 +323,7 @@ namespace ROMVault2.IO
     {
         public static bool Exists(string path)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
                 return System.IO.File.Exists(path);
 
 
@@ -340,7 +340,7 @@ namespace ROMVault2.IO
         }
         public static void Copy(String sourceFileName, String destFileName, bool overwrite)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 System.IO.File.Copy(sourceFileName, destFileName, overwrite);
                 return;
@@ -387,7 +387,7 @@ namespace ROMVault2.IO
         }
         public static void Move(String sourceFileName, String destFileName)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 System.IO.File.Move(sourceFileName, destFileName);
                 return;
@@ -412,7 +412,7 @@ namespace ROMVault2.IO
         }
         public static void Delete(String path)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 System.IO.File.Delete(path);
                 return;
@@ -431,7 +431,7 @@ namespace ROMVault2.IO
 
         public static bool SetAttributes(String path, FileAttributes fileAttributes)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 try
                 {
@@ -466,7 +466,7 @@ namespace ROMVault2.IO
         }
         public static string Combine(string path1, string path2)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
                 return System.IO.Path.Combine(path1, path2);
 
             if (path1 == null || path2 == null)
@@ -538,7 +538,7 @@ namespace ROMVault2.IO
         }
         public static String GetDirectoryName(String path)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
                 return System.IO.Path.GetDirectoryName(path);
 
 
@@ -600,7 +600,7 @@ namespace ROMVault2.IO
 
         public static int OpenFileRead(string path, out System.IO.Stream stream)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 try
                 {
@@ -634,7 +634,7 @@ namespace ROMVault2.IO
 
         public static int OpenFileWrite(string path, out System.IO.Stream stream)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
             {
                 try
                 {
@@ -675,7 +675,7 @@ namespace ROMVault2.IO
     {
         public static string GetShortPath(string path)
         {
-            if (Settings.IsUnix)
+            if ( Program.rvSettings.IsUnix)
                 return path;
 
             int remove = 0;

@@ -40,7 +40,7 @@ namespace ROMVault2
         {
             RepairStatus.InitStatusCheck();
 
-            Settings.SetDefaults();
+            Program.rvSettings.SetDefaults();
 
             DB.Read(sender,e);
         }

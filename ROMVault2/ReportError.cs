@@ -111,7 +111,7 @@ namespace ROMVault2
 
         public static void ReportList(List<RvFile> files)
         {
-            if (!Settings.DebugLogsEnabled) return;
+            if (!Program.rvSettings.DebugLogsEnabled) return;
 
             string dir, now;
             OpenLogFile(out dir, out now);
@@ -150,7 +150,7 @@ namespace ROMVault2
 
         public static void LogOut(string s)
         {
-            if (!Settings.DebugLogsEnabled) return;
+            if (!Program.rvSettings.DebugLogsEnabled) return;
 
             if (_logfilename == null)
             {
@@ -166,7 +166,7 @@ namespace ROMVault2
         }
         public static void LogOut(RvFile f)
         {
-            if (!Settings.DebugLogsEnabled) return;
+            if (!Program.rvSettings.DebugLogsEnabled) return;
 
             StreamWriter sw = new StreamWriter(_logfilename, true);
             ReportFile(sw, f);

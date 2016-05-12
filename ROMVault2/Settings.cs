@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Win32;
 using ROMVault2.RvDB;
 
 namespace ROMVault2
@@ -31,24 +30,24 @@ namespace ROMVault2
         Level3
     }
 
-    public static class Settings
+    public class Settings
     {
 
-        public static string DatRoot;
-        public static string CacheFile;
-        public static eScanLevel ScanLevel;
-        public static eFixLevel FixLevel;
+        public string DatRoot;
+        public string CacheFile;
+        public eScanLevel ScanLevel;
+        public eFixLevel FixLevel;
 
-        public static List<DirMap> DirPathMap;
+        public List<DirMap> DirPathMap;
 
-        public static List<string> IgnoreFiles;
+        public List<string> IgnoreFiles;
 
-        public static bool DoubleCheckDelete = true;
-        public static bool DebugLogsEnabled;
-        public static bool CacheSaveTimerEnabled = true;
-        public static int CacheSaveTimePeriod = 10;
+        public bool DoubleCheckDelete = true;
+        public bool DebugLogsEnabled;
+        public bool CacheSaveTimerEnabled = true;
+        public int CacheSaveTimePeriod = 10;
 
-        public static bool IsUnix
+        public bool IsUnix
         {
             get
             {
@@ -57,13 +56,12 @@ namespace ROMVault2
             }
         }
 
-        public static bool IsMono { get { return (Type.GetType ("Mono.Runtime") != null); } }
+        public bool IsMono { get { return (Type.GetType("Mono.Runtime") != null); } }
 
-        public static void SetDefaults()
+        public void SetDefaults()
         {
             CacheFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2_" + DBVersion.Version + ".Cache");
 
-            //DatRoot = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DatRoot");
             DatRoot = "DatRoot";
 
             ScanLevel = eScanLevel.Level2;
@@ -78,7 +76,7 @@ namespace ROMVault2
             DirPathMap.Sort();
         }
 
-        public static void ResetDirectories()
+        public void ResetDirectories()
         {
             DirPathMap = new List<DirMap>
                              {
@@ -87,7 +85,7 @@ namespace ROMVault2
                              };
         }
 
-        public static string ToSort()
+        public string ToSort()
         {
             foreach (DirMap t in DirPathMap)
             {
@@ -97,179 +95,172 @@ namespace ROMVault2
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ToSort");
         }
 
-        public static void WriteConfig()
+        public void WriteConfig()
         {
-            if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2.cfg")))
-                File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2.cfg"));
+            //if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2.cfg")))
+            //    File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2.cfg"));
+            if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2cfg.xml")))
+                File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2cfg.xml"));
 
-            FileStream fs = new FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2.cfg"), FileMode.CreateNew, FileAccess.Write);
-            BinaryWriter bw = new BinaryWriter(fs);
-            const int ver = 5;
-
-            bw.Write(ver);                  //int
-            bw.Write(DatRoot);              //string
-            bw.Write((Int32)ScanLevel);
-            bw.Write((Int32)FixLevel);
-            bw.Write(DebugLogsEnabled);     //bool
-
-            bw.Write(IgnoreFiles.Count);    //int
-            foreach (string t in IgnoreFiles)
+            using (StreamWriter sw = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2cfg.xml")))
             {
-                bw.Write(t);                //string
+                System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(Program.rvSettings.GetType());
+                x.Serialize(sw, Program.rvSettings);
+                sw.Flush();
             }
-
-            bw.Write(DirPathMap.Count);     //int
-            foreach (DirMap t in DirPathMap)
-            {
-                bw.Write(t.DirKey);         //string
-                bw.Write(t.DirPath);        //string
-            }
-
-            bw.Write(CacheSaveTimerEnabled); //bool
-            bw.Write(CacheSaveTimePeriod);   //int
-            bw.Write(DoubleCheckDelete);     //bool
-
-            fs.Flush();
-            fs.Close();
         }
 
-        private static void ReadConfig()
+        private void ReadConfig()
         {
-            if (!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2.cfg"))) return;
-
-            FileStream fs = new FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2.cfg"), FileMode.Open, FileAccess.Read);
-            BinaryReader br = new BinaryReader(fs);
-
-            int ver = br.ReadInt32();
-            if (ver == 1)
+            if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2cfg.xml")))
             {
-                DatRoot = br.ReadString();
-                ScanLevel = eScanLevel.Level1;
-                FixLevel = (eFixLevel)br.ReadInt32();
-
-                IgnoreFiles = new List<string>();
-                int c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    IgnoreFiles.Add(br.ReadString());
-
-                DirPathMap = new List<DirMap>();
-                c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
-            }
-            if (ver == 2)
-            {
-                DatRoot = br.ReadString();
-                ScanLevel = (eScanLevel)br.ReadInt32();
-                FixLevel = (eFixLevel)br.ReadInt32();
-
-                IgnoreFiles = new List<string>();
-                int c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    IgnoreFiles.Add(br.ReadString());
-
-                DirPathMap = new List<DirMap>();
-                c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
-            }
-            if (ver == 3)
-            {
-                DatRoot = br.ReadString();
-                ScanLevel = (eScanLevel)br.ReadInt32();
-                FixLevel = (eFixLevel)br.ReadInt32();
-                DebugLogsEnabled = br.ReadBoolean();
-
-                IgnoreFiles = new List<string>();
-                int c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    IgnoreFiles.Add(br.ReadString());
-
-                DirPathMap = new List<DirMap>();
-                c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
+                using (StreamReader sr = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2cfg.xml")))
+                {
+                    System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(Program.rvSettings.GetType());
+                    Program.rvSettings = (Settings)x.Deserialize(sr);
+                }
+                return;
             }
 
-            if (ver == 4)
+            if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2.cfg")))
             {
-                DatRoot = br.ReadString();
-                ScanLevel = (eScanLevel)br.ReadInt32();
-                FixLevel = (eFixLevel)br.ReadInt32();
-                DebugLogsEnabled = br.ReadBoolean();
 
-                IgnoreFiles = new List<string>();
-                int c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    IgnoreFiles.Add(br.ReadString());
+                FileStream fs = new FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RomVault2.cfg"), FileMode.Open, FileAccess.Read);
+                BinaryReader br = new BinaryReader(fs);
 
-                DirPathMap = new List<DirMap>();
-                c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
+                int ver = br.ReadInt32();
+                if (ver == 1)
+                {
+                    DatRoot = br.ReadString();
+                    ScanLevel = eScanLevel.Level1;
+                    FixLevel = (eFixLevel)br.ReadInt32();
 
-                CacheSaveTimerEnabled = br.ReadBoolean();
-                CacheSaveTimePeriod = br.ReadInt32();
+                    IgnoreFiles = new List<string>();
+                    int c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        IgnoreFiles.Add(br.ReadString());
+
+                    DirPathMap = new List<DirMap>();
+                    c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
+                }
+                if (ver == 2)
+                {
+                    DatRoot = br.ReadString();
+                    ScanLevel = (eScanLevel)br.ReadInt32();
+                    FixLevel = (eFixLevel)br.ReadInt32();
+
+                    IgnoreFiles = new List<string>();
+                    int c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        IgnoreFiles.Add(br.ReadString());
+
+                    DirPathMap = new List<DirMap>();
+                    c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
+                }
+                if (ver == 3)
+                {
+                    DatRoot = br.ReadString();
+                    ScanLevel = (eScanLevel)br.ReadInt32();
+                    FixLevel = (eFixLevel)br.ReadInt32();
+                    DebugLogsEnabled = br.ReadBoolean();
+
+                    IgnoreFiles = new List<string>();
+                    int c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        IgnoreFiles.Add(br.ReadString());
+
+                    DirPathMap = new List<DirMap>();
+                    c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
+                }
+
+                if (ver == 4)
+                {
+                    DatRoot = br.ReadString();
+                    ScanLevel = (eScanLevel)br.ReadInt32();
+                    FixLevel = (eFixLevel)br.ReadInt32();
+                    DebugLogsEnabled = br.ReadBoolean();
+
+                    IgnoreFiles = new List<string>();
+                    int c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        IgnoreFiles.Add(br.ReadString());
+
+                    DirPathMap = new List<DirMap>();
+                    c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
+
+                    CacheSaveTimerEnabled = br.ReadBoolean();
+                    CacheSaveTimePeriod = br.ReadInt32();
+                }
+
+                if (ver == 5)
+                {
+                    DatRoot = br.ReadString();
+                    ScanLevel = (eScanLevel)br.ReadInt32();
+                    FixLevel = (eFixLevel)br.ReadInt32();
+                    DebugLogsEnabled = br.ReadBoolean();
+
+                    IgnoreFiles = new List<string>();
+                    int c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        IgnoreFiles.Add(br.ReadString());
+
+                    DirPathMap = new List<DirMap>();
+                    c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
+
+                    CacheSaveTimerEnabled = br.ReadBoolean();
+                    CacheSaveTimePeriod = br.ReadInt32();
+
+                    DoubleCheckDelete = br.ReadBoolean();
+                }
+
+                if (ver == 6)
+                {
+                    DatRoot = br.ReadString();
+                    ScanLevel = (eScanLevel)br.ReadInt32();
+                    FixLevel = (eFixLevel)br.ReadInt32();
+                    DebugLogsEnabled = br.ReadBoolean();
+                    bool UserLongFilenames = br.ReadBoolean();
+
+                    IgnoreFiles = new List<string>();
+                    int c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        IgnoreFiles.Add(br.ReadString());
+
+                    DirPathMap = new List<DirMap>();
+                    c = br.ReadInt32();
+                    for (int i = 0; i < c; i++)
+                        DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
+
+                    CacheSaveTimerEnabled = br.ReadBoolean();
+                    CacheSaveTimePeriod = br.ReadInt32();
+
+                    DoubleCheckDelete = br.ReadBoolean();
+                }
+
+
+                br.Close();
+                fs.Close();
             }
-
-            if (ver == 5)
-            {
-                DatRoot = br.ReadString();
-                ScanLevel = (eScanLevel)br.ReadInt32();
-                FixLevel = (eFixLevel)br.ReadInt32();
-                DebugLogsEnabled = br.ReadBoolean();
-
-                IgnoreFiles = new List<string>();
-                int c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    IgnoreFiles.Add(br.ReadString());
-
-                DirPathMap = new List<DirMap>();
-                c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
-
-                CacheSaveTimerEnabled = br.ReadBoolean();
-                CacheSaveTimePeriod = br.ReadInt32();
-
-                DoubleCheckDelete = br.ReadBoolean();
-            }
-
-            if (ver == 6)
-            {
-                DatRoot = br.ReadString();
-                ScanLevel = (eScanLevel)br.ReadInt32();
-                FixLevel = (eFixLevel)br.ReadInt32();
-                DebugLogsEnabled = br.ReadBoolean();
-                bool UserLongFilenames = br.ReadBoolean();
-
-                IgnoreFiles = new List<string>();
-                int c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    IgnoreFiles.Add(br.ReadString());
-
-                DirPathMap = new List<DirMap>();
-                c = br.ReadInt32();
-                for (int i = 0; i < c; i++)
-                    DirPathMap.Add(new DirMap(br.ReadString(), br.ReadString()));
-
-                CacheSaveTimerEnabled = br.ReadBoolean();
-                CacheSaveTimePeriod = br.ReadInt32();
-
-                DoubleCheckDelete = br.ReadBoolean();
-            }
-
-
-            br.Close();
-            fs.Close();
         }
     }
 
-
     public class DirMap : IComparable<DirMap>
     {
-        public readonly string DirKey;
-        public readonly string DirPath;
+        public string DirKey;
+        public string DirPath;
+
+        public DirMap()
+        { }
 
         public DirMap(string key, string path)
         {

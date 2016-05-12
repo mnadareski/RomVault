@@ -54,15 +54,15 @@ namespace ROMVault2.RvDB
 
         public static void Write()
         {
-            if (File.Exists(Settings.CacheFile))
+            if (File.Exists(Program.rvSettings.CacheFile))
             {
-                string bname = Settings.CacheFile + "Backup";
+                string bname = Program.rvSettings.CacheFile + "Backup";
                 if (File.Exists(bname))
                     File.Delete(bname);
-                File.Move(Settings.CacheFile, bname);
+                File.Move(Program.rvSettings.CacheFile, bname);
 
             }
-            FileStream fs = new FileStream(Settings.CacheFile, FileMode.CreateNew, FileAccess.Write);
+            FileStream fs = new FileStream(Program.rvSettings.CacheFile, FileMode.CreateNew, FileAccess.Write);
             BinaryWriter bw = new BinaryWriter(fs);
             DBVersion.VersionNow = DBVersion.Version;
             bw.Write(DBVersion.Version);
@@ -81,7 +81,7 @@ namespace ROMVault2.RvDB
             Bgw = sender as BackgroundWorker;
             Program.SyncCont = e.Argument as SynchronizationContext;
 
-            if (!File.Exists(Settings.CacheFile))
+            if (!File.Exists(Program.rvSettings.CacheFile))
             {
                 OpenDefaultDB();
                 Bgw = null;
@@ -89,7 +89,7 @@ namespace ROMVault2.RvDB
                 return;
             }
             DirTree = new RvDir(FileType.Dir);
-            FileStream fs = new FileStream(Settings.CacheFile, FileMode.Open, FileAccess.Read);
+            FileStream fs = new FileStream(Program.rvSettings.CacheFile, FileMode.Open, FileAccess.Read);
             if (fs.Length < 4)
                 ReportError.UnhandledExceptionHandler("Cache is Corrupt, revert to Backup.");
 

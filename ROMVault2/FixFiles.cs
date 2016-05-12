@@ -48,7 +48,7 @@ namespace ROMVault2
 
                 _cacheSaveTimer = new Stopwatch();
                 _cacheSaveTimer.Reset();
-                if (Settings.CacheSaveTimerEnabled)
+                if (Program.rvSettings.CacheSaveTimerEnabled)
                     _cacheSaveTimer.Start();
 
                 _bgw = sender as BackgroundWorker;
@@ -201,7 +201,7 @@ namespace ROMVault2
                 return ReturnCode.Good;
 
 
-            if (_cacheSaveTimer.Elapsed.Minutes > Settings.CacheSaveTimePeriod)
+            if (_cacheSaveTimer.Elapsed.Minutes > Program.rvSettings.CacheSaveTimePeriod)
             {
                 ReportProgress("Saving Cache");
                 DB.Write();
@@ -395,13 +395,13 @@ namespace ROMVault2
         {
             string fixFileFullName = fixFile.FullName;
 
-            string toSortFullName = Path.Combine(Settings.ToSort(), fixFile.Name);
+            string toSortFullName = Path.Combine(Program.rvSettings.ToSort(), fixFile.Name);
             string toSortFileName = fixFile.Name;
             int fileC = 0;
             while (File.Exists(toSortFullName))
             {
                 fileC++;
-                toSortFullName = Path.Combine(Settings.ToSort(), fixFile.Name + fileC);
+                toSortFullName = Path.Combine(Program.rvSettings.ToSort(), fixFile.Name + fileC);
                 toSortFileName = fixFile.Name + fileC;
             }
 
@@ -450,7 +450,7 @@ namespace ROMVault2
 
         private static ReturnCode FixFileMoveToCorrupt(RvFile fixFile)
         {
-            string corruptDir = Path.Combine(Settings.ToSort(), "Corrupt");
+            string corruptDir = Path.Combine(Program.rvSettings.ToSort(), "Corrupt");
             if (!Directory.Exists(corruptDir))
             {
                 Directory.CreateDirectory(corruptDir);
@@ -806,7 +806,7 @@ namespace ROMVault2
             if (fixZip.DirStatus.HasUnknown())
                 return ReturnCode.FindFixes; // Error
 
-            bool needsTrrntzipped = fixZip.ZipStatus != ZipStatus.TrrntZip && fixZip.GotStatus == GotStatus.Got && fixZip.DatStatus == DatStatus.InDatCollect && (Settings.FixLevel == eFixLevel.TrrntZipLevel1 || Settings.FixLevel == eFixLevel.TrrntZipLevel2 || Settings.FixLevel == eFixLevel.TrrntZipLevel3);
+            bool needsTrrntzipped = fixZip.ZipStatus != ZipStatus.TrrntZip && fixZip.GotStatus == GotStatus.Got && fixZip.DatStatus == DatStatus.InDatCollect && (Program.rvSettings.FixLevel == eFixLevel.TrrntZipLevel1 || Program.rvSettings.FixLevel == eFixLevel.TrrntZipLevel2 || Program.rvSettings.FixLevel == eFixLevel.TrrntZipLevel3);
 
             // file corrupt and not in tosort
             //      if file cannot be fully fixed copy to corrupt
@@ -1218,13 +1218,13 @@ namespace ROMVault2
 
                             if (toSortGame == null)
                             {
-                                string toSortFullName = Path.Combine(Settings.ToSort(), fixZip.Name + ".zip");
+                                string toSortFullName = Path.Combine( Program.rvSettings.ToSort(), fixZip.Name + ".zip");
                                 string toSortFileName = fixZip.Name;
                                 int fileC = 0;
                                 while (File.Exists(toSortFullName))
                                 {
                                     fileC++;
-                                    toSortFullName = Path.Combine(Settings.ToSort(), fixZip.Name + fileC + ".zip");
+                                    toSortFullName = Path.Combine( Program.rvSettings.ToSort(), fixZip.Name + fileC + ".zip");
                                     toSortFileName = fixZip.Name + fileC;
                                 }
 
@@ -1254,7 +1254,7 @@ namespace ROMVault2
 
                             toSortGame.ChildAdd(toSortRom);
 
-                            string destination = Path.Combine(Settings.ToSort(), toSortGame.Name + ".zip");
+                            string destination = Path.Combine( Program.rvSettings.ToSort(), toSortGame.Name + ".zip");
                             ReportProgress(new bgwShowFix(Path.GetDirectoryName(fixZipFullName), Path.GetFileName(fixZipFullName), zipFileFixing.Name, zipFileFixing.Size, "-->", "ToSort", Path.GetFileName(destination), toSortRom.Name));
 
                             RvFile foundFile;
@@ -1287,7 +1287,7 @@ namespace ROMVault2
                             string toSortFullName;
                             if (toSortCorruptGame == null)
                             {
-                                string corruptDir = Path.Combine(Settings.ToSort(), "Corrupt");
+                                string corruptDir = Path.Combine( Program.rvSettings.ToSort(), "Corrupt");
                                 if (!Directory.Exists(corruptDir))
                                 {
                                     Directory.CreateDirectory(corruptDir);
@@ -1312,7 +1312,7 @@ namespace ROMVault2
                             }
                             else
                             {
-                                string corruptDir = Path.Combine(Settings.ToSort(), "Corrupt");
+                                string corruptDir = Path.Combine( Program.rvSettings.ToSort(), "Corrupt");
                                 toSortFullName = Path.Combine(corruptDir, toSortCorruptGame.Name + ".zip");
                             }
 
@@ -1520,7 +1520,7 @@ namespace ROMVault2
 
         private static ReturnCode DoubleCheckDelete(RvFile fileDeleting)
         {
-            if (!Settings.DoubleCheckDelete)
+            if (! Program.rvSettings.DoubleCheckDelete)
                 return ReturnCode.Good;
 
 
@@ -1648,7 +1648,7 @@ namespace ROMVault2
                 return ReturnCode.RescanNeeded;
             }
 
-            string corruptDir = Path.Combine(Settings.ToSort(), "Corrupt");
+            string corruptDir = Path.Combine( Program.rvSettings.ToSort(), "Corrupt");
             if (!Directory.Exists(corruptDir))
             {
                 Directory.CreateDirectory(corruptDir);

@@ -33,18 +33,18 @@ namespace ROMVault2
 
         private void FrmConfigLoad(object sender, EventArgs e)
         {
-            lblDATRoot.Text = Settings.DatRoot;
-            cboScanLevel.SelectedIndex = (int)Settings.ScanLevel;
-            cboFixLevel.SelectedIndex = (int)Settings.FixLevel;
+            lblDATRoot.Text = Program.rvSettings.DatRoot;
+            cboScanLevel.SelectedIndex = (int)Program.rvSettings.ScanLevel;
+            cboFixLevel.SelectedIndex = (int)Program.rvSettings.FixLevel;
 
             textBox1.Text = "";
-            for (int i = 0; i < Settings.IgnoreFiles.Count; i++)
-                textBox1.Text += Settings.IgnoreFiles[i] + Environment.NewLine;
+            for (int i = 0; i < Program.rvSettings.IgnoreFiles.Count; i++)
+                textBox1.Text += Program.rvSettings.IgnoreFiles[i] + Environment.NewLine;
 
-            chkDoubleCheckDelete.Checked = Settings.DoubleCheckDelete;
-            chkCacheSaveTimer.Checked = Settings.CacheSaveTimerEnabled;
-            upTime.Value = Settings.CacheSaveTimePeriod;
-            chkDebugLogs.Checked = Settings.DebugLogsEnabled;
+            chkDoubleCheckDelete.Checked = Program.rvSettings.DoubleCheckDelete;
+            chkCacheSaveTimer.Checked = Program.rvSettings.CacheSaveTimerEnabled;
+            upTime.Value = Program.rvSettings.CacheSaveTimePeriod;
+            chkDebugLogs.Checked = Program.rvSettings.DebugLogsEnabled;
         }
 
         private void BtnCancelClick(object sender, EventArgs e)
@@ -54,31 +54,31 @@ namespace ROMVault2
 
         private void BtnOkClick(object sender, EventArgs e)
         {
-            Settings.DatRoot = lblDATRoot.Text;
-            Settings.ScanLevel = (eScanLevel)cboScanLevel.SelectedIndex;
-            Settings.FixLevel = (eFixLevel)cboFixLevel.SelectedIndex;
+            Program.rvSettings.DatRoot = lblDATRoot.Text;
+            Program.rvSettings.ScanLevel = (eScanLevel)cboScanLevel.SelectedIndex;
+            Program.rvSettings.FixLevel = (eFixLevel)cboFixLevel.SelectedIndex;
 
             string strtxt = textBox1.Text;
             strtxt = strtxt.Replace("\r", "");
             string[] strsplit = strtxt.Split('\n');
 
-            Settings.IgnoreFiles = new List<string>(strsplit);
-            for (int i = 0; i < Settings.IgnoreFiles.Count; i++)
+            Program.rvSettings.IgnoreFiles = new List<string>(strsplit);
+            for (int i = 0; i < Program.rvSettings.IgnoreFiles.Count; i++)
             {
-                Settings.IgnoreFiles[i] = Settings.IgnoreFiles[i].Trim();
-                if (string.IsNullOrEmpty(Settings.IgnoreFiles[i]))
+                Program.rvSettings.IgnoreFiles[i] = Program.rvSettings.IgnoreFiles[i].Trim();
+                if (string.IsNullOrEmpty(Program.rvSettings.IgnoreFiles[i]))
                 {
-                    Settings.IgnoreFiles.RemoveAt(i);
+                    Program.rvSettings.IgnoreFiles.RemoveAt(i);
                     i--;
                 }
             }
 
-            Settings.DoubleCheckDelete = chkDoubleCheckDelete.Checked;
-            Settings.DebugLogsEnabled = chkDebugLogs.Checked;
-            Settings.CacheSaveTimerEnabled = chkCacheSaveTimer.Checked;
-            Settings.CacheSaveTimePeriod = (int)upTime.Value;
+            Program.rvSettings.DoubleCheckDelete = chkDoubleCheckDelete.Checked;
+            Program.rvSettings.DebugLogsEnabled = chkDebugLogs.Checked;
+            Program.rvSettings.CacheSaveTimerEnabled = chkCacheSaveTimer.Checked;
+            Program.rvSettings.CacheSaveTimePeriod = (int)upTime.Value;
 
-            Settings.WriteConfig();
+            Program.rvSettings.WriteConfig();
             Close();
         }
 
@@ -89,7 +89,7 @@ namespace ROMVault2
                                                  ShowNewFolderButton = true,
                                                  Description = Resources.FrmSettings_BtnDatClick_Please_select_a_folder_for_DAT_Root,
                                                  RootFolder = Environment.SpecialFolder.MyComputer,
-                                                 SelectedPath = Settings.DatRoot
+                                                 SelectedPath = Program.rvSettings.DatRoot
                                              };
 
             if (browse.ShowDialog() != DialogResult.OK) return;

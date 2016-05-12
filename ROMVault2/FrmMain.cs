@@ -112,6 +112,29 @@ namespace ROMVault2
 
             splitContainer3_Panel1_Resize(new object(), new EventArgs());
             splitContainer4_Panel1_Resize(new object(), new EventArgs());
+
+            mnuContext = new ContextMenu();
+
+            mnuFile = new MenuItem
+            {
+                Text = @"Set ROM Dir",
+                Tag = null
+            };
+
+
+            mnuMakeDat = new MenuItem
+            {
+                Text = @"Make Dat",
+                Tag = null
+            };
+
+            mnuContext.MenuItems.Add(mnuFile);
+            mnuContext.MenuItems.Add(mnuMakeDat);
+
+            mnuFile.Click += MnuFileClick;
+            mnuMakeDat.Click += MnuMakeDatClick;
+
+            DirTree.ContextMenu = mnuContext;
         }
 
         private Label lblSIName;
@@ -343,7 +366,7 @@ namespace ROMVault2
         }
         private void BtnScanRomsClick(object sender, EventArgs e)
         {
-            ScanRoms(Settings.ScanLevel);
+            ScanRoms(Program.rvSettings.ScanLevel);
         }
 
         private void ScanRoms(eScanLevel sd)
@@ -409,6 +432,10 @@ namespace ROMVault2
 
         #endregion
 
+        private ContextMenu mnuContext;
+        private MenuItem mnuFile;
+        private MenuItem mnuMakeDat;
+
         private void DirTreeRvSelected(object sender, MouseEventArgs e)
         {
             RvDir cf = (RvDir)sender;
@@ -421,27 +448,8 @@ namespace ROMVault2
 
             RvDir tn = (RvDir)sender;
 
-            ContextMenu mnuContext = new ContextMenu();
-
-            MenuItem mnuFile = new MenuItem
-            {
-                Index = 0,
-                Text = Resources.FrmMain_DirTreeRvSelected_Set_ROM_DIR,
-                Tag = tn.TreeFullName
-            };
-            mnuFile.Click += MnuFileClick;
-            mnuContext.MenuItems.Add(mnuFile);
-
-            MenuItem mnuMakeDat = new MenuItem
-            {
-                Index = 1,
-                Text = @"Make Dat",
-                Tag = tn
-            };
-            mnuMakeDat.Click += MnuMakeDatClick;
-            mnuContext.MenuItems.Add(mnuMakeDat);
-            
-            mnuContext.Show(DirTree, e.Location);
+            mnuFile.Tag = tn.TreeFullName;
+            mnuMakeDat.Tag = tn;
         }
 
         #region "DAT display code"
@@ -450,7 +458,7 @@ namespace ROMVault2
         {
             DirTree.Refresh();
 
-            if (Settings.IsMono)
+            if (Program.rvSettings.IsMono)
             {
                 if (GameGrid.RowCount > 0)
                     GameGrid.CurrentCell = GameGrid[0,0];
@@ -475,23 +483,24 @@ namespace ROMVault2
         }
 
 
-        private static void MnuFileClick(object sender, EventArgs e)
+        private void MnuFileClick(object sender, EventArgs e)
         {
-            FrmSetDir sd = new FrmSetDir();
 
             MenuItem mi = (MenuItem)sender;
+            if (mi.Tag == null)
+                return;
             string tDir = (string)mi.Tag;
-            Debug.WriteLine("Opening Dir Options for " + tDir);
-
+            FrmSetDir sd = new FrmSetDir();
             sd.SetLocation(tDir);
-            sd.ShowDialog();
-
+            sd.ShowDialog(this);
             sd.Dispose();
         }
 
-        private static void MnuMakeDatClick(object sender, EventArgs e)
+        private void MnuMakeDatClick(object sender, EventArgs e)
         {
             MenuItem mi = (MenuItem)sender;
+            if (mi.Tag == null)
+                return;
             RvDir thisDir = (RvDir) mi.Tag;
             DatMaker.MakeDatFromDir(thisDir);
         }
@@ -599,7 +608,7 @@ namespace ROMVault2
 
             _updatingGameGrid = true;
 
-            if (Settings.IsMono)
+            if (Program.rvSettings.IsMono)
             {
                 if (GameGrid.RowCount > 0)
                     GameGrid.CurrentCell = GameGrid[0,0];
@@ -1273,7 +1282,7 @@ namespace ROMVault2
                 }
             }
 
-            if (Settings.IsMono && RomGrid.RowCount > 0)
+            if (Program.rvSettings.IsMono && RomGrid.RowCount > 0)
                 RomGrid.CurrentCell = RomGrid[0,0];
 
             RomGrid.Rows.Clear();

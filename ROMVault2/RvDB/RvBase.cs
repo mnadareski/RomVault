@@ -294,7 +294,7 @@ namespace ROMVault2.RvDB
         {
             SearchFound = false;
             if ((RepStatus == RepStatus.UnSet || RepStatus == RepStatus.Unknown || RepStatus == RepStatus.Ignore) && FileType == FileType.File && GotStatus == GotStatus.Got && DatStatus==DatStatus.NotInDat)
-                foreach (string file in Settings.IgnoreFiles)
+                foreach (string file in Program.rvSettings.IgnoreFiles)
                     if (Name == file)
                     {
                         RepStatus = RepStatus.Ignore;

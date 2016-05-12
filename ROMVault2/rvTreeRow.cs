@@ -81,7 +81,7 @@ namespace ROMVault2
         {
             if (_filePointer >= 0)
             {
-                FileStream fs = new FileStream(Settings.CacheFile, FileMode.Open, FileAccess.Write);
+                FileStream fs = new FileStream(Program.rvSettings.CacheFile, FileMode.Open, FileAccess.Write);
                 BinaryWriter bw = new BinaryWriter(fs);
                 fs.Position = _filePointer;
                 bw.Write(_pTreeExpanded);

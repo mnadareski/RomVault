@@ -35,11 +35,11 @@ namespace ROMVault2
 
         private void UpdateGrid()
         {
-            if (Settings.IsMono && DataGridGames.RowCount > 0)
+            if (Program.rvSettings.IsMono && DataGridGames.RowCount > 0)
                 DataGridGames.CurrentCell = DataGridGames[0,0];
 
             DataGridGames.Rows.Clear();
-            foreach (DirMap t in Settings.DirPathMap)
+            foreach (DirMap t in Program.rvSettings.DirPathMap)
             {
                 DataGridGames.Rows.Add();
                 int row = DataGridGames.Rows.Count - 1;
@@ -85,11 +85,11 @@ namespace ROMVault2
                                              };
             if (browse.ShowDialog() == DialogResult.OK)
             {
-                for (int i = 0; i < Settings.DirPathMap.Count; i++)
+                for (int i = 0; i < Program.rvSettings.DirPathMap.Count; i++)
                 {
-                    if (Settings.DirPathMap[i].DirKey == _datLocation)
+                    if (Program.rvSettings.DirPathMap[i].DirKey == _datLocation)
                     {
-                        Settings.DirPathMap.RemoveAt(i);
+                        Program.rvSettings.DirPathMap.RemoveAt(i);
                         i--;
                     }
                 }
@@ -97,10 +97,10 @@ namespace ROMVault2
 
                 string relPath = RelativePath.MakeRelative(AppDomain.CurrentDomain.BaseDirectory, browse.SelectedPath);
 
-                Settings.DirPathMap.Add(new DirMap(_datLocation, relPath));
-                Settings.DirPathMap.Sort();
+                Program.rvSettings.DirPathMap.Add(new DirMap(_datLocation, relPath));
+                Program.rvSettings.DirPathMap.Sort();
                 SetLocation(_datLocation);
-                Settings.WriteConfig();
+                Program.rvSettings.WriteConfig();
 
                 //db.CheckNamesToLong();
             }
@@ -119,17 +119,17 @@ namespace ROMVault2
                 }
                 else
                 {
-                    for (int i = 0; i < Settings.DirPathMap.Count; i++)
+                    for (int i = 0; i < Program.rvSettings.DirPathMap.Count; i++)
                     {
-                        if (Settings.DirPathMap[i].DirKey == datLocation)
+                        if (Program.rvSettings.DirPathMap[i].DirKey == datLocation)
                         {
-                            Settings.DirPathMap.RemoveAt(i);
+                            Program.rvSettings.DirPathMap.RemoveAt(i);
                             i--;
                         }
                     }
                 }
             }
-            Settings.WriteConfig();
+            Program.rvSettings.WriteConfig();
             UpdateGrid();
             //db.CheckNamesToLong();
         }
@@ -159,8 +159,8 @@ namespace ROMVault2
 
         private void BtnResetAllClick(object sender, EventArgs e)
         {
-            Settings.ResetDirectories();
-            Settings.WriteConfig();
+            Program.rvSettings.ResetDirectories();
+            Program.rvSettings.WriteConfig();
             UpdateGrid();
         }
 

@@ -40,7 +40,7 @@ namespace ROMVault2
                 _fileErrorAbort = false;
                 _cacheSaveTimer = new Stopwatch();
                 _cacheSaveTimer.Reset();
-                if (Settings.CacheSaveTimerEnabled)
+                if (Program.rvSettings.CacheSaveTimerEnabled)
                     _cacheSaveTimer.Start();
 
                 _bgw = sender as BackgroundWorker;
@@ -109,7 +109,7 @@ namespace ROMVault2
 
         private static void CheckADir(RvDir dbDir, bool report)
         {
-            if (_cacheSaveTimer.Elapsed.TotalMinutes > Settings.CacheSaveTimePeriod)
+            if (_cacheSaveTimer.Elapsed.TotalMinutes > Program.rvSettings.CacheSaveTimePeriod)
             {
                 _bgw.ReportProgress(0, "Saving Cache");
                 DB.Write();

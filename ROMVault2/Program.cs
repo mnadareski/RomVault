@@ -15,9 +15,11 @@ namespace ROMVault2
         //public static UsernamePassword Up;
         public static readonly Encoding Enc = Encoding.GetEncoding(28591);
         public const string Version = "2.2";
-        public const int SubVersion = 5;
-        
+        public const int SubVersion = 6;
+
         public static SynchronizationContext SyncCont;
+
+        public static Settings rvSettings;
 
         /// <summary>
         /// The main entry point for the application.
@@ -25,6 +27,8 @@ namespace ROMVault2
         [STAThread]
         static void Main()
         {
+            rvSettings = new Settings();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -36,7 +40,7 @@ namespace ROMVault2
             progress.ShowDialog();
 
             progress.Dispose();
-                       
+
             Application.Run(new FrmMain());
         }
     }

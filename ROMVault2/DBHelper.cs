@@ -122,7 +122,7 @@ namespace ROMVault2
         {
             string strFullPath = "";
             int lenFound = 0;
-            foreach (DirMap dirPathMap in Settings.DirPathMap)
+            foreach (DirMap dirPathMap in Program.rvSettings.DirPathMap)
             {
                 string dirKey = dirPathMap.DirKey;
                 int dirKeyLen = dirKey.Length;
@@ -144,13 +144,13 @@ namespace ROMVault2
         public static string GetDatPath(string rootPath)
         {
             if (rootPath == "")
-                return Settings.DatRoot;
+                return Program.rvSettings.DatRoot;
             if (rootPath.Substring(0, 6) == "ToSort")
                 return "Error";
             if (rootPath.Substring(0, 8) == "RomVault")
-                return Settings.DatRoot + rootPath.Substring(8);
+                return Program.rvSettings.DatRoot + rootPath.Substring(8);
 
-            return Settings.DatRoot;
+            return Program.rvSettings.DatRoot;
 
         }
 

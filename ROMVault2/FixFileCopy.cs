@@ -180,7 +180,7 @@ namespace ROMVault2
                 sourceTrrntzip = true;
             }
 
-            if (!rawCopy && (Settings.FixLevel == eFixLevel.TrrntZipLevel1 || Settings.FixLevel == eFixLevel.TrrntZipLevel2 || Settings.FixLevel == eFixLevel.TrrntZipLevel3))
+            if (!rawCopy && (Program.rvSettings.FixLevel == eFixLevel.TrrntZipLevel1 || Program.rvSettings.FixLevel == eFixLevel.TrrntZipLevel2 || Program.rvSettings.FixLevel == eFixLevel.TrrntZipLevel3))
                 compressionMethod = 8;
 
             #region Find and Check/Open Output Files
@@ -659,7 +659,7 @@ namespace ROMVault2
 
             bool deepchecked = fileIn.FileStatusIs(FileStatus.SHA1Verified) && fileIn.FileStatusIs(FileStatus.MD5Verified);
 
-            switch (Settings.FixLevel)
+            switch (Program.rvSettings.FixLevel)
             {
                 case eFixLevel.TrrntZipLevel1:
                     return trrntzipped;

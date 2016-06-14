@@ -737,7 +737,7 @@ namespace ROMVault2.SupportedFiles.Zip
                     sizetogo -= (ulong)sizeNext;
                     bool whichBuffer = true;
 
-                    while (sizebuffer > 0)
+                    while (sizebuffer > 0 && !lbuffer.errorState)
                     {
                         sizeNext = sizetogo > Buffersize ? Buffersize : (int)sizetogo;
 
@@ -760,11 +760,27 @@ namespace ROMVault2.SupportedFiles.Zip
                         whichBuffer = !whichBuffer;
                     }
 
+                    if (lbuffer.errorState)
+                    {
+                        if (_compressionMethod == 8)
+                        {
+                            sInput.Close();
+                            sInput.Dispose();
+                        }
+
+                        lbuffer.Dispose();
+                        tcrc32.Dispose();
+                        tmd5.Dispose();
+                        tsha1.Dispose();
+                        FileStatus = ZipReturn.ZipDecodeError;
+                        return;
+                    }
+
                     lbuffer.Finish();
                     tcrc32.Finish();
                     tmd5.Finish();
                     tsha1.Finish();
-                    
+
                     byte[] testcrc = tcrc32.Hash;
                     md5 = tmd5.Hash;
                     sha1 = tsha1.Hash;
@@ -773,7 +789,7 @@ namespace ROMVault2.SupportedFiles.Zip
                     tcrc32.Dispose();
                     tmd5.Dispose();
                     tsha1.Dispose();
-                    
+
                     if (_compressionMethod == 8)
                     {
                         sInput.Close();

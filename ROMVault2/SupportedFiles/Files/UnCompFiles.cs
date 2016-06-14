@@ -56,7 +56,7 @@ namespace ROMVault2.SupportedFiles.Files
                 sizetogo -= sizeNext;
                 bool whichBuffer = true;
 
-                while (sizebuffer > 0)
+                while (sizebuffer > 0 && !lbuffer.errorState)
                 {
                     sizeNext = sizetogo > Buffersize ? Buffersize : (int)sizetogo;
 
@@ -94,7 +94,18 @@ namespace ROMVault2.SupportedFiles.Files
                 tmd5?.Dispose();
                 tsha1?.Dispose();
 
-                return 0x17;
+                return 0x17; // need to remember what this number is for
+            }
+
+            if (!lbuffer.errorState)
+            {
+                ds?.Close();
+                lbuffer?.Dispose();
+                tcrc32?.Dispose();
+                tmd5?.Dispose();
+                tsha1?.Dispose();
+
+                return 0x17; // need to remember what this number is for
             }
 
             crc = tcrc32.Hash;

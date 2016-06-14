@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using ROMVault2.SupportedFiles;
 
 namespace RomVaultX.SupportedFiles.Files
 {
@@ -14,6 +15,7 @@ namespace RomVaultX.SupportedFiles.Files
         private int _size;
         private Stream _ds;
         private bool _finished;
+        public bool errorState;
 
         public ThreadLoadBuffer(Stream ds)
         {
@@ -21,6 +23,7 @@ namespace RomVaultX.SupportedFiles.Files
             _outEvent = new AutoResetEvent(false);
             _finished = false;
             _ds = ds;
+            errorState = false;
 
             _tWorker = new Thread(MainLoop);
             _tWorker.Start();
@@ -37,7 +40,14 @@ namespace RomVaultX.SupportedFiles.Files
             {
                 _waitEvent.WaitOne();
                 if (_finished) break;
-                _ds.Read(_buffer, 0, _size);
+                try
+                {
+                    _ds.Read(_buffer, 0, _size);
+                }
+                catch (Exception)
+                {
+                    errorState = true;
+                }
                 _outEvent.Set();
             }
         }

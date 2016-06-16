@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatMaker.cs" />
+    <Compile Include="DatReaders\HeaderSkipReader.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="SupportedFiles\CHD\CHD.cs" />
     <Compile Include="DatReaders\DatDOSReader.cs" />
@@ -294,7 +295,9 @@
     </Content>
     <Content Include="chip.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Headers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

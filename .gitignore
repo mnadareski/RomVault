@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ROMVault2/obj/x86/Debug
+/ROMVault2/Stage
+/.vs/ROMVault2/v14

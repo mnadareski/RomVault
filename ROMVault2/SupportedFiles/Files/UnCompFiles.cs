@@ -21,7 +21,7 @@ namespace ROMVault2.SupportedFiles.Files
             Buffer1 = new byte[Buffersize];
         }
 
-        public static int CheckSumRead(string filename, bool testDeep, out byte[] crc, out byte[] bMD5, out byte[] bSHA1)
+        public static int CheckSumRead(string filename, bool testDeep, out byte[] crc, out byte[] bMD5, out byte[] bSHA1, long offset = 0)
         {
             bMD5 = null;
             bSHA1 = null;
@@ -47,7 +47,10 @@ namespace ROMVault2.SupportedFiles.Files
                     tsha1 = new ThreadSHA1();
                 }
 
-                long sizetogo = ds.Length;
+                if (ds.CanSeek && offset != 0)
+                    ds.Seek(offset, SeekOrigin.Begin);
+
+                long sizetogo = ds.Length - offset;
 
                 // Pre load the first buffer0
                 int sizeNext = sizetogo > Buffersize ? Buffersize : (int)sizetogo;

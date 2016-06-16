@@ -14,6 +14,7 @@ namespace ROMVault2.RvDB
     public class RvFile : RvBase
     {
         public ulong? Size;
+        public ulong? HeaderSize;
         public byte[] CRC;
         public byte[] SHA1;
         public byte[] MD5;

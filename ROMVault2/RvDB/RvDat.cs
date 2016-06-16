@@ -41,7 +41,8 @@ namespace ROMVault2.RvDB
             FileType = 12,
             MergeType = 13,
             SuperDat = 14,
-            DirSetup = 15
+            DirSetup = 15,
+            Header = 16,
         }
 
         private class GameMetaData

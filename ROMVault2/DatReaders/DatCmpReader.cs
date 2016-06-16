@@ -128,7 +128,7 @@ namespace ROMVault2.DatReaders
                     case "url": tDat.AddData(RvDat.DatData.URL, DatFileLoader.GnRest()); DatFileLoader.Gn(); break;
 
                     case "comment": DatFileLoader.GnRest(); DatFileLoader.Gn(); break;
-                    case "header": DatFileLoader.GnRest(); DatFileLoader.Gn(); break;
+                    case "header": tDat.AddData(RvDat.DatData.Header, DatFileLoader.GnRest()); DatFileLoader.Gn(); break;
                     case "forcezipping": forceZipping = DatFileLoader.GnRest(); DatFileLoader.Gn(); break;
                     case "forcepacking": DatFileLoader.GnRest(); DatFileLoader.Gn(); break; // incorrect usage
                     case "forcemerging": tDat.AddData(RvDat.DatData.MergeType, DatFileLoader.GnRest()); DatFileLoader.Gn(); break;

@@ -156,6 +156,10 @@ namespace ROMVault2.DatReaders
                             tDat.AddData(RvDat.DatData.MergeType, "split");
                             break;
                     }
+                    val = VarFix.String(packingNode.Attributes.GetNamedItem("header")).ToLower();
+                    if (!String.IsNullOrEmpty(val))
+                        tDat.AddData(RvDat.DatData.Header, val);
+
                     val = VarFix.String(packingNode.Attributes.GetNamedItem("dir")).ToLower(); // noautodir , nogame
                     if (!String.IsNullOrEmpty(val))
                         tDat.AddData(RvDat.DatData.DirSetup, val);

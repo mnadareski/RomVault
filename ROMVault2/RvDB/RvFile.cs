@@ -232,9 +232,13 @@ namespace ROMVault2.RvDB
             if (cf != null)
             {
                 cf.Size = Size;
+                cf.HeaderlessSize = HeaderlessSize;
                 cf.CRC = CRC;
+                cf.HeaderlessCRC = HeaderlessCRC;
                 cf.SHA1 = SHA1;
+                cf.HeaderlessSHA1 = HeaderlessSHA1;
                 cf.MD5 = MD5;
+                cf.HeaderlessMD5 = HeaderlessMD5;
                 cf.Merge = Merge;
                 cf.Status = Status;
                 cf._fileStatus = _fileStatus;

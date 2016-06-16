@@ -151,9 +151,13 @@ namespace ROMVault2.RvDB
             }
 
             if (Size == null && tFile.Size != null) Size = tFile.Size;
+            if (HeaderlessSize == null && tFile.HeaderlessSize != null) HeaderlessSize = tFile.HeaderlessSize;
             if (CRC == null && tFile.CRC != null) CRC = tFile.CRC;
+            if (HeaderlessCRC == null && tFile.HeaderlessCRC != null) HeaderlessCRC = tFile.HeaderlessCRC;
             if (SHA1 == null && tFile.SHA1 != null) SHA1 = tFile.SHA1;
+            if (HeaderlessSHA1 == null && tFile.HeaderlessSHA1 != null) HeaderlessSHA1 = tFile.HeaderlessSHA1;
             if (MD5 == null && tFile.MD5 != null) MD5 = tFile.MD5;
+            if (HeaderlessMD5 == null && tFile.HeaderlessMD5 != null) HeaderlessMD5 = tFile.HeaderlessMD5;
             if (SHA1CHD == null && tFile.SHA1CHD != null) SHA1CHD = tFile.SHA1CHD;
             if (MD5CHD == null && tFile.MD5CHD != null) MD5CHD = tFile.MD5CHD;
 

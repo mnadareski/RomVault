@@ -53,7 +53,11 @@ namespace ROMVault2.RvDB
             Status = 0x80,
             ZipFileIndex = 0x100,
             ZipFileHeader = 0x200,
-            CHDVersion = 0x400
+            CHDVersion = 0x400,
+            HeaderlessSize = 0x1000,
+            HeaderlessCRC = 0x2000,
+            HeaderlessSHA1 = 0x4000,
+            HeaderlessMD5 = 0x8000,
         }
 
         public override void Write(BinaryWriter bw)
@@ -63,6 +67,7 @@ namespace ROMVault2.RvDB
             FileFlags fFlags = 0;
             if (Size != null) fFlags |= FileFlags.Size;
             if (CRC != null) fFlags |= FileFlags.CRC;
+			if (HeaderlessCRC != null)
             if (SHA1 != null) fFlags |= FileFlags.SHA1;
             if (MD5 != null) fFlags |= FileFlags.MD5;
             if (SHA1CHD != null) fFlags |= FileFlags.SHA1CHD;

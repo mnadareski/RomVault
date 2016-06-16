@@ -84,9 +84,13 @@ namespace ROMVault2.RvDB
             bw.Write((UInt16)fFlags);
 
             if (Size != null) bw.Write((ulong)Size);
+            if (HeaderlessSize != null) bw.Write((ulong)HeaderlessSize);
             if (CRC != null) ArrByte.Write(bw, CRC);
+            if (HeaderlessCRC != null) ArrByte.Write(bw, HeaderlessCRC);
             if (SHA1 != null) ArrByte.Write(bw, SHA1);
+            if (HeaderlessSHA1 != null) ArrByte.Write(bw, HeaderlessSHA1);
             if (MD5 != null) ArrByte.Write(bw, MD5);
+            if (HeaderlessMD5 != null) ArrByte.Write(bw, HeaderlessMD5);
             if (SHA1CHD != null) ArrByte.Write(bw, SHA1CHD);
             if (MD5CHD != null) ArrByte.Write(bw, MD5CHD);
             if (!String.IsNullOrEmpty(Merge)) bw.Write(Merge);

@@ -14,10 +14,13 @@ namespace ROMVault2.RvDB
     public class RvFile : RvBase
     {
         public ulong? Size;
-        public ulong? HeaderSize;
+        public ulong? HeaderlessSize;
         public byte[] CRC;
+        public byte[] HeaderlessCRC;
         public byte[] SHA1;
+        public byte[] HeaderlessSHA1;
         public byte[] MD5;
+        public byte[] HeaderlessMD5;
         public byte[] SHA1CHD;
         public byte[] MD5CHD;
 

@@ -66,10 +66,13 @@ namespace ROMVault2.RvDB
 
             FileFlags fFlags = 0;
             if (Size != null) fFlags |= FileFlags.Size;
+            if (HeaderlessSize != null) fFlags |= FileFlags.HeaderlessSize;
             if (CRC != null) fFlags |= FileFlags.CRC;
-			if (HeaderlessCRC != null)
+            if (HeaderlessCRC != null) fFlags |= FileFlags.HeaderlessCRC;
             if (SHA1 != null) fFlags |= FileFlags.SHA1;
+            if (HeaderlessSHA1 != null) fFlags |= FileFlags.HeaderlessSHA1;
             if (MD5 != null) fFlags |= FileFlags.MD5;
+            if (HeaderlessMD5 != null) fFlags |= FileFlags.HeaderlessMD5;
             if (SHA1CHD != null) fFlags |= FileFlags.SHA1CHD;
             if (MD5CHD != null) fFlags |= FileFlags.MD5CHD;
             if (!String.IsNullOrEmpty(Merge)) fFlags |= FileFlags.Merge;

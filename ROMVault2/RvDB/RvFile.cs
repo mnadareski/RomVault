@@ -108,9 +108,13 @@ namespace ROMVault2.RvDB
             FileFlags fFlags = (FileFlags)br.ReadUInt16();
 
             Size = (fFlags & FileFlags.Size) > 0 ? (ulong?)br.ReadUInt64() : null;
+            HeaderlessSize = (fFlags & FileFlags.HeaderlessSize) > 0 ? (ulong?)br.ReadUInt64() : null;
             CRC = (fFlags & FileFlags.CRC) > 0 ? ArrByte.Read(br) : null;
+            HeaderlessCRC = (fFlags & FileFlags.HeaderlessCRC) > 0 ? ArrByte.Read(br) : null;
             SHA1 = (fFlags & FileFlags.SHA1) > 0 ? ArrByte.Read(br) : null;
+            HeaderlessSHA1 = (fFlags & FileFlags.HeaderlessSHA1) > 0 ? ArrByte.Read(br) : null;
             MD5 = (fFlags & FileFlags.MD5) > 0 ? ArrByte.Read(br) : null;
+            HeaderlessMD5 = (fFlags & FileFlags.HeaderlessMD5) > 0 ? ArrByte.Read(br) : null;
             SHA1CHD = (fFlags & FileFlags.SHA1CHD) > 0 ? ArrByte.Read(br) : null;
             MD5CHD = (fFlags & FileFlags.MD5CHD) > 0 ? ArrByte.Read(br) : null;
             Merge = (fFlags & FileFlags.Merge) > 0 ? br.ReadString() : null;
